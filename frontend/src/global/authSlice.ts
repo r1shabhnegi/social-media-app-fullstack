@@ -1,43 +1,42 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-type AuthInitialTypes = {
-  isAuth: boolean;
-  // userId: string;
-};
+export const authValidation = createAsyncThunk('auth/validation', async () => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/auth/validate-token`,
+    {
+      method: 'POST',
+      credentials: 'include',
+    }
+  );
 
-const initialState: AuthInitialTypes = {
-  isAuth: false,
-  // userId: '',
-};
+  if (!response.ok) {
+    throw new Error('Token invalid');
+  }
 
-// export const authValidation = createAsyncThunk('auth/validation', () => {
-//   const res = ApiClient.validateToken;
-//   return res;
-// });
-
-export const authSlice = createSlice({
+  return response.json();
+});
+const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    userId: {},
+    isAuth: false,
+  },
   reducers: {
     setAuth: (state, action) => {
-      state.isAuth = !!action.payload;
+      state.isAuth = action.payload;
     },
   },
-  //   extraReducers: (builder) => {
-  //     builder
-  //       .addCase(authValidation.pending, (state) => {
-  //         state.authStatus = 'PENDING';
-  //       })
-  //       .addCase(authValidation.fulfilled, (state) => {
-  //         state.authStatus = 'SUCCESS';
-  //         state.isAuth = true;
-  //       })
-
-  //       .addCase(authValidation.rejected, (state) => {
-  //         state.authStatus = 'ERROR';
-  //         state.isAuth = false;
-  //       });
-  //   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(authValidation.fulfilled, (state, action) => {
+        state.isAuth = !!action.payload;
+        state.userId = action.payload;
+      })
+      .addCase(authValidation.rejected, (state, action) => {
+        state.isAuth = !!action.payload;
+        state.userId = {};
+      });
+  },
 });
 
 export const { setAuth } = authSlice.actions;

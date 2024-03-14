@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import bcrypt from 'bcryptjs';
 type UserTypes = {
   name: string;
   username: string;
@@ -9,4 +9,44 @@ type UserTypes = {
   bio: string;
 };
 
-const userSchema = new mongoose.Schema({}, {});
+const userSchema = new mongoose.Schema<UserTypes>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    bio: {
+      type: String,
+    },
+    avatar: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
+  next();
+});
+
+const User = mongoose.model<UserTypes>('User', userSchema);
+
+export default User;

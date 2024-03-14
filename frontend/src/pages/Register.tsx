@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as ApiClient from '../ApiClient';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@/global/toastSlice';
 import { AppDispatch } from '@/global/store';
+import { authValidation } from '@/global/authSlice';
 
 export type RegisterTypes = {
   name: string;
@@ -15,17 +16,16 @@ export type RegisterTypes = {
 
 const Register = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm<RegisterTypes>();
 
   const mutation = useMutation({
     mutationFn: ApiClient.register,
     onSuccess: async () => {
+      dispatch(authValidation());
       dispatch(
         showToast({ message: 'Registered Successfully!', type: 'SUCCESS' })
       );
-      await queryClient.invalidateQueries({ queryKey: ['validation-token'] });
       navigate('/');
     },
     onError: () => {
@@ -97,7 +97,7 @@ const Register = () => {
             className='flex items-center justify-center w-full h-8 p-2 mt-6 font-semibold text-gray-700 bg-gray-300 rounded-lg md:h-10 hover:bg-gray-400'>
             Submit
           </button>
-          <p className='mt-1 text-sm md:text-md'>
+          <p className='mt-1 text-sm md:text-base'>
             Already Registered?
             <span className='ml-1 font-semibold text-gray-700 underline hover:text-green-500'>
               <Link to='/sign-in'>Sign In</Link>

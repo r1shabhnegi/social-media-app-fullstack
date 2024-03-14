@@ -5,7 +5,7 @@ import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 
 const App = () => {
-  const auth = true;
+  const isAuth = true;
 
   return (
     <Router>
@@ -21,7 +21,7 @@ const App = () => {
             element={<SignIn />}
           />
 
-          {auth && (
+          {isAuth && (
             <Route
               path='/'
               element={<Home />}

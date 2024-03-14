@@ -5,6 +5,7 @@ import * as ApiClient from '../ApiClient';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@/global/toastSlice';
 import { AppDispatch } from '@/global/store';
+import { authValidation } from '@/global/authSlice';
 
 export type SignInTypes = {
   username: string;
@@ -13,7 +14,6 @@ export type SignInTypes = {
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm<SignInTypes>();
 
@@ -23,7 +23,7 @@ const SignIn = () => {
       dispatch(
         showToast({ message: 'Sign In Successfully!', type: 'SUCCESS' })
       );
-      await queryClient.invalidateQueries({ queryKey: ['validation-token'] });
+      dispatch(authValidation());
       navigate('/');
     },
     onError: () => {
@@ -77,7 +77,7 @@ const SignIn = () => {
             className='flex items-center justify-center w-full h-8 p-2 mt-6 font-semibold text-gray-700 bg-gray-300 rounded-lg md:h-10 hover:bg-gray-400'>
             Submit
           </button>
-          <p className='mt-1 text-sm md:text-md'>
+          <p className='mt-1 text-md md:text-base'>
             Create an Account
             <span className='ml-1 font-semibold text-gray-700 underline hover:text-green-500'>
               <Link to='/register'>Sign Up</Link>
