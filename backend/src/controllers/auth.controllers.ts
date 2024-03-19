@@ -5,15 +5,17 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 export const login = async (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ message: errors.array() });
-  }
+  // const errors = validationResult(req);
+
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({ message: errors.array() });
+  // }
+
+  const cookies = req.cookies;
+  const { username, password } = req.body;
 
   try {
-    const { username, password } = req.body;
-
-    const user = await User.findOne({ username });
+    let user = await User.findOne({ username });
 
     if (!user) {
       return res.status(500).json({ message: 'User Does not Exists!' });
@@ -25,23 +27,52 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Password Is Wrong!' });
     }
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
-        userId: user._id,
+        username: user.username,
       },
-      process.env.JWT_SECRET_KEY as string,
+      process.env.ACCESS_TOKEN_SECRET as string,
       {
-        expiresIn: '3d',
+        expiresIn: '6h',
       }
     );
 
-    res.cookie('auth_token', token, {
+    const refreshToken = jwt.sign(
+      {
+        username: user.username,
+      },
+      process.env.REFRESH_TOKEN_SECRET as string,
+      {
+        expiresIn: '1d',
+      }
+    );
+
+    let newRefreshTokenArray = !cookies?.jwt
+      ? user.refreshToken
+      : user.refreshToken.filter((token) => token !== cookies.jwt);
+
+    if (cookies?.jwt) {
+      const refreshToken = cookies.jwt;
+      const foundToken = await User.findOne({ refreshToken }).exec();
+
+      if (!foundToken) {
+        newRefreshTokenArray = [];
+      }
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        secure: true,
+      });
+    }
+
+    user.refreshToken = [...newRefreshTokenArray, refreshToken];
+    await user.save();
+
+    res.cookie('jwt', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 86400000,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).send({ message: 'Sign In Successfully!' });
+    res.status(200).json({ accessToken });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: 'Something Went Wrong!' });

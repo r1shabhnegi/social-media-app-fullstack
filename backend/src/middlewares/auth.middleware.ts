@@ -1,32 +1,32 @@
 import { NextFunction, Request, Response } from 'express';
-import Jwt, { JwtPayload } from 'jsonwebtoken';
+import Jwt from 'jsonwebtoken';
 
 declare global {
   namespace Express {
     interface Request {
-      userId: string;
+      username: string;
     }
   }
 }
 
-export const verifyToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const token = req.cookies['auth_token'];
+interface decodedTypes {
+  username: string;
+}
 
-  if (!token) {
-    return res.status(400).json({ message: 'Unauthorized!' });
-  }
+export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = (req.headers.authorization ||
+    req.headers.Authorization) as string;
 
-  try {
-    const decode = Jwt.verify(token, process.env.JWT_SECRET_KEY as string);
+  if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);
+  const accessToken = authHeader.split(' ')[1];
 
-    req.userId = (decode as JwtPayload).userId;
+  const decodedAccessToken: decodedTypes = Jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET as string
+  ) as decodedTypes;
 
-    next();
-  } catch (error) {
-    return res.status(400).json({ message: 'Unauthorized!' });
-  }
+  if (!decodedAccessToken) res.send({ message: 'error' });
+
+  req.username = decodedAccessToken.username;
+  next();
 };

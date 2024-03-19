@@ -7,6 +7,10 @@ type UserTypes = {
   password: string;
   avatar: string;
   bio: string;
+  following: mongoose.Types.ObjectId[];
+  followers: mongoose.Types.ObjectId[];
+  savedPosts: mongoose.Types.ObjectId[];
+  refreshToken: string[];
 };
 
 const userSchema = new mongoose.Schema<UserTypes>(
@@ -36,6 +40,26 @@ const userSchema = new mongoose.Schema<UserTypes>(
     avatar: {
       type: String,
     },
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    savedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post',
+        default: [],
+      },
+    ],
+    refreshToken: [String],
   },
   { timestamps: true }
 );

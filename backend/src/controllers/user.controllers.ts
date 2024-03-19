@@ -10,13 +10,6 @@ export const register = async (req: Request, res: Response) => {
     return res.json({ message: errors.array() });
   }
 
-  // TODO for Registration
-  // 1. validation for req body
-  // 2. check if user already exists
-  // 3. store the user into DB
-  // 4. create a jwt token
-  // 5. send it back
-
   try {
     let user = await User.findOne({
       username: req.body.username,
@@ -37,7 +30,7 @@ export const register = async (req: Request, res: Response) => {
       {
         userId: user._id,
       },
-      process.env.JWT_SECRET_KEY as string,
+      process.env.ACCESS_TOKEN_SECRET as string,
       {
         expiresIn: '3d',
       }

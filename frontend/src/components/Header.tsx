@@ -53,8 +53,8 @@ const Header = () => {
         </span>
         {isAuth ? (
           <>
-            <span className='p-1 text-gray-600 rounded active:bg-gray-300 '>
-              <IoAdd className='w-7 h-7 md:w-10 md:h-10' />
+            <span className='flex items-center p-1 font-bold text-gray-600 rounded active:bg-gray-300'>
+              <IoAdd className='w-7 h-7 md:w-10 md:h-10' /> Create
             </span>
 
             <span className='flex items-center p-1 text-gray-600 rounded active:bg-gray-300'>

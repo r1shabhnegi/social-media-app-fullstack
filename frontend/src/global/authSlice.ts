@@ -1,43 +1,23 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const authValidation = createAsyncThunk('auth/validation', async () => {
-  const response = await fetch(
-    `${import.meta.env.VITE_API_BASE_URL}/api/auth/validate-token`,
-    {
-      method: 'POST',
-      credentials: 'include',
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error('Token invalid');
-  }
-
-  return response.json();
-});
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    userId: {},
-    isAuth: false,
+    accessToken: null,
+    username: null,
   },
   reducers: {
-    setAuth: (state, action) => {
-      state.isAuth = action.payload;
+    setCredentials: (state, { payload }) => {
+      const { token, userData } = payload;
+      state.accessToken = token;
+      state.username = userData;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(authValidation.fulfilled, (state, action) => {
-        state.isAuth = !!action.payload;
-        state.userId = action.payload;
-      })
-      .addCase(authValidation.rejected, (state, action) => {
-        state.isAuth = !!action.payload;
-        state.userId = {};
-      });
+    logout: (state) => {
+      state.accessToken = null;
+      state.username = null;
+    },
   },
 });
 
-export const { setAuth } = authSlice.actions;
+export const { setCredentials, logout } = authSlice.actions;
 export default authSlice.reducer;
