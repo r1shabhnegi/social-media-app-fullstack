@@ -1,29 +1,29 @@
-import { useMutation } from '@tanstack/react-query';
-import { authValidation } from '@/global/authSlice';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/global/store';
-import * as ApiClient from '../ApiClient';
-import { showToast } from '@/global/toastSlice';
+import { AppDispatch } from '@/store/store';
+import { showToast } from '@/store/toastSlice';
 import { useNavigate } from 'react-router-dom';
+import { useLogoutQuery } from '@/api/queries/authQuery';
+import { useEffect, useState } from 'react';
+import { setCredentials } from '@/store/authSlice';
+
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 const LogoutBtn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const [skipQuery, setSkipQuery] = useState<boolean>(true);
+  const { isSuccess } = useLogoutQuery({ skip: skipQuery });
 
-  const mutation = useMutation({
-    mutationFn: ApiClient.logout,
-    onSuccess: async () => {
-      dispatch(authValidation());
-      dispatch(
-        showToast({ message: 'Logged Out Successfully!', type: 'SUCCESS' })
-      );
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(showToast({ message: 'Logout Successful!', type: 'SUCCESS' }));
+      dispatch(setCredentials({ accessToken: null, username: null }));
       navigate('/sign-in');
-    },
-  });
-
+    }
+  }, [isSuccess, dispatch, navigate]);
   const handleLogout = () => {
-    mutation.mutate();
+    setSkipQuery(false);
   };
-  return <button onClick={() => handleLogout()}>Logout</button>;
+  return <button onClick={() => handleLogout}>Logout</button>;
 };
 export default LogoutBtn;

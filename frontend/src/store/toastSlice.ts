@@ -1,9 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 type initialStateTypes = {
-  toastValue:
-    | undefined
-    | { message: string; type: 'ERROR' | 'SUCCESS'; onChange: () => void };
+  toastValue: undefined | { message: string; type: 'ERROR' | 'SUCCESS' };
 };
 
 const initialState: initialStateTypes = {

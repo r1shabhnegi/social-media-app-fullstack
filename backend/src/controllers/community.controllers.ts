@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { Community, CommunityTypes } from '../models/community.model';
-import { uploadSingleImage } from '../utility/cloudinary';
+import { uploadSingleImage } from '../config/cloudinary';
 
 export const createCommunity = async (req: Request, res: Response) => {
   const errors = validationResult(req);

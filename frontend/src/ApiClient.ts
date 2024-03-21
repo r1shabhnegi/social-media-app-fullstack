@@ -33,21 +33,21 @@ export const validateToken = async () => {
   return response.json();
 };
 
-export const signIn = async (formData: SignInTypes) => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/sign-in`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(formData),
-  });
+// export const signIn = async (formData: SignInTypes) => {
+//   const response = await fetch(`${API_BASE_URL}/api/auth/sign-in`, {
+//     method: 'POST',
+//     credentials: 'include',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(formData),
+//   });
 
-  if (!response.ok) {
-    throw new Error('sign-in failed');
-  }
-  return response.json();
-};
+//   if (!response.ok) {
+//     throw new Error('sign-in failed');
+//   }
+//   return response.json();
+// };
 
 export const logout = async () => {
   const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {

@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -8,25 +7,25 @@ import userRouter from './routes/user.routes';
 import authRouter from './routes/auth.routes';
 import communityRouter from './routes/community.routes';
 import refreshRouter from './routes/refresh.routes';
-import { verifyJwt } from './middlewares/auth.middleware';
+import serverStatusRouter from './routes/serverStatus.routes';
 
-mongoose
-  .connect(process.env.MONGODB_CONNECTION_STRING as string)
-  .catch((error) => console.log('DB ERROR ', error));
+import { corsOptions } from './config/corsOption';
+import { credentials } from './middlewares/credentials.middleware';
+import { connectDb } from './config/db';
 
+// Don't change the order //
+connectDb();
 const app = express();
-
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({ credentials: true, origin: process.env.FRONT_URL as string }));
+app.use(express.urlencoded({ extended: true }));
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use('/server-status', serverStatusRouter);
 
-app.use(verifyJwt);
-
-app.use('/refresh', refreshRouter);
-
-app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
+app.use('/refresh', refreshRouter);
 app.use('/api/community', communityRouter);
 
 app.listen(process.env.SERVER_PORT, () => {

@@ -1,11 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import * as ApiClient from '../ApiClient';
+import { useLoginMutation } from '../api/queries/authQuery';
+import { showToast } from '@/store/toastSlice';
 import { useDispatch } from 'react-redux';
-import { showToast } from '@/global/toastSlice';
-import { AppDispatch } from '@/global/store';
-import { authValidation } from '@/global/authSlice';
+import { AppDispatch } from '@/store/store';
+import { setCredentials } from '@/store/authSlice';
+import { useEffect } from 'react';
 
 export type SignInTypes = {
   username: string;
@@ -16,23 +16,20 @@ const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm<SignInTypes>();
+  const [login, { isLoading, isSuccess, data }] = useLoginMutation();
 
-  const mutation = useMutation({
-    mutationFn: ApiClient.signIn,
-    onSuccess: async () => {
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setCredentials({ ...data }));
       dispatch(
         showToast({ message: 'Sign In Successfully!', type: 'SUCCESS' })
       );
-      dispatch(authValidation());
       navigate('/');
-    },
-    onError: () => {
-      dispatch(showToast({ message: 'Something Went Wrong!', type: 'ERROR' }));
-    },
-  });
+    }
+  }, [data, dispatch, isSuccess, navigate]);
 
-  const onSubmit = handleSubmit((formData) => {
-    mutation.mutate(formData);
+  const onSubmit = handleSubmit((formData: SignInTypes) => {
+    login(formData);
   });
 
   return (
@@ -74,7 +71,10 @@ const SignIn = () => {
         <div>
           <button
             type='submit'
-            className='flex items-center justify-center w-full h-8 p-2 mt-6 font-semibold text-gray-700 bg-gray-300 rounded-lg md:h-10 hover:bg-gray-400'>
+            disabled={isLoading}
+            className={`flex items-center justify-center w-full h-8 p-2 mt-6 font-semibold text-gray-700 ${
+              isLoading ? 'bg-gray-200' : 'bg-gray-300'
+            } rounded-lg md:h-10 hover:bg-gray-400`}>
             Submit
           </button>
           <p className='mt-1 text-md md:text-base'>

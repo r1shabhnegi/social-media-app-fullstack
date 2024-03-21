@@ -4,32 +4,33 @@ import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-export const login = async (req: Request, res: Response) => {
-  // const errors = validationResult(req);
+// LOGIN
 
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ message: errors.array() });
-  // }
+export const login = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.sendStatus(403).json({ message: errors.array() });
+  }
 
   const cookies = req.cookies;
   const { username, password } = req.body;
 
   try {
-    let user = await User.findOne({ username });
+    let foundUser = await User.findOne({ username });
 
-    if (!user) {
-      return res.status(500).json({ message: 'User Does not Exists!' });
+    if (!foundUser) {
+      return res.sendStatus(403);
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, foundUser.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Password Is Wrong!' });
+      return res.status(401);
     }
 
     const accessToken = jwt.sign(
       {
-        username: user.username,
+        username: foundUser.username,
       },
       process.env.ACCESS_TOKEN_SECRET as string,
       {
@@ -39,7 +40,7 @@ export const login = async (req: Request, res: Response) => {
 
     const refreshToken = jwt.sign(
       {
-        username: user.username,
+        username: foundUser.username,
       },
       process.env.REFRESH_TOKEN_SECRET as string,
       {
@@ -48,8 +49,8 @@ export const login = async (req: Request, res: Response) => {
     );
 
     let newRefreshTokenArray = !cookies?.jwt
-      ? user.refreshToken
-      : user.refreshToken.filter((token) => token !== cookies.jwt);
+      ? foundUser.refreshToken
+      : foundUser.refreshToken.filter((token) => token !== cookies.jwt);
 
     if (cookies?.jwt) {
       const refreshToken = cookies.jwt;
@@ -60,35 +61,54 @@ export const login = async (req: Request, res: Response) => {
       }
       res.clearCookie('jwt', {
         httpOnly: true,
+        sameSite: 'none',
         secure: true,
       });
     }
 
-    user.refreshToken = [...newRefreshTokenArray, refreshToken];
-    await user.save();
+    foundUser.refreshToken = [...newRefreshTokenArray, refreshToken];
+    await foundUser.save();
 
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
+      sameSite: 'none',
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ accessToken });
+    res.status(200).json({ accessToken, username: foundUser.username });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: 'Something Went Wrong!' });
+    return res.sendStatus(500);
   }
 };
 
-export const logout = (_: any, res: Response) => {
+// LOGOUT
+
+export const logout = async (req: Request, res: Response) => {
+  const cookie = req.cookies;
+  if (!cookie?.jwt) return res.sendStatus(403);
+
+  const refreshToken = cookie?.jwt;
+
   try {
-    res.cookie('auth_token', '', {
-      expires: new Date(),
-    });
-    res.send({ message: 'Logout Successfully!' });
+    const foundUser = await User.findOne({ refreshToken });
+
+    const decodedCookieToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+
+    if (foundUser) {
+      foundUser.refreshToken = foundUser.refreshToken.filter(
+        (token) => token !== refreshToken
+      );
+      await foundUser.save();
+    }
+
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
+    res.sendStatus(204);
   } catch (error) {
-    res.status(400).json({ message: 'Something Went Wrong!' });
+    res.sendStatus(500);
   }
-};
-export const validateToken = (req: Request, res: Response) => {
-  res.status(200).send({ userId: req.userId });
 };

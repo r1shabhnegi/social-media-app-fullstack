@@ -4,25 +4,20 @@ import {
   createApi,
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
-import setCredentials, { logout } from '../global/authSlice';
-import { RootState } from '@/global/store';
+import { setCredentials, logout } from '../store/authSlice';
+import { RootState } from '@/store/store';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${import.meta.env.VITE_API_BASE_URL}`,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.accessToken;
-    if (token) {
-      headers.set('authorization', `bearer ${token}`);
+    const accessToken = (getState() as RootState).auth.accessToken;
+    if (accessToken) {
+      headers.set('authorization', `Bearer ${accessToken}`);
     }
     return headers;
   },
 });
-
-// type credentialsTypes= {
-//   accessToken: string,
-//   username:string
-// }
 
 const baseQueryAuthRF = async (
   args: FetchArgs | string,
@@ -30,20 +25,15 @@ const baseQueryAuthRF = async (
   extraOptions: object
 ) => {
   let result = await baseQuery(args, api, extraOptions);
-  if (result.error) {
-    const refresh = await baseQuery('/refresh', api, extraOptions);
-    if (refresh?.data) {
-      const username = (api.getState() as RootState).auth.username;
 
+  if (result.error?.status === 403) {
+    const refreshResult = await baseQuery('/refresh', api, extraOptions);
+    if (refreshResult?.data) {
+      const username = (api.getState() as RootState).auth.username;
       api.dispatch(
-        setCredentials(undefined, {
-          ...refresh.data,
-          username,
-          type: '',
-        })
+        setCredentials(setCredentials({ ...refreshResult.data, username }))
       );
       result = await baseQuery(args, api, extraOptions);
-      throw new Error();
     } else {
       api.dispatch(logout());
     }

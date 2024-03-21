@@ -1,11 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import * as ApiClient from '../ApiClient';
 import { useDispatch } from 'react-redux';
-import { showToast } from '@/global/toastSlice';
-import { AppDispatch } from '@/global/store';
-import { authValidation } from '@/global/authSlice';
+import { showToast } from '@/store/toastSlice';
+import { AppDispatch } from '@/store/store';
 
 export type RegisterTypes = {
   name: string;
@@ -19,22 +16,8 @@ const Register = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm<RegisterTypes>();
 
-  const mutation = useMutation({
-    mutationFn: ApiClient.register,
-    onSuccess: async () => {
-      dispatch(authValidation());
-      dispatch(
-        showToast({ message: 'Registered Successfully!', type: 'SUCCESS' })
-      );
-      navigate('/');
-    },
-    onError: () => {
-      dispatch(showToast({ message: 'Something Went Wrong!', type: 'ERROR' }));
-    },
-  });
-
   const onSubmit = handleSubmit((formData) => {
-    mutation.mutate(formData);
+    console.log(formData);
   });
 
   return (

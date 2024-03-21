@@ -2,35 +2,31 @@ import { Request, Response } from 'express';
 import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
 
+interface decodedTypes {
+  username?: string;
+}
+
 export const refreshToken = async (req: Request, res: Response) => {
   const cookie = req.cookies;
 
   if (!cookie?.jwt) {
-    return res.status(400).json({ message: 'token does not exist' });
+    return res.status(403).json({ message: 'Invalid' });
   }
 
   const refreshToken = cookie.jwt;
 
-  //   clearing the cookie token
   res.clearCookie('jwt', { httpOnly: true, secure: true });
 
   try {
     const foundUser = await User.findOne({ refreshToken });
 
-    interface decodedTypes {
-      username?: string;
-    }
     const decodedCookieToken: decodedTypes = jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET as string
     ) as decodedTypes;
 
-    console.log(decodedCookieToken);
-
     if (!foundUser) {
       if (decodedCookieToken) {
-        // return res.status(400).json({ message: 'Something went wrong' });
-
         const hackedUser = await User.findOne({
           username: decodedCookieToken.username,
         });
@@ -40,7 +36,7 @@ export const refreshToken = async (req: Request, res: Response) => {
           await hackedUser.save();
         }
       }
-      return res.json({ message: 'error' });
+      return res.status(403).json({ message: 'Forbidden' });
     }
 
     const newRefreshTokenArray = foundUser.refreshToken.filter(
@@ -55,10 +51,10 @@ export const refreshToken = async (req: Request, res: Response) => {
       !decodedCookieToken ||
       foundUser.username !== decodedCookieToken.username
     ) {
-      return res.json({ message: 'err' });
+      return res.status(403).json({ message: 'Forbidden' });
     }
 
-    const newAccessToken = jwt.sign(
+    const accessToken = jwt.sign(
       { username: foundUser.username },
       process.env.ACCESS_TOKEN_SECRET as string,
       {
@@ -82,6 +78,8 @@ export const refreshToken = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.json({ newAccessToken });
-  } catch (error) {}
+    res.json({ accessToken, username: foundUser.username });
+  } catch (error) {
+    res.status(500);
+  }
 };

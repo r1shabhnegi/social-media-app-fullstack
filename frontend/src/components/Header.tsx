@@ -4,6 +4,12 @@ import { TbLayoutSidebarRightCollapseFilled } from 'react-icons/tb';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import LeftSideBar from './LeftSideBar';
 
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +17,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import LogoutBtn from './LogoutBtn';
+// import LogoutBtn from './LogoutBtn';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/global/store';
+import { RootState } from '@/store/store';
+import LogoutBtn from './LogoutBtn';
 
 const Header = () => {
-  const isAuth = useSelector((state: RootState) => state.auth.isAuth);
+  const { isLoggedIn } = useSelector((state: RootState) => state.auth);
 
   return (
     <header className='flex items-center justify-between px-2 py-2 bg-gray-200'>
@@ -29,11 +36,12 @@ const Header = () => {
           </Link>
         </span>
 
-        {isAuth && (
+        {isLoggedIn && (
           <Sheet>
             <SheetTrigger>
               <span className='flex items-center p-1 text-gray-600 rounded active:bg-gray-300 '>
                 <TbLayoutSidebarRightCollapseFilled className='w-7 h-7 md:w-10 md:h-10' />
+                <p className='font-bold'>Communities</p>
               </span>
             </SheetTrigger>
             <SheetContent side='left'>
@@ -51,19 +59,29 @@ const Header = () => {
         <span className='p-1 text-gray-600 rounded active:bg-gray-300 sm:hidden'>
           <IoSearchOutline className='w-7 h-7 md:w-10 md:h-10' />
         </span>
-        {isAuth ? (
+        {isLoggedIn ? (
           <>
             <span className='flex items-center p-1 font-bold text-gray-600 rounded active:bg-gray-300'>
-              <IoAdd className='w-7 h-7 md:w-10 md:h-10' /> Create
+              <IoAdd className='w-7 h-7 md:w-10 md:h-10' />
+              <p>Create</p>
             </span>
 
             <span className='flex items-center p-1 text-gray-600 rounded active:bg-gray-300'>
               <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <IoMenuOutline className='w-7 h-7 md:w-10 md:h-10' />
+                <DropdownMenuTrigger asChild>
+                  <Button variant='ghost'>
+                    <IoMenuOutline size={30} />
+                  </Button>
                 </DropdownMenuTrigger>
+
                 <DropdownMenuContent className='w-56'>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
                   <DropdownMenuItem>Profile</DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
                   <DropdownMenuItem>
                     <LogoutBtn />
                   </DropdownMenuItem>
