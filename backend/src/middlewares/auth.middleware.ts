@@ -18,7 +18,8 @@ export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
     req.headers.Authorization) as string;
   console.log(authHeader);
 
-  if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);
+  if (!authHeader?.startsWith('Bearer '))
+    return res.status(401).json({ message: 'Invalid Header!' });
 
   const accessToken = authHeader.split(' ')[1];
 
@@ -28,7 +29,8 @@ export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
   ) as decodedTypes;
   console.log(decodedAccessToken);
 
-  if (!decodedAccessToken) res.sendStatus(403);
+  if (!decodedAccessToken)
+    res.status(403).json({ message: 'Invalid Credentials!' });
 
   req.username = decodedAccessToken.username;
   next();

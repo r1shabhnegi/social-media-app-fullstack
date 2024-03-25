@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { register } from '../controllers/user.controllers';
+import { signUp } from '../controllers/user.controllers';
 import { body, check } from 'express-validator';
 
 const router = Router();
 
 router.post(
-  '/register',
+  '/sign-up',
   [
     check('name')
       .notEmpty()
@@ -30,7 +30,7 @@ router.post(
       .isLength({ min: 6 })
       .withMessage('Password must be at least 6 characters long'),
   ],
-  register
+  signUp
 );
 
 export default router;

@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const loginValidations = [
+export const signInValidations = [
   body('username')
     .notEmpty()
     .withMessage('Username is required')

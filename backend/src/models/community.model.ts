@@ -1,13 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 export type CommunityTypes = {
+  author: mongoose.Types.ObjectId;
   name: string;
   userId: number;
   avatar: string;
   coverImage: string;
   description: string;
   rule: string[];
-  author: mongoose.Types.ObjectId;
   members: mongoose.Types.ObjectId[];
   moderator: mongoose.Types.ObjectId[];
   posts: mongoose.Types.ObjectId[];
@@ -15,9 +15,14 @@ export type CommunityTypes = {
 
 const communitySchema = new mongoose.Schema<CommunityTypes>(
   {
-    userId: {
-      type: Number,
-      // required: true,
+    // userId: {
+    //   type: Number,
+    //   // required: true,
+    // },
+
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
     name: {
       type: String,
@@ -37,7 +42,6 @@ const communitySchema = new mongoose.Schema<CommunityTypes>(
       trim: true,
     },
     rule: [String],
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     members: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] },
     ],

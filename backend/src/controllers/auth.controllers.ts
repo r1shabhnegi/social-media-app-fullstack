@@ -4,12 +4,12 @@ import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-// LOGIN
+// SIGN-IN
 
-export const login = async (req: Request, res: Response) => {
+export const signIn = async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.sendStatus(403).json({ message: errors.array() });
+    return res.status(403).json({ message: errors.array() });
   }
 
   const cookies = req.cookies;
@@ -19,13 +19,13 @@ export const login = async (req: Request, res: Response) => {
     let foundUser = await User.findOne({ username });
 
     if (!foundUser) {
-      return res.sendStatus(403);
+      return res.status(403).json({ message: 'User Not Found!' });
     }
 
     const isMatch = await bcrypt.compare(password, foundUser.password);
 
     if (!isMatch) {
-      return res.status(401);
+      return res.status(401).json({ message: 'Invalid Credentials!' });
     }
 
     const accessToken = jwt.sign(
@@ -79,36 +79,40 @@ export const login = async (req: Request, res: Response) => {
     res.status(200).json({ accessToken, username: foundUser.username });
   } catch (error) {
     console.log(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Internal Server Error!' });
   }
 };
 
-// LOGOUT
+// SIGN_OUT
 
-export const logout = async (req: Request, res: Response) => {
+export const signOut = async (req: Request, res: Response) => {
   const cookie = req.cookies;
-  if (!cookie?.jwt) return res.sendStatus(403);
+  if (!cookie?.jwt)
+    return res.status(403).json({ message: 'Credentials Missing!' });
 
   const refreshToken = cookie?.jwt;
 
+  console.log(refreshToken);
   try {
     const foundUser = await User.findOne({ refreshToken });
 
-    const decodedCookieToken = jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string
-    );
-
-    if (foundUser) {
-      foundUser.refreshToken = foundUser.refreshToken.filter(
-        (token) => token !== refreshToken
-      );
-      await foundUser.save();
+    if (!foundUser) {
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+      return res.status(204).json({ message: 'Clear!' });
     }
+    foundUser.refreshToken = foundUser.refreshToken.filter(
+      (token) => token !== refreshToken
+    );
+    await foundUser.save();
 
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
-    res.sendStatus(204);
+    res.status(204).json({ message: 'Clear!' });
   } catch (error) {
-    res.sendStatus(500);
+    console.log(error);
+    res.status(500).json({ message: 'Internal Server Error!' });
   }
 };

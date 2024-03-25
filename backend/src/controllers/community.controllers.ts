@@ -9,7 +9,8 @@ export const createCommunity = async (req: Request, res: Response) => {
     return res.status(400).json({ message: errors.array() });
   }
 
-  const { name, description, imageUrls, userId, rule } = req.body;
+  const { username, communityName, description, imageUrls, userId, rule } =
+    req.body;
 
   try {
     const newCommunity: CommunityTypes = req.body;
@@ -25,12 +26,16 @@ export const createCommunity = async (req: Request, res: Response) => {
 
     // newCommunity.avatar = imageUrl;
     // newCommunity.userId = req.body.userId;
-    community = new Community(newCommunity);
-    community.save();
-    res.send({ message: 'success' });
-    // community.userId = req.body.userId;
 
-    // communit;'
+    community = new Community({
+      author: username,
+      name: communityName,
+      description: description,
+      rule: rule,
+    });
+    community.save();
+
+    res.send({ message: 'success' });
   } catch (error) {
     console.log(error);
   }

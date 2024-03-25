@@ -22,10 +22,10 @@ app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use('/server-status', serverStatusRouter);
+app.use('/refresh', refreshRouter);
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
-app.use('/refresh', refreshRouter);
 app.use('/api/community', communityRouter);
 
 app.listen(process.env.SERVER_PORT, () => {

@@ -1,7 +1,7 @@
-import { AppDispatch, RootState } from '@/store/store';
+import { AppDispatch, RootState } from '@/global/_store';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { showToast } from '@/store/toastSlice';
+import { showToast } from '@/global/toastSlice';
 
 const Toast = () => {
   const dispatch = useDispatch<AppDispatch>();

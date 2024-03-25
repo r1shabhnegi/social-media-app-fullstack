@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-export const register = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -42,7 +42,7 @@ export const register = async (req: Request, res: Response) => {
       maxAge: 259200000,
     });
 
-    res.status(200).send({ message: 'User Registered Successfully!' });
+    res.status(200).send({ message: 'User Sign Up Successful!' });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: 'Something Went Wrong!' });

@@ -4,8 +4,8 @@ import {
   createApi,
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../store/authSlice';
-import { RootState } from '@/store/store';
+import { setCredentials, setLogout } from '../global/authSlice';
+import { RootState } from '@/global/_store';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${import.meta.env.VITE_API_BASE_URL}`,
@@ -35,7 +35,7 @@ const baseQueryAuthRF = async (
       );
       result = await baseQuery(args, api, extraOptions);
     } else {
-      api.dispatch(logout());
+      api.dispatch(setLogout());
     }
   }
   return result;

@@ -10,7 +10,7 @@ export const refreshToken = async (req: Request, res: Response) => {
   const cookie = req.cookies;
 
   if (!cookie?.jwt) {
-    return res.status(403).json({ message: 'Invalid' });
+    return res.status(403).json({ message: 'Invalid Cookie!' });
   }
 
   const refreshToken = cookie.jwt;

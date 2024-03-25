@@ -1,17 +1,12 @@
 import { Router } from 'express';
-import { login, logout } from '../controllers/auth.controllers';
+import { signIn, signOut } from '../controllers/auth.controllers';
 import { body } from 'express-validator';
 import { verifyJwt } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.post(
-  '/login',
-  // verifyJwt,
+router.post('/sign-in', signIn);
 
-  login
-);
-
-router.get('/logout', logout);
+router.post('/sign-out', signOut);
 
 export default router;

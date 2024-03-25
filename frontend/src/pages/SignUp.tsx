@@ -1,23 +1,32 @@
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { showToast } from '@/store/toastSlice';
-import { AppDispatch } from '@/store/store';
+import { showToast } from '@/global/toastSlice';
+import { AppDispatch } from '@/global/_store';
+import { useSignUpMutation } from '@/api/queries/authQuery';
+import { useEffect } from 'react';
 
-export type RegisterTypes = {
+export type SignUpTypes = {
   name: string;
   username: string;
   email: string;
   password: string;
 };
 
-const Register = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { register, handleSubmit } = useForm<RegisterTypes>();
+  const { register, handleSubmit } = useForm<SignUpTypes>();
+  const [SignUp, { isSuccess }] = useSignUpMutation();
 
-  const onSubmit = handleSubmit((formData) => {
-    console.log(formData);
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(showToast({ message: 'Sign Up Successful!', type: 'SUCCESS' }));
+    }
+  }, [isSuccess, dispatch]);
+
+  const onSubmit = handleSubmit((formData: SignUpTypes) => {
+    SignUp(formData);
   });
 
   return (
@@ -26,7 +35,7 @@ const Register = () => {
         className='flex flex-col gap-5'
         onSubmit={onSubmit}>
         <h1 className='pb-10 text-3xl font-semibold text-gray-600'>
-          Register User
+          Sign Up User
         </h1>
 
         <div className='flex flex-col gap-5 md:flex-row'>
@@ -81,7 +90,7 @@ const Register = () => {
             Submit
           </button>
           <p className='mt-1 text-sm md:text-base'>
-            Already Registered?
+            Already Signed Up?
             <span className='ml-1 font-semibold text-gray-700 underline hover:text-green-500'>
               <Link to='/sign-in'>Sign In</Link>
             </span>
@@ -91,4 +100,4 @@ const Register = () => {
     </div>
   );
 };
-export default Register;
+export default SignUp;

@@ -1,3 +1,4 @@
+import { url } from 'inspector';
 import { apiClient } from '../apiClient';
 
 export const apiRequests = apiClient.injectEndpoints({
@@ -8,25 +9,39 @@ export const apiRequests = apiClient.injectEndpoints({
     // REFRESH_TOKEN
     refreshToken: builder.query({ query: () => '/refresh' }),
 
-    // LOGIN
+    // SIGN_IN
     login: builder.mutation({
       query: (data) => ({
-        url: '/api/auth/login',
+        url: '/api/auth/sign-in',
         method: 'POST',
         body: { ...data },
       }),
     }),
 
-    // LOGOUT
-    logout: builder.query({
-      query: () => '/api/auth/logout',
+    // SIGN_UP
+    signUp: builder.mutation({
+      query: (data) => ({
+        url: '/api/user/sign-up',
+        method: 'POST',
+        body: { ...data },
+      }),
+    }),
+
+    // SIGN_OUT
+    logout: builder.mutation({
+      query: () => ({
+        url: '/api/auth/sign-out',
+        method: 'POST',
+        response: {},
+      }),
     }),
   }),
 });
 
 export const {
-  useLoginMutation,
-  useLogoutQuery,
+  useLogoutMutation,
   useServerStatusQuery,
   useRefreshTokenQuery,
+  useLoginMutation,
+  useSignUpMutation,
 } = apiRequests;

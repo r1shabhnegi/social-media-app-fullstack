@@ -1,11 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../api/queries/authQuery';
-import { showToast } from '@/store/toastSlice';
+import { showToast } from '@/global/toastSlice';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store/store';
-import { setCredentials } from '@/store/authSlice';
-import { useEffect } from 'react';
+import { AppDispatch } from '@/global/_store';
+import { setCredentials } from '@/global/authSlice';
+import Loading from '@/components/Loading';
 
 export type SignInTypes = {
   username: string;
@@ -16,29 +16,30 @@ const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm<SignInTypes>();
-  const [login, { isLoading, isSuccess, data }] = useLoginMutation();
+  const [login, { isLoading, isSuccess }] = useLoginMutation();
 
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(setCredentials({ ...data }));
-      dispatch(
-        showToast({ message: 'Sign In Successfully!', type: 'SUCCESS' })
-      );
+  const onSubmit = handleSubmit(async (formData) => {
+    try {
+      const user = await login(formData).unwrap();
       navigate('/');
+      dispatch(setCredentials({ ...user }));
+      dispatch(showToast({ message: 'Sign In Successful!', type: 'SUCCESS' }));
+    } catch (error) {
+      dispatch(showToast({ message: 'Sign In Failed!', type: 'ERROR' }));
     }
-  }, [data, dispatch, isSuccess, navigate]);
-
-  const onSubmit = handleSubmit((formData: SignInTypes) => {
-    login(formData);
   });
 
-  return (
+  if (isLoading) {
+    return <Loading isLoading={isLoading} />;
+  }
+
+  return !isSuccess ? (
     <div className='container px-16 py-20 sm:px-28 md:px-40 lg:px-56 xl:px-80'>
       <form
         className='flex flex-col gap-5'
         onSubmit={onSubmit}>
         <h1 className='pb-10 text-3xl font-semibold text-gray-600'>
-          Login user
+          Sign In User
         </h1>
 
         <label className='flex flex-col text-sm text-gray-700 md:text-md'>
@@ -80,12 +81,13 @@ const SignIn = () => {
           <p className='mt-1 text-md md:text-base'>
             Create an Account
             <span className='ml-1 font-semibold text-gray-700 underline hover:text-green-500'>
-              <Link to='/register'>Sign Up</Link>
+              <Link to='/sign-up'>Sign Up</Link>
             </span>
           </p>
         </div>
       </form>
     </div>
-  );
+  ) : null;
 };
+
 export default SignIn;
