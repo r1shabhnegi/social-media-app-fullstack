@@ -1,11 +1,13 @@
-import { CgProfile } from 'react-icons/cg';
-import { AiOutlineLogout } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '@/api/queries/authQuery';
 import { AppDispatch } from '@/global/_store';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '@/global/authSlice';
 import { showToast } from '@/global/toastSlice';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { IoIosLogOut } from 'react-icons/io';
+import { IoSettingsOutline } from 'react-icons/io5';
+
 const HeaderDropdown = ({ username }: { username: string | null }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -27,19 +29,34 @@ const HeaderDropdown = ({ username }: { username: string | null }) => {
   };
 
   return (
-    <div className='absolute w-48 p-4 bg-gray-100 rounded-md -right-1 drop-shadow-xl top-16'>
+    <div className='absolute z-50 w-60 p-4 bg-[#0f1a1c] rounded-md -right-1 drop-shadow-xl top-16 text-[#f2f2f1]'>
       <ul className='flex flex-col gap-6'>
         <li
           className='flex items-center gap-2 cursor-pointer'
           onClick={goToProfile}>
-          <CgProfile />
-          <p>Profile</p>
+          <span className='rounded-full'>
+            <Avatar className='size-8 sm:size-9'>
+              <AvatarImage src='https://github.com/r1shabhnegi.png' />
+              <AvatarFallback>RN</AvatarFallback>
+            </Avatar>
+          </span>
+
+          <span>
+            <p className='text-sm'>View Profile</p>
+            <p className='text-xs text-gray-400'>u/{username}</p>
+          </span>
         </li>
         <li
-          className='flex items-center gap-2 cursor-pointer'
+          className='flex items-center gap-3 pl-2 cursor-pointer'
           onClick={handleLogout}>
-          <AiOutlineLogout />
-          <p>Logout</p>
+          <IoSettingsOutline className='size-6' />
+          <p className='text-sm'>Settings</p>
+        </li>
+        <li
+          className='flex items-center gap-2 pl-2 cursor-pointer'
+          onClick={handleLogout}>
+          <IoIosLogOut className='size-7' />
+          <p className='text-sm'>Logout</p>
         </li>
       </ul>
     </div>

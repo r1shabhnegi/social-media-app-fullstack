@@ -12,6 +12,7 @@ import serverStatusRouter from './routes/serverStatus.routes';
 import { corsOptions } from './config/corsOption';
 import { credentials } from './middlewares/credentials.middleware';
 import { connectDb } from './config/db';
+import { verifyJwt } from './middlewares/auth.middleware';
 
 // Don't change the order //
 connectDb();
@@ -26,6 +27,8 @@ app.use('/refresh', refreshRouter);
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+
+// app.use(verifyJwt);
 app.use('/api/community', communityRouter);
 
 app.listen(process.env.SERVER_PORT, () => {

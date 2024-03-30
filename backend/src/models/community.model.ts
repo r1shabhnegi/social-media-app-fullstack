@@ -15,11 +15,6 @@ export type CommunityTypes = {
 
 const communitySchema = new mongoose.Schema<CommunityTypes>(
   {
-    // userId: {
-    //   type: Number,
-    //   // required: true,
-    // },
-
     author: {
       type: Schema.Types.ObjectId,
       ref: 'User',

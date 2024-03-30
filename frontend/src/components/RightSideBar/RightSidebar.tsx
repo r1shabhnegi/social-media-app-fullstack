@@ -2,7 +2,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const RightSidebar = () => {
   return (
-    <ScrollArea className='h-screen w-[20rem] bg-green-200 rounded-md border p-4 mr-5'>
+    <ScrollArea className='h-screen w-[20rem] bg-[#04090a] rounded-md p-4 mr-5'>
       dfadf Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit, hic?
       Exercitationem similique, voluptate veritatis unde quae porro neque
       eligendi odio rem quidem, ut ducimus quia inventore doloremque ratione
