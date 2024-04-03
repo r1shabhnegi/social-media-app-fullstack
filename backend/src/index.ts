@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -13,6 +13,8 @@ import { corsOptions } from './config/corsOption';
 import { credentials } from './middlewares/credentials.middleware';
 import { connectDb } from './config/db';
 import { verifyJwt } from './middlewares/auth.middleware';
+import { error } from 'console';
+import { handleErrors } from './middlewares/error.middleware';
 
 // Don't change the order //
 connectDb();
@@ -30,6 +32,9 @@ app.use('/api/user', userRouter);
 
 // app.use(verifyJwt);
 app.use('/api/community', communityRouter);
+
+// Error handler middleware
+app.use(handleErrors);
 
 app.listen(process.env.SERVER_PORT, () => {
   console.log('Connected on port:', process.env.SERVER_PORT);

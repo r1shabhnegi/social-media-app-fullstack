@@ -3,59 +3,115 @@ import { validationResult } from 'express-validator';
 import { Community, CommunityTypes } from '../models/community.model';
 import { uploadSingleImage } from '../config/cloudinary';
 import jwt from 'jsonwebtoken';
+import { ApiError } from '../utility/apiError';
+import {
+  COM_COOKIE_MISSING,
+  COM_ALREADY_EXISTS,
+  COM_INVALID_RF_TOKEN,
+  COM_NOT_FOUND,
+} from '../utility/errorConstants';
+import { tryCatch } from '../utility/tryCatch';
 
 interface decodedTypes {
-  username: string;
+  userId?: string;
 }
 
-export const createCommunity = async (req: Request, res: Response) => {
-  const { name } = req.params;
+// CREATE_COMMUNITY
 
+export const createCommunity = tryCatch(async (req: Request, res: Response) => {
   const cookies = req.cookies;
-
-  if (!cookies?.jwt) {
-    return res.status(403).json({ message: 'Invalid Credentials!' });
-  }
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ message: errors.array() });
-  // }
+  if (!cookies?.jwt)
+    throw new ApiError('cookie missing', COM_COOKIE_MISSING, 403);
 
   const refreshToken = cookies?.jwt;
 
-  const { name: communityName, description } = req.body;
+  const { name, description } = req.body;
 
-  try {
-    let community = await Community.findOne({
-      name: communityName,
-    });
-    if (community) {
-      return res.status(403).json({ message: 'Community Already Exists' });
-    }
-
-    const decodedToken: decodedTypes = jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string
-    ) as decodedTypes;
-
-    if (!decodedToken) {
-      return res.status(400).json({ message: 'User Invalidate!' });
-    }
-
-    // const imageUrl = uploadSingleImage(req.body.imageUrl);
-
-    // newCommunity.avatar = imageUrl;
-    // newCommunity.userId = req.body.userId;
-
-    community = new Community({
-      // author: decodedToken.username,
-      name: communityName,
-      description: description,
-    });
-    community.save();
-
-    res.status(200).json({ message: 'success' });
-  } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error!' });
+  let foundCommunity = await Community.findOne({ name });
+  if (foundCommunity) {
+    throw new ApiError('Community Already Exists', COM_ALREADY_EXISTS, 403);
   }
-};
+
+  const decodedToken = jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET as string
+  ) as decodedTypes;
+
+  if (!decodedToken) {
+    throw new ApiError('Refresh Token Invalid', COM_INVALID_RF_TOKEN, 401);
+  }
+
+  const newCommunity = new Community({
+    name,
+    description,
+    moderator: decodedToken.userId,
+    members: decodedToken.userId,
+  });
+  await newCommunity.save();
+
+  res.status(200).json({ message: 'success' });
+});
+
+// FIND_COMMUNITIES
+
+export const findBestCommunities = tryCatch(
+  async (req: Request, res: Response) => {
+    const pageCount = +req.params.pageCount;
+    const pageSize = 9;
+    const skipItems = pageCount * 9;
+    const foundCommunities = await Community.find()
+      .skip(skipItems)
+      .limit(pageSize)
+      .sort();
+
+    // .aggregate([
+    //   {
+    //     $group: {
+    //       _id: null,
+    //       maxMembers: {
+    //         $max: '$members',
+    //       },
+    //       groups: {
+    //         $push: '$$ROOT',
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $unwind: '$groups',
+    //   },
+    //   {
+    //     $sort: { 'groups.members': -1 },
+    //   },
+    //   {
+    //     $skip: skipItems,
+    //   },
+    //   {
+    //     $limit: pageSize,
+    //   },
+    //   {
+    //     $project: {
+    //       name: '$groups.name',
+    //       description: '$groups.description',
+    //       _id: '$groups._id',
+    //       author: '$groups.author',
+    //       members: '$groups.members',
+    //     },
+    //   },
+    // ]);
+
+    res.status(200).send(foundCommunities);
+  }
+);
+
+export const getCommunity = tryCatch(async (req: Request, res: Response) => {
+  console.log(req.params.name);
+  const communityName = req.params.name;
+
+  const foundCommunity = await Community.find({ name: communityName });
+  console.log(foundCommunity);
+
+  if (!foundCommunity)
+    throw new ApiError('Community not found!', COM_NOT_FOUND, 404);
+
+  res.status(200).send(foundCommunity);
+});

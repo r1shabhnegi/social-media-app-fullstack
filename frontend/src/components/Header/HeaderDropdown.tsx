@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '@/api/queries/authQuery';
-import { AppDispatch } from '@/global/_store';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '@/global/authSlice';
 import { showToast } from '@/global/toastSlice';
@@ -10,15 +9,19 @@ import { IoSettingsOutline } from 'react-icons/io5';
 
 const HeaderDropdown = ({ username }: { username: string | null }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     try {
-      await logout('').unwrap();
-      dispatch(setLogout());
-      dispatch(showToast({ message: 'Sign Out Successful!', type: 'SUCCESS' }));
-      navigate('/sign-in');
+      const loggedOut = await logout('').unwrap();
+      if (loggedOut) {
+        dispatch(setLogout());
+        dispatch(
+          showToast({ message: 'Sign Out Successful!', type: 'SUCCESS' })
+        );
+        navigate('/sign-in');
+      }
     } catch (error) {
       dispatch(showToast({ message: 'Error Signing Out!', type: 'ERROR' }));
     }

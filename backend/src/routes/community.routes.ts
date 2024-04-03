@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { createCommunity } from '../controllers/community.controllers';
+import {
+  getCommunity,
+  createCommunity,
+  findBestCommunities,
+} from '../controllers/community.controllers';
 import { check } from 'express-validator';
 import multer from 'multer';
 
@@ -14,10 +18,13 @@ const router = Router();
 // });
 
 router.post(
-  '/:name',
+  '/create',
   // [check('name', 'This field is required').isString()],
   // upload.array('imageUrls'),
   createCommunity
 );
 
+router.get('/findBestCommunities/:pageCount', findBestCommunities);
+
+router.get('/:name', getCommunity);
 export default router;

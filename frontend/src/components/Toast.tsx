@@ -27,7 +27,7 @@ const Toast = () => {
   if (message && type) {
     return (
       <span
-        className={`${bgType} fixed flex items-center justify-center px-6 py-5 text-xl font-bold text-gray-800  rounded-xl bottom-10 left-10`}>
+        className={`${bgType} z-50 fixed flex items-center justify-center px-6 py-5 text-xl font-bold text-gray-800  rounded-xl bottom-10 left-10`}>
         {message}
       </span>
     );

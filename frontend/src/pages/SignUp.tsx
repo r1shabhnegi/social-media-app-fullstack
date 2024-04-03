@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@/global/toastSlice';
 import { AppDispatch } from '@/global/_store';
-import { useSignUpMutation } from '@/api/queries/authQuery';
-import { useEffect } from 'react';
+import { useLoginMutation, useSignUpMutation } from '@/api/queries/authQuery';
+import { setCredentials } from '@/global/authSlice';
 
 export type SignUpTypes = {
   name: string;
@@ -17,16 +17,29 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm<SignUpTypes>();
-  const [SignUp, { isSuccess }] = useSignUpMutation();
+  const [SignUp, { isLoading: signUpLoading }] = useSignUpMutation();
+  const [login, { isLoading: signInLoading }] = useLoginMutation();
 
-  useEffect(() => {
-    if (isSuccess) {
+  const onSubmit = handleSubmit(async (formData: SignUpTypes) => {
+    try {
+      const createUser = await SignUp(formData).unwrap();
+      if (!createUser) throw new Error('Sign Up Failed!');
+
+      const signInUser = await login({
+        username: formData.username,
+        password: formData.password,
+      }).unwrap();
+
+      if (signInUser) {
+        navigate('/');
+        dispatch(setCredentials({ ...signInUser }));
+      } else {
+        throw new Error('Something went wrong maybe try Sign In!');
+      }
       dispatch(showToast({ message: 'Sign Up Successful!', type: 'SUCCESS' }));
+    } catch (error) {
+      dispatch(showToast({ message: error as string, type: 'ERROR' }));
     }
-  }, [isSuccess, dispatch]);
-
-  const onSubmit = handleSubmit((formData: SignUpTypes) => {
-    SignUp(formData);
   });
 
   return (
@@ -86,7 +99,8 @@ const SignUp = () => {
         <div>
           <button
             type='submit'
-            className='flex items-center justify-center w-full h-8 p-2 mt-6 font-semibold text-gray-700 bg-gray-300 rounded-lg md:h-10 hover:bg-gray-400'>
+            className='flex items-center justify-center w-full h-8 p-2 mt-6 font-semibold text-gray-700 bg-gray-300 rounded-lg md:h-10 hover:bg-gray-400'
+            disabled={signInLoading || signUpLoading}>
             Submit
           </button>
           <p className='mt-1 text-sm md:text-base'>

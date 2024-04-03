@@ -5,7 +5,7 @@ import { showToast } from '@/global/toastSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/global/_store';
 import { setCredentials } from '@/global/authSlice';
-import Loading from '@/components/Loading';
+// import Loading from '@/components/Loading';
 
 export type SignInTypes = {
   username: string;
@@ -16,24 +16,24 @@ const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit } = useForm<SignInTypes>();
-  const [login, { isLoading, isSuccess }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      const user = await login(formData).unwrap();
-      navigate('/');
-      dispatch(setCredentials({ ...user }));
-      dispatch(showToast({ message: 'Sign In Successful!', type: 'SUCCESS' }));
+      const signInUser = await login(formData).unwrap();
+      if (signInUser) {
+        navigate('/');
+        dispatch(setCredentials({ ...signInUser }));
+        dispatch(
+          showToast({ message: 'Sign In Successful!', type: 'SUCCESS' })
+        );
+      }
     } catch (error) {
       dispatch(showToast({ message: 'Sign In Failed!', type: 'ERROR' }));
     }
   });
 
-  if (isLoading) {
-    return <Loading isLoading={isLoading} />;
-  }
-
-  return !isSuccess ? (
+  return (
     <div className='container px-16 py-20 sm:px-28 md:px-40 lg:px-56 xl:px-80'>
       <form
         className='flex flex-col gap-5'
@@ -87,7 +87,7 @@ const SignIn = () => {
         </div>
       </form>
     </div>
-  ) : null;
+  );
 };
 
 export default SignIn;

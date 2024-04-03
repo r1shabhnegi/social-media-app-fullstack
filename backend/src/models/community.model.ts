@@ -24,6 +24,7 @@ const communitySchema = new mongoose.Schema<CommunityTypes>(
       unique: true,
       required: true,
       trim: true,
+      lowercase: true,
     },
     avatar: {
       type: String,

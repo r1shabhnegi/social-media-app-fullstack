@@ -1,12 +1,11 @@
 import React, { ReactElement } from 'react';
 import SignIn from './pages/SignIn';
 import Home from './pages/Home';
-import CommunityCreate from './pages/CommunityCreate';
 import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 import Submit from './pages/Submit';
 import FindCommunities from './pages/FindCommunities';
-import communityPage from './pages/communityPage';
+import communityPage from './pages/CommunityPage';
 
 export const publicRoutes: { path: string; element: ReactElement }[] = [
   {
@@ -24,11 +23,6 @@ export const publicRoutes: { path: string; element: ReactElement }[] = [
 ];
 
 export const privateRoutes: { path: string; element: ReactElement }[] = [
-  {
-    path: '/create/community',
-    element: React.createElement(CommunityCreate),
-  },
-
   {
     path: '/profile/:username',
     element: React.createElement(Profile),

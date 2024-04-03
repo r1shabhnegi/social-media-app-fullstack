@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { MdOutlineCancel } from 'react-icons/md';
-import { useCreateCommunityMutation } from '@/api/queries/community';
+import { useCreateCommunityMutation } from '@/api/queries/communityQuery';
 import { useNavigate } from 'react-router-dom';
 import { showToast } from '@/global/toastSlice';
 import { useDispatch } from 'react-redux';
@@ -20,23 +20,30 @@ const CreateCommunity = ({ cancelBtn }: { cancelBtn: () => void }) => {
     register,
     handleSubmit,
     formState: { errors },
-    // reset,
   } = useForm<CreateCommunityTypes>();
 
-  const [CreateCommunity, { isSuccess, error }] = useCreateCommunityMutation();
+  const [CreateCommunity] = useCreateCommunityMutation();
 
   const onSubmit = handleSubmit(async (formData: CreateCommunityTypes) => {
-    await CreateCommunity(formData);
-    if (isSuccess) {
-      // reset();
-      navigate(`/community/${formData.name}`);
-      console.log('success');
-    }
-    console.log(isSuccess);
-    // console.log(isError);
-    if (!isSuccess) {
-      // dispatch(showToast({ message: error.data, type: 'ERROR' }));
-      console.log(error);
+    try {
+      const res = await CreateCommunity(formData).unwrap();
+      if (res) {
+        cancelBtn();
+        dispatch(
+          showToast({
+            message: 'Community Created Successfully!',
+            type: 'SUCCESS',
+          })
+        );
+        navigate(`/community/${formData.name}`);
+      }
+    } catch (error) {
+      dispatch(
+        showToast({
+          message: 'Community already exists or Something went wrong',
+          type: 'ERROR',
+        })
+      );
     }
   });
 
