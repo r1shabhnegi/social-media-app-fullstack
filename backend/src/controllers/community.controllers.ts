@@ -46,6 +46,7 @@ export const createCommunity = tryCatch(async (req: Request, res: Response) => {
     description,
     moderator: decodedToken.userId,
     members: decodedToken.userId,
+    author: decodedToken.userId,
   });
   await newCommunity.save();
 

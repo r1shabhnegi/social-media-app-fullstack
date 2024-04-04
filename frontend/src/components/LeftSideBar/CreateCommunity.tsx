@@ -70,6 +70,11 @@ const CreateCommunity = ({ cancelBtn }: { cancelBtn: () => void }) => {
             <Input
               {...register('name', {
                 required: 'This field is required',
+                validate: (value) => {
+                  if (value !== value.toLowerCase()) {
+                    return 'The name must be in lowercase.';
+                  }
+                },
               })}
               className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none'
               placeholder='Name should be unique.'
@@ -96,7 +101,9 @@ const CreateCommunity = ({ cancelBtn }: { cancelBtn: () => void }) => {
             onClick={cancelBtn}>
             Cancel
           </button>
-          <button className='px-5 py-3 bg-[#0045ac] rounded-2xl'>Create</button>
+          <button className='px-5 py-3 bg-[#0045ac] hover:bg-[#0079d3] rounded-2xl'>
+            Create
+          </button>
         </div>
       </form>
     </div>

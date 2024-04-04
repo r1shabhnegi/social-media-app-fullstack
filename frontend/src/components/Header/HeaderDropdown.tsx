@@ -14,7 +14,7 @@ const HeaderDropdown = ({ username }: { username: string | null }) => {
 
   const handleLogout = async () => {
     try {
-      const loggedOut = await logout('').unwrap();
+      const loggedOut = await logout('');
       if (loggedOut) {
         dispatch(setLogout());
         dispatch(

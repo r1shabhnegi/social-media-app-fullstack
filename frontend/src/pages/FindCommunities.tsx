@@ -20,6 +20,8 @@ const FindCommunities = () => {
     `${page}`
   );
 
+  console.log(data);
+
   if (isLoading || isFetching) {
     return <Loading isLoading={isLoading || isFetching} />;
   }
@@ -40,11 +42,13 @@ const FindCommunities = () => {
                   avatar,
                   description,
                   _id: id,
+                  author,
                 }: {
                   name: string;
                   avatar: string;
                   description: string;
                   _id: string;
+                  author: string;
                 },
                 index: number
               ) => (
@@ -56,6 +60,7 @@ const FindCommunities = () => {
                     avatar={avatar}
                     description={description}
                     id={id}
+                    author={author}
                     index={index + page * 9}
                   />
                 </Link>

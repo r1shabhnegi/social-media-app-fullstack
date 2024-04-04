@@ -83,5 +83,5 @@ export const refreshToken = tryCatch(async (req: Request, res: Response) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
 
-  res.json({ accessToken, username: foundUser.username });
+  res.json({ accessToken, username: foundUser.username, userId: foundUser._id });
 });

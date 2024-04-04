@@ -8,10 +8,12 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: { ...data },
       }),
+      invalidatesTags: ['findBestCommunities'],
     }),
 
     findBestCommunities: builder.query({
       query: (pageCount) => `/api/community/findBestCommunities/${pageCount}`,
+      providesTags: ['findBestCommunities'],
     }),
 
     communityPage: builder.query({

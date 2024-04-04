@@ -1,4 +1,6 @@
 import { useCommunityPageQuery } from '@/api/queries/communityQuery';
+import AvatarAndOptions from '@/components/CommunityPage/AvatarAndOptions';
+import CommunityBanner from '@/components/CommunityPage/CommunityBanner';
 import { useParams } from 'react-router-dom';
 
 const CommunityPage = () => {
@@ -8,6 +10,11 @@ const CommunityPage = () => {
   console.log(data);
 
   console.log(name);
-  return <div className='mx-24 bg-gray-100'>sd</div>;
+  return (
+    <div className=''>
+      <CommunityBanner />
+      <AvatarAndOptions />
+    </div>
+  );
 };
 export default CommunityPage;

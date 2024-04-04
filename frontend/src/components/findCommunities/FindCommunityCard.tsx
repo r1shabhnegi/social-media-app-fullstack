@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/global/_store';
 
 const FindCommunityCard = ({
   name,
@@ -7,13 +9,19 @@ const FindCommunityCard = ({
   description,
   id,
   index,
+  author,
 }: {
   name: string;
   avatar: string;
   description: string;
   id: string;
   index: number;
+  author: string;
 }) => {
+  console.log(author);
+  const { userId } = useSelector((state: RootState) => state.auth);
+  const isMod = author === userId;
+
   return (
     <span className='flex items-center gap-4 p-2 mb-16 w-96'>
       <p>{index + 1}</p>
@@ -25,7 +33,15 @@ const FindCommunityCard = ({
           </AvatarFallback>
         </Avatar>
         <span>
-          <h2>{name}</h2>
+          <span className='flex items-center justify-between pr-4'>
+            <h2>{name}</h2>
+            <p
+              className={`${
+                !isMod && 'hidden'
+              } px-[.2rem] text-xs bg-orange-700 `}>
+              MOD
+            </p>
+          </span>
           <p className='w-full text-sm text-[#6f7c71] line-clamp-1'>
             {description}
           </p>
