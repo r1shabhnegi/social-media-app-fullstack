@@ -7,6 +7,7 @@ import { MdGroups3 } from 'react-icons/md';
 import { IoAdd } from 'react-icons/io5';
 import { useState } from 'react';
 import CreateCommunity from './CreateCommunity';
+import CommunitiesList from './CommunitiesList';
 
 const LeftSideBar = () => {
   const [showCommunityCreate, setShowCommunityCreate] =
@@ -49,8 +50,12 @@ const LeftSideBar = () => {
           <p className='flex flex-col p-2 text-[0.8rem] px-5 text-gray-400'>
             COMMUNITIES
           </p>
+          <span>
+            <CommunitiesList />
+          </span>
         </span>
       </span>
+
       {showCommunityCreate && (
         <CreateCommunity
           cancelBtn={() => setShowCommunityCreate(!showCommunityCreate)}

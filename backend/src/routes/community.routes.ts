@@ -2,7 +2,9 @@ import { Router } from 'express';
 import {
   getCommunity,
   createCommunity,
-  findBestCommunities,
+  findCommunities,
+  joinCommunity,
+  getCommunities,
 } from '../controllers/community.controllers';
 import { check } from 'express-validator';
 import multer from 'multer';
@@ -24,7 +26,11 @@ router.post(
   createCommunity
 );
 
-router.get('/findBestCommunities/:pageCount', findBestCommunities);
+router.get('/findCommunities/:pageCount', findCommunities);
 
-router.get('/:name', getCommunity);
+router.get('getCommunity', getCommunity);
+
+router.post('/joinCommunity', joinCommunity);
+
+router.get('/getUserCommunitiesList', getCommunities);
 export default router;

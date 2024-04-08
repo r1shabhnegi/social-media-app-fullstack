@@ -55,64 +55,99 @@ export const createCommunity = tryCatch(async (req: Request, res: Response) => {
 
 // FIND_COMMUNITIES
 
-export const findBestCommunities = tryCatch(
-  async (req: Request, res: Response) => {
-    const pageCount = +req.params.pageCount;
-    const pageSize = 9;
-    const skipItems = pageCount * 9;
-    const foundCommunities = await Community.find()
-      .skip(skipItems)
-      .limit(pageSize)
-      .sort();
+export const findCommunities = tryCatch(async (req: Request, res: Response) => {
+  const pageCount = +req.params.pageCount;
+  const pageSize = 9;
+  const skipItems = pageCount * 9;
+  const foundCommunities = await Community.find()
+    .skip(skipItems)
+    .limit(pageSize)
+    .sort();
 
-    // .aggregate([
-    //   {
-    //     $group: {
-    //       _id: null,
-    //       maxMembers: {
-    //         $max: '$members',
-    //       },
-    //       groups: {
-    //         $push: '$$ROOT',
-    //       },
-    //     },
-    //   },
-    //   {
-    //     $unwind: '$groups',
-    //   },
-    //   {
-    //     $sort: { 'groups.members': -1 },
-    //   },
-    //   {
-    //     $skip: skipItems,
-    //   },
-    //   {
-    //     $limit: pageSize,
-    //   },
-    //   {
-    //     $project: {
-    //       name: '$groups.name',
-    //       description: '$groups.description',
-    //       _id: '$groups._id',
-    //       author: '$groups.author',
-    //       members: '$groups.members',
-    //     },
-    //   },
-    // ]);
+  // .aggregate([
+  //   {
+  //     $group: {
+  //       _id: null,
+  //       maxMembers: {
+  //         $max: '$members',
+  //       },
+  //       groups: {
+  //         $push: '$$ROOT',
+  //       },
+  //     },
+  //   },
+  //   {
+  //     $unwind: '$groups',
+  //   },
+  //   {
+  //     $sort: { 'groups.members': -1 },
+  //   },
+  //   {
+  //     $skip: skipItems,
+  //   },
+  //   {
+  //     $limit: pageSize,
+  //   },
+  //   {
+  //     $project: {
+  //       name: '$groups.name',
+  //       description: '$groups.description',
+  //       _id: '$groups._id',
+  //       author: '$groups.author',
+  //       members: '$groups.members',
+  //     },
+  //   },
+  // ]);
 
-    res.status(200).send(foundCommunities);
-  }
-);
+  res.status(200).send(foundCommunities);
+});
 
 export const getCommunity = tryCatch(async (req: Request, res: Response) => {
-  console.log(req.params.name);
   const communityName = req.params.name;
 
   const foundCommunity = await Community.find({ name: communityName });
-  console.log(foundCommunity);
+  // console.log(foundCommunity);
 
   if (!foundCommunity)
     throw new ApiError('Community not found!', COM_NOT_FOUND, 404);
 
   res.status(200).send(foundCommunity);
+});
+
+export const joinCommunity = tryCatch(async (req: Request, res: Response) => {
+  // console.log(req.body);
+  const { communityName, userId } = req.body;
+
+  const community = await Community.findOneAndUpdate(
+    {
+      name: communityName,
+    },
+    {
+      $push: {
+        members: userId,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!community) throw new ApiError('Not Joined', 907, 403);
+
+  res.status(200).json({ message: 'done' });
+});
+
+export const getCommunities = tryCatch(async (req: Request, res: Response) => {
+  const userId = req.userId;
+  console.log(userId);
+
+  const communities = await Community.find({
+    members: {
+      $in: [userId],
+    },
+  })
+    .select('name _id')
+    .lean();
+
+  res.status(200).send(communities);
 });

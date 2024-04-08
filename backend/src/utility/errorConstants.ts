@@ -11,6 +11,7 @@ export const COM_ALREADY_EXISTS = 903; //403
 export const COM_INVALID_RF_TOKEN = 905; //401
 export const COM_INVALID_AC_TOKEN = 906; //403
 export const COM_NOT_FOUND = 901; //404
+export const COM_NOT_JOINED = 907; //403
 
 // USER_CONTROLLER
 export const USER_ALREADY_EXISTS = 701; //403

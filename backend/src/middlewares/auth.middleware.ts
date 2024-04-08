@@ -4,13 +4,13 @@ import Jwt from 'jsonwebtoken';
 declare global {
   namespace Express {
     interface Request {
-      username: string;
+      userId: string;
     }
   }
 }
 
 interface decodedTypes {
-  username: string;
+  userId: string;
 }
 
 export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
@@ -30,6 +30,6 @@ export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
   if (!decodedAccessToken)
     res.status(403).json({ message: 'Invalid Credentials!' });
 
-  req.username = decodedAccessToken.username;
+  req.userId = decodedAccessToken.userId;
   next();
 };

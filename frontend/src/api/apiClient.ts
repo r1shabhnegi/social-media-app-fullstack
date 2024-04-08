@@ -13,7 +13,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).auth.accessToken;
     if (accessToken) {
-      headers.set('authorization', `Bearer ${accessToken}`);
+      headers.set('Authorization', `Bearer ${accessToken}`);
     }
     return headers;
   },
@@ -29,10 +29,7 @@ const baseQueryAuthRF = async (
   if (result.error?.status === 403) {
     const refreshResult = await baseQuery('/refresh', api, extraOptions);
     if (refreshResult?.data) {
-      const username = (api.getState() as RootState).auth.username;
-      api.dispatch(
-        setCredentials(setCredentials({ ...refreshResult.data, username }))
-      );
+      api.dispatch(setCredentials({ ...refreshResult.data }));
       result = await baseQuery(args, api, extraOptions);
     } else {
       api.dispatch(setLogout());

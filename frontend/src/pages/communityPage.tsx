@@ -1,19 +1,43 @@
-import { useCommunityPageQuery } from '@/api/queries/communityQuery';
+import { useGetCommunityMutation } from '@/api/queries/communityQuery';
 import AvatarAndOptions from '@/components/CommunityPage/AvatarAndOptions';
 import CommunityBanner from '@/components/CommunityPage/CommunityBanner';
+import Loading from '@/components/Loading';
+import { RootState } from '@/global/_store';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 const CommunityPage = () => {
-  const { name } = useParams();
+  const { name: communityName } = useParams();
 
-  const { data } = useCommunityPageQuery(`${name}`);
-  console.log(data);
+  const { userId } = useSelector((state: RootState) => state.auth);
 
-  console.log(name);
+  const [getCommunity, { data, isLoading, isError, isSuccess }] =
+    useGetCommunityMutation();
+
+  useEffect(() => {
+    function fetch() {
+      getCommunity({ communityName });
+    }
+    fetch();
+  }, []);
+
+  let community;
+  let isMod;
+  if (data) {
+    community = data[0];
+    isMod = userId === community.author;
+  }
+  console.log(community);
+  if (isLoading) return <Loading isLoading={isLoading} />;
   return (
     <div className=''>
       <CommunityBanner />
-      <AvatarAndOptions />
+      <AvatarAndOptions
+        isMod={isMod}
+        communityName={communityName}
+        userId={userId}
+      />
     </div>
   );
 };

@@ -2,9 +2,26 @@ import { IoAdd } from 'react-icons/io5';
 import { RxDotsHorizontal } from 'react-icons/rx';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useParams } from 'react-router-dom';
-const AvatarAndOptions = () => {
+import { useJoinCommunityMutation } from '@/api/queries/communityQuery';
+// import Loading from '../Loading';
+
+const AvatarAndOptions = ({
+  isMod,
+  communityName,
+  userId,
+}: {
+  isMod?: boolean;
+  communityName?: string;
+  userId: string | null;
+}) => {
   const { name } = useParams();
-  //   console.log(name);
+
+  const [joinCommunity] = useJoinCommunityMutation();
+  const handleJoinCommunity = async () => {
+    const res = await joinCommunity({ communityName, userId });
+    console.log(res);
+  };
+
   return (
     <div className='max-w-[67rem] justify-between h-24 bg-re-300 mx-auto -mt-12 flex items-end'>
       <span className='flex items-end gap-4'>
@@ -19,7 +36,11 @@ const AvatarAndOptions = () => {
           <IoAdd className='size-7 ' />
           Create a post
         </button>
-        <button className='bg-[#0045ac] hover:bg-[#0079d3] rounded-full font-bold py-2 px-3'>
+        <button
+          className={`${
+            isMod && 'hidden'
+          } bg-[#0045ac] hover:bg-[#0079d3] rounded-full font-bold py-2 px-3`}
+          onClick={handleJoinCommunity}>
           Join
         </button>
         <button className='flex items-center justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100'>

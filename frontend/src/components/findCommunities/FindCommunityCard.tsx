@@ -18,7 +18,6 @@ const FindCommunityCard = ({
   index: number;
   author: string;
 }) => {
-  console.log(author);
   const { userId } = useSelector((state: RootState) => state.auth);
   const isMod = author === userId;
 

@@ -13,7 +13,6 @@ import { corsOptions } from './config/corsOption';
 import { credentials } from './middlewares/credentials.middleware';
 import { connectDb } from './config/db';
 import { verifyJwt } from './middlewares/auth.middleware';
-import { error } from 'console';
 import { handleErrors } from './middlewares/error.middleware';
 
 // Don't change the order //
@@ -30,7 +29,7 @@ app.use('/refresh', refreshRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
-// app.use(verifyJwt);
+app.use(verifyJwt);
 app.use('/api/community', communityRouter);
 
 // Error handler middleware

@@ -15,6 +15,8 @@ const PersistentUser = ({ children }: { children: React.ReactNode }) => {
     }
   }, [dispatch, data, isSuccess]);
 
+  
+
   return isLoading ? <Loading isLoading={isLoading} /> : children;
 };
 export default PersistentUser;
