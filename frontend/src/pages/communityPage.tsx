@@ -9,27 +9,27 @@ import { useParams } from 'react-router-dom';
 
 const CommunityPage = () => {
   const { name: communityName } = useParams();
-
   const { userId } = useSelector((state: RootState) => state.auth);
 
-  const [getCommunity, { data, isLoading, isError, isSuccess }] =
-    useGetCommunityMutation();
+  const [getCommunity, { data, isLoading }] = useGetCommunityMutation();
 
   useEffect(() => {
-    function fetch() {
-      getCommunity({ communityName });
+    async function fetch() {
+      await getCommunity({ communityName });
     }
     fetch();
-  }, []);
+  }, [communityName, getCommunity]);
 
   let community;
   let isMod;
+
   if (data) {
     community = data[0];
-    isMod = userId === community.author;
+    isMod = userId === community?.author;
   }
   console.log(community);
   if (isLoading) return <Loading isLoading={isLoading} />;
+
   return (
     <div className=''>
       <CommunityBanner />

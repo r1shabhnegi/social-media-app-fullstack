@@ -5,9 +5,11 @@ import {
   findCommunities,
   joinCommunity,
   getCommunities,
+  leaveCommunity,
 } from '../controllers/community.controllers';
 import { check } from 'express-validator';
 import multer from 'multer';
+import { verifyJwt } from '../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -19,18 +21,12 @@ const router = Router();
 //   },
 // });
 
-router.post(
-  '/create',
-  // [check('name', 'This field is required').isString()],
-  // upload.array('imageUrls'),
-  createCommunity
-);
-
+// [check('name', 'This field is required').isString()],
+// upload.array('imageUrls'),
+router.post('/create', createCommunity);
 router.get('/findCommunities/:pageCount', findCommunities);
-
-router.get('getCommunity', getCommunity);
-
-router.post('/joinCommunity', joinCommunity);
-
-router.get('/getUserCommunitiesList', getCommunities);
+router.post('/getCommunity', getCommunity);
+router.post('/joinCommunity', verifyJwt, joinCommunity);
+router.post('/leaveCommunity', verifyJwt, leaveCommunity);
+router.get('/getUserCommunitiesList', verifyJwt, getCommunities);
 export default router;

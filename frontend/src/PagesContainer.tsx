@@ -7,6 +7,7 @@ import {
   privateIndependentPageRoutes,
 } from './routes';
 import ProtectedRoutes from './ProtectedRoutes';
+import Header from './components/Header/Header';
 
 const PagesContainer = () => {
   return (
@@ -37,6 +38,7 @@ const PagesContainer = () => {
           element={element}
         />
       ))}
+
       <Route element={<ProtectedRoutes />}>
         {privateIndependentPageRoutes.map(({ path, element }) => (
           <Route

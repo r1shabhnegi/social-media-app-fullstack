@@ -103,10 +103,9 @@ export const findCommunities = tryCatch(async (req: Request, res: Response) => {
 });
 
 export const getCommunity = tryCatch(async (req: Request, res: Response) => {
-  const communityName = req.params.name;
+  const { communityName } = req.body;
 
-  const foundCommunity = await Community.find({ name: communityName });
-  // console.log(foundCommunity);
+  const foundCommunity = await Community.findOne({ name: communityName });
 
   if (!foundCommunity)
     throw new ApiError('Community not found!', COM_NOT_FOUND, 404);
@@ -115,7 +114,6 @@ export const getCommunity = tryCatch(async (req: Request, res: Response) => {
 });
 
 export const joinCommunity = tryCatch(async (req: Request, res: Response) => {
-  // console.log(req.body);
   const { communityName, userId } = req.body;
 
   const community = await Community.findOneAndUpdate(
@@ -133,6 +131,28 @@ export const joinCommunity = tryCatch(async (req: Request, res: Response) => {
   );
 
   if (!community) throw new ApiError('Not Joined', 907, 403);
+
+  res.status(200).json({ message: 'done' });
+});
+
+export const leaveCommunity = tryCatch(async (req: Request, res: Response) => {
+  const { communityName, userId } = req.body;
+
+  const community = await Community.findOneAndUpdate(
+    {
+      name: communityName,
+    },
+    {
+      $pull: {
+        members: userId,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!community) throw new ApiError('haven"t left', 907, 403);
 
   res.status(200).json({ message: 'done' });
 });

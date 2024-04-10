@@ -22,7 +22,7 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: { ...data },
       }),
-      providesTags: ['communityPage'],
+      providesTags: ['getCommunity'],
     }),
 
     joinCommunity: builder.mutation({
@@ -31,19 +31,30 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: { ...data },
       }),
-      invalidatesTags: ['communityPage'],
+      invalidatesTags: ['getCommunity', 'getUserCommunities'],
+    }),
+
+    leaveCommunity: builder.mutation({
+      query: (data) => ({
+        url: '/api/community/leaveCommunity',
+        method: 'POST',
+        body: { ...data },
+      }),
+      invalidatesTags: ['getCommunity', 'getUserCommunities'],
     }),
 
     getUserCommunities: builder.query({
       query: () => '/api/community/getUserCommunitiesList',
+      providesTags: ['getUserCommunities'],
     }),
   }),
 });
 
 export const {
   useCreateCommunityMutation,
-  useFindCommunitiesQuery,
   useGetCommunityMutation,
   useJoinCommunityMutation,
   useLazyGetUserCommunitiesQuery,
+  useLeaveCommunityMutation,
+  useFindCommunitiesQuery,
 } = apiRequests;

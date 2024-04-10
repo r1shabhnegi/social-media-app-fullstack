@@ -1,5 +1,5 @@
 import { useFindCommunitiesQuery } from '@/api/queries/communityQuery';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import {
   Pagination,
@@ -13,26 +13,14 @@ import {
 import FindCommunityCard from '@/components/findCommunities/FindCommunityCard';
 import Loading from '@/components/Loading';
 import { Link } from 'react-router-dom';
-import { RootState } from '@/global/_store';
-import { useSelector } from 'react-redux';
 
 const FindCommunities = () => {
   const [page, setPage] = useState(0);
-  // const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-
-  // const [refetch, { isLoading, data }] = useLazyFindBestCommunitiesQuery();
-
-  // useEffect(() => {
-  //   if (accessToken) {
-  //     refetch(`${page}`);
-  //   }
-  // }, [accessToken, page, refetch]);
-
-  // if (isLoading) {
-  //   return <Loading isLoading={isLoading} />;
-  // }
-
   const { data, isLoading } = useFindCommunitiesQuery(`${page}`);
+
+  if (isLoading) {
+    return <Loading isLoading={isLoading} />;
+  }
 
   return (
     <div className='flex flex-col mx-16'>

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';

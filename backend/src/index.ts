@@ -29,7 +29,6 @@ app.use('/refresh', refreshRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
-app.use(verifyJwt);
 app.use('/api/community', communityRouter);
 
 // Error handler middleware
