@@ -65,7 +65,7 @@ const Header = () => {
         <input
           type='text'
           placeholder='Search...'
-          className='w-full p-1 text-sm mr-2 outline-none bg-[#1a282d]'
+          className='w-full p-1 text-sm mr-2 outline-none text-[#f2f2f1] bg-[#1a282d]'
         />
       </span>
 

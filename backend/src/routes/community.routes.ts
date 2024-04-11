@@ -25,7 +25,7 @@ const router = Router();
 // upload.array('imageUrls'),
 router.post('/create', createCommunity);
 router.get('/findCommunities/:pageCount', findCommunities);
-router.post('/getCommunity', getCommunity);
+router.get('/getCommunity/:name', getCommunity);
 router.post('/joinCommunity', verifyJwt, joinCommunity);
 router.post('/leaveCommunity', verifyJwt, leaveCommunity);
 router.get('/getUserCommunitiesList', verifyJwt, getCommunities);

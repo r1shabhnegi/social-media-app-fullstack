@@ -103,9 +103,9 @@ export const findCommunities = tryCatch(async (req: Request, res: Response) => {
 });
 
 export const getCommunity = tryCatch(async (req: Request, res: Response) => {
-  const { communityName } = req.body;
+  const { name } = req.params;
 
-  const foundCommunity = await Community.findOne({ name: communityName });
+  const foundCommunity = await Community.findOne({ name });
 
   if (!foundCommunity)
     throw new ApiError('Community not found!', COM_NOT_FOUND, 404);
@@ -165,9 +165,7 @@ export const getCommunities = tryCatch(async (req: Request, res: Response) => {
     members: {
       $in: [userId],
     },
-  })
-    .select('name _id')
-    .lean();
+  }).lean();
 
   res.status(200).send(communities);
 });

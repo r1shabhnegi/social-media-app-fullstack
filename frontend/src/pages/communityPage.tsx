@@ -1,4 +1,7 @@
-import { useGetCommunityMutation } from '@/api/queries/communityQuery';
+import {
+  useGetCommunityMutation,
+  useGetCommunityQuery,
+} from '@/api/queries/communityQuery';
 import AvatarAndOptions from '@/components/CommunityPage/AvatarAndOptions';
 import CommunityBanner from '@/components/CommunityPage/CommunityBanner';
 import Loading from '@/components/Loading';
@@ -11,23 +14,10 @@ const CommunityPage = () => {
   const { name: communityName } = useParams();
   const { userId } = useSelector((state: RootState) => state.auth);
 
-  const [getCommunity, { data, isLoading }] = useGetCommunityMutation();
+  const { data, isLoading } = useGetCommunityQuery(`${communityName}`);
 
-  useEffect(() => {
-    async function fetch() {
-      await getCommunity({ communityName });
-    }
-    fetch();
-  }, [communityName, getCommunity]);
+  const isMod = userId === data?.author;
 
-  let community;
-  let isMod;
-
-  if (data) {
-    community = data[0];
-    isMod = userId === community?.author;
-  }
-  console.log(community);
   if (isLoading) return <Loading isLoading={isLoading} />;
 
   return (

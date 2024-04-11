@@ -8,6 +8,9 @@ import {
 } from '@/api/queries/communityQuery';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';
+import { MdEditNote } from 'react-icons/md';
+import { useState } from 'react';
+import EditCommunity from './EditCommunity';
 // import Loading from '../Loading';
 
 const AvatarAndOptions = ({
@@ -19,6 +22,7 @@ const AvatarAndOptions = ({
   communityName?: string;
   userId: string | null;
 }) => {
+  const [editModel, setEditModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const { name } = useParams();
 
@@ -32,25 +36,18 @@ const AvatarAndOptions = ({
 
   const isNotJoined = joined.length !== 0;
 
-  console.log(isNotJoined);
-
   const [joinCommunity] = useJoinCommunityMutation();
   const [leaveCommunity] = useLeaveCommunityMutation();
 
   const handleJoinCommunity = async () => {
     if (!isNotJoined) {
-      console.log('joined');
-      const res = await joinCommunity({ communityName, userId });
-      console.log(res);
+      await joinCommunity({ communityName, userId });
     }
-
     if (isNotJoined) {
-      console.log('leave');
-      const res = await leaveCommunity({ communityName, userId });
-      console.log(res);
+      await leaveCommunity({ communityName, userId });
     }
   };
-
+  console.log(editModel);
   const handleCreatePostBtn = () => {
     navigate('/submit', { state: { communityName } });
   };
@@ -70,6 +67,16 @@ const AvatarAndOptions = ({
           <IoAdd className='size-7 ' />
           Create a post
         </button>
+
+        {isMod && (
+          <button
+            className='flex items-center justify-between gap-1 px-3 py-2 font-bold border border-gray-400 rounded-full hover:border-gray-100'
+            onClick={() => setEditModal(!editModel)}>
+            <MdEditNote className='size-7 ' />
+            Edit
+          </button>
+        )}
+
         <button
           className={`${isMod && 'hidden'} ${
             isNotJoined
@@ -83,6 +90,12 @@ const AvatarAndOptions = ({
           <RxDotsHorizontal className='size-6' />
         </button>
       </span>
+      {editModel && (
+        <EditCommunity
+          cancel={() => setEditModal(!editModel)}
+          communityName={communityName}
+        />
+      )}
     </div>
   );
 };

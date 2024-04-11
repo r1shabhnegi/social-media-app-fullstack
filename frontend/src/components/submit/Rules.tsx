@@ -1,6 +1,6 @@
 const Rules = () => {
   return (
-    <span className='bg-[#1A1A1B] rounded-lg p-4 my-5'>
+    <span className='bg-[#1A1A1B] rounded-lg p-4 mt-9 my-5'>
       <h1 className='text-lg font-semibold border-b-[0.1rem] border-gray-700 py-2 text-[#D7DADC]'>
         Posting to Reddit
       </h1>

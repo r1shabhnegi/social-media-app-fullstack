@@ -16,12 +16,17 @@ const apiRequests = apiClient.injectEndpoints({
       providesTags: ['findBestCommunities'],
     }),
 
-    getCommunity: builder.mutation({
-      query: (data) => ({
-        url: '/api/community/getCommunity',
-        method: 'POST',
-        body: { ...data },
-      }),
+    // getCommunity: builder.mutation({
+    //   query: (data) => ({
+    //     url: '/api/community/getCommunity',
+    //     method: 'POST',
+    //     body: { ...data },
+    //   }),
+    //   providesTags: ['getCommunity'],
+    // }),
+
+    getCommunity: builder.query({
+      query: (name) => `/api/community/getCommunity/${name}`,
       providesTags: ['getCommunity'],
     }),
 
@@ -52,7 +57,7 @@ const apiRequests = apiClient.injectEndpoints({
 
 export const {
   useCreateCommunityMutation,
-  useGetCommunityMutation,
+  useGetCommunityQuery,
   useJoinCommunityMutation,
   useLazyGetUserCommunitiesQuery,
   useLeaveCommunityMutation,
