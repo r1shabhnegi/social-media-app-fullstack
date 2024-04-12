@@ -28,10 +28,8 @@ app.use('/refresh', refreshRouter);
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
-
 app.use('/api/community', communityRouter);
 
-// Error handler middleware
 app.use(handleErrors);
 
 app.listen(process.env.SERVER_PORT, () => {

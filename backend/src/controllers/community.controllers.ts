@@ -159,7 +159,6 @@ export const leaveCommunity = tryCatch(async (req: Request, res: Response) => {
 
 export const getCommunities = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
-  console.log(userId);
 
   const communities = await Community.find({
     members: {
@@ -168,4 +167,11 @@ export const getCommunities = tryCatch(async (req: Request, res: Response) => {
   }).lean();
 
   res.status(200).send(communities);
+});
+
+export const editCommunity = tryCatch(async (req: Request, res: Response) => {
+  const imgs = req.body;
+  const sds = req.files;
+  console.log(sds);
+  console.log(imgs);
 });

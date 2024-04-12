@@ -9,6 +9,7 @@ export const credentials = (
   const origin = req.headers.origin;
   if (allowedOrigin.includes(origin as string)) {
     res.header('Access-Control-Allow-Credentials', 'true');
+    // res.header({ ContentType: 'multipart/form-data' });
   }
   next();
 };

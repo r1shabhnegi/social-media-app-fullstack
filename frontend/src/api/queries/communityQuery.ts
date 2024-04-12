@@ -6,7 +6,7 @@ const apiRequests = apiClient.injectEndpoints({
       query: (data) => ({
         url: '/api/community/create',
         method: 'POST',
-        body: { ...data },
+        body: data,
       }),
       invalidatesTags: ['findBestCommunities'],
     }),
@@ -15,15 +15,6 @@ const apiRequests = apiClient.injectEndpoints({
       query: (pageCount) => `/api/community/findCommunities/${pageCount}`,
       providesTags: ['findBestCommunities'],
     }),
-
-    // getCommunity: builder.mutation({
-    //   query: (data) => ({
-    //     url: '/api/community/getCommunity',
-    //     method: 'POST',
-    //     body: { ...data },
-    //   }),
-    //   providesTags: ['getCommunity'],
-    // }),
 
     getCommunity: builder.query({
       query: (name) => `/api/community/getCommunity/${name}`,
@@ -34,7 +25,7 @@ const apiRequests = apiClient.injectEndpoints({
       query: (data) => ({
         url: '/api/community/joinCommunity',
         method: 'POST',
-        body: { ...data },
+        body: data,
       }),
       invalidatesTags: ['getCommunity', 'getUserCommunities'],
     }),
@@ -43,7 +34,7 @@ const apiRequests = apiClient.injectEndpoints({
       query: (data) => ({
         url: '/api/community/leaveCommunity',
         method: 'POST',
-        body: { ...data },
+        body: data,
       }),
       invalidatesTags: ['getCommunity', 'getUserCommunities'],
     }),
@@ -51,6 +42,17 @@ const apiRequests = apiClient.injectEndpoints({
     getUserCommunities: builder.query({
       query: () => '/api/community/getUserCommunitiesList',
       providesTags: ['getUserCommunities'],
+    }),
+
+    editCommunity: builder.mutation({
+      query: (data) => ({
+        url: '/api/community/editCommunity',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: data,
+      }),
     }),
   }),
 });
@@ -62,4 +64,5 @@ export const {
   useLazyGetUserCommunitiesQuery,
   useLeaveCommunityMutation,
   useFindCommunitiesQuery,
+  useEditCommunityMutation,
 } = apiRequests;
