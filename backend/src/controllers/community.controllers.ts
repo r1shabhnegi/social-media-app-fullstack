@@ -170,8 +170,11 @@ export const getCommunities = tryCatch(async (req: Request, res: Response) => {
 });
 
 export const editCommunity = tryCatch(async (req: Request, res: Response) => {
-  const imgs = req.body;
-  const sds = req.files;
-  console.log(sds);
-  console.log(imgs);
+  // const files = req.files;
+  const file = req.file;
+  // const body = req.body;
+  // console.log('files-', files);
+  console.log('file-', file);
+  // console.log(body);
+  // console.log(req);
 });

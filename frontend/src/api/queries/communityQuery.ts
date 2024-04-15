@@ -48,10 +48,10 @@ const apiRequests = apiClient.injectEndpoints({
       query: (data) => ({
         url: '/api/community/editCommunity',
         method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
         body: data,
+        // headers: {
+        //   'Content-Type': 'multipart/form-data',
+        // },
       }),
     }),
   }),

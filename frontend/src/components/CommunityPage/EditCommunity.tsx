@@ -28,24 +28,50 @@ const EditCommunity = ({
   useEffect(() => {
     reset({ name: communityName });
   }, [communityName, reset]);
+  // if (data.coverImg && data.coverImg.length > 0) {
+  //   formData.append('coverImg', data.coverImg[0]);
+  // }
 
   const [editCommunity] = useEditCommunityMutation();
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    // console.log(data.avatarImg);
+
     const formData = new FormData();
-    if (data.avatarImg && data.avatarImg.length > 0) {
-      formData.append('avatarImg', data.avatarImg[0]);
-    }
-    if (data.coverImg && data.coverImg.length > 0) {
-      formData.append('coverImg', data.coverImg[0]);
-    }
     formData.append('description', data.description);
     formData.append('name', data.name);
     formData.append('rules', data.rules);
-    // console.log(formData);
-    editCommunity(formData);
+
+    if (data.avatarImg && data.avatarImg.length > 0) {
+      formData.append('avatarImg', data.avatarImg[0]);
+    }
+
+    const postFiles = async (dataFiles) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/community/editCommunity`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: dataFiles,
+        }
+      );
+      console.log(res);
+    };
+
+    console.log(
+      data,
+      "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
+    );
+    // console.log(form.en)
+
+    for (const [key, val] of formData.entries()) {
+      console.log(key, val);
+    }
+    postFiles(formData);
   });
+
+  // console.log(formData)
+  // editCommunity(formData);
 
   // if (isLoading) <Loading isLoading={isLoading} />;
   // console.log(data);
