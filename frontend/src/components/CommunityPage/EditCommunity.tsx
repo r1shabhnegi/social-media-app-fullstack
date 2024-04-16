@@ -6,13 +6,8 @@ import { MdOutlineCancel } from 'react-icons/md';
 import { AiFillPicture } from 'react-icons/ai';
 import { useEditCommunityMutation } from '@/api/queries/communityQuery';
 import Loading from '../Loading';
-type CommunityEditTypes = {
-  name: string;
-  description: string;
-  avatarImg: FileList;
-  coverImg: FileList;
-  rules: string;
-};
+import { IoCompassOutline } from 'react-icons/io5';
+import EditCommunityForm from '@/forms/EditCommunityForm';
 
 const EditCommunity = ({
   communityName,
@@ -21,60 +16,8 @@ const EditCommunity = ({
   communityName: string | undefined;
   cancel: () => void;
 }) => {
-  const [avatar, setAvatar] = useState<string | null>(null);
-  const [coverImg, setCoverImg] = useState<string | null>(null);
-  const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
-
-  useEffect(() => {
-    reset({ name: communityName });
-  }, [communityName, reset]);
-  // if (data.coverImg && data.coverImg.length > 0) {
-  //   formData.append('coverImg', data.coverImg[0]);
-  // }
-
-  const [editCommunity] = useEditCommunityMutation();
-
-  const onSubmit = handleSubmit((data) => {
-    // console.log(data.avatarImg);
-
-    const formData = new FormData();
-    formData.append('description', data.description);
-    formData.append('name', data.name);
-    formData.append('rules', data.rules);
-
-    if (data.avatarImg && data.avatarImg.length > 0) {
-      formData.append('avatarImg', data.avatarImg[0]);
-    }
-
-    const postFiles = async (dataFiles) => {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/community/editCommunity`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          body: dataFiles,
-        }
-      );
-      console.log(res);
-    };
-
-    console.log(
-      data,
-      "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
-    );
-    // console.log(form.en)
-
-    for (const [key, val] of formData.entries()) {
-      console.log(key, val);
-    }
-    postFiles(formData);
-  });
-
-  // console.log(formData)
-  // editCommunity(formData);
-
-  // if (isLoading) <Loading isLoading={isLoading} />;
-  // console.log(data);
+  // const [avatar, setAvatar] = useState<string | null>(null);
+  // const [coverImg, setCoverImg] = useState<string | null>(null);
 
   return (
     <div className='fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50'>
@@ -89,13 +32,14 @@ const EditCommunity = ({
             <MdOutlineCancel size={25} />
           </span>
         </div>
-        <form
+        <EditCommunityForm communityName={communityName} />
+        {/* <form
           className='bg-[#0f1a1c] p-6 rounded-3xl gap-2 flex flex-col'
           onSubmit={onSubmit}>
           <span className='flex gap-4'>
             <label className='flex-1 mb-2 text-sm font-semibold'>
               Community Name
-              <Input
+              <input
                 {...register('name', {
                   validate: (val) => {
                     if (val.length < 4) {
@@ -117,9 +61,9 @@ const EditCommunity = ({
                 ) : (
                   <AiFillPicture className='size-12' />
                 )}
-                <Input
+                <input
                   type='file'
-                  accept='image/png, image/jpg'
+                  accept='image/*'
                   {...register('avatarImg')}
                   className='mt-1 text-[#f2f2f1]  bg-[#1a282d] h-16 hidden rounded-3xl  p-4 outline-none'
                   onChange={(e) => {
@@ -142,7 +86,7 @@ const EditCommunity = ({
                 ) : (
                   <AiFillPicture className='size-12' />
                 )}
-                <Input
+                <input
                   {...register('coverImg')}
                   accept='image/png, image/jpg'
                   type='file'
@@ -159,7 +103,7 @@ const EditCommunity = ({
           </span>
           <label className='mb-2 text-sm font-semibold'>
             Description
-            <Textarea
+            <textarea
               className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none'
               placeholder='Write...'
               {...register('description')}
@@ -168,7 +112,7 @@ const EditCommunity = ({
 
           <label className='mb-2 text-sm font-semibold'>
             Rules
-            <Input
+            <input
               {...register('rules')}
               className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none'
               placeholder='WriteRules Separated by the Coma (,)'
@@ -184,7 +128,7 @@ const EditCommunity = ({
               Submit
             </button>
           </span>
-        </form>
+        </form> */}
       </div>
     </div>
   );
