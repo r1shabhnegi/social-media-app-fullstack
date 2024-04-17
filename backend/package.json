@@ -4,7 +4,7 @@
   "description": "This is full stack clone of Reddit.",
   "main": "./src/index.ts",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon src/index.ts"
   },
   "author": "Rishabh Negi",
   "license": "ISC",

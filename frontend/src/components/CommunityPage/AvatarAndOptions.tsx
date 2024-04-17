@@ -22,9 +22,8 @@ const AvatarAndOptions = ({
   communityName?: string;
   userId: string | null;
 }) => {
-  const [editModel, setEditModal] = useState<boolean>(false);
+  const [editModal, setEditModal] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { name } = useParams();
 
   const { userCommunitiesList } = useSelector(
     (state: RootState) => state.community
@@ -47,7 +46,7 @@ const AvatarAndOptions = ({
       await leaveCommunity({ communityName, userId });
     }
   };
-  console.log(editModel);
+  // console.log(editModal);
   const handleCreatePostBtn = () => {
     navigate('/submit', { state: { communityName } });
   };
@@ -58,7 +57,7 @@ const AvatarAndOptions = ({
           <AvatarImage src='https://github.com/r1shabhnegi.png' />
           <AvatarFallback>RN</AvatarFallback>
         </Avatar>
-        <h1 className='text-4xl font-bold'>r/{name}</h1>
+        <h1 className='text-4xl font-bold'>r/{communityName}</h1>
       </span>
       <span className='flex gap-2'>
         <button
@@ -71,7 +70,7 @@ const AvatarAndOptions = ({
         {isMod && (
           <button
             className='flex items-center justify-between gap-1 px-3 py-2 font-bold border border-gray-400 rounded-full hover:border-gray-100'
-            onClick={() => setEditModal(!editModel)}>
+            onClick={() => setEditModal(!editModal)}>
             <MdEditNote className='size-7 ' />
             Edit
           </button>
@@ -90,9 +89,9 @@ const AvatarAndOptions = ({
           <RxDotsHorizontal className='size-6' />
         </button>
       </span>
-      {editModel && (
+      {editModal && (
         <EditCommunity
-          cancel={() => setEditModal(!editModel)}
+          cancel={() => setEditModal(!editModal)}
           communityName={communityName}
         />
       )}
