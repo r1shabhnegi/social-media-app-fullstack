@@ -12,6 +12,8 @@ const CommunityPage = () => {
 
   const { data, isLoading } = useGetCommunityQuery(`${communityName}`);
 
+  console.log(data);
+
   const isMod = userId === data?.author;
 
   if (isLoading) return <Loading isLoading={isLoading} />;

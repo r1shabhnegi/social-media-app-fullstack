@@ -10,25 +10,25 @@ import {
   editCommunity,
 } from '../controllers/community.controllers';
 import { check } from 'express-validator';
-import multer, { FileFilterCallback } from 'multer';
+// import multer, { FileFilterCallback } from 'multer';
 import { verifyJwt } from '../middlewares/auth.middleware';
 import { uploadEditPhotosValidation } from '../utility/express-validations';
 import { tryCatch } from '../utility/tryCatch';
 import path from 'path';
 import fs from 'fs';
 import fileUpload from 'express-fileupload';
+import multer from 'multer';
+import { upload } from '../middlewares/multer.middleware';
 
 const router = Router();
 
-//
-
 router.post(
   '/editCommunity',
-  fileUpload({ createParentPath: true }),
-  (req: Request, res: Response) => {
-    console.log(req.files);
-    console.log(req.body);
-  }
+  upload.fields([
+    { name: 'avatarImg', maxCount: 1 },
+    { name: 'coverImg', maxCount: 1 },
+  ]),
+  editCommunity
 );
 
 router.post('/create', createCommunity);

@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+// import { validationResult } from 'express-validator';
 import { Community, CommunityTypes } from '../models/community.model';
-import { uploadSingleImage } from '../config/cloudinary';
+// import { uploadSingleImage } from '../config/cloudinary';
 import jwt from 'jsonwebtoken';
 import { ApiError } from '../utility/apiError';
+import { v2 as cloudinary } from 'cloudinary';
 import {
   COM_COOKIE_MISSING,
   COM_ALREADY_EXISTS,
@@ -11,6 +12,7 @@ import {
   COM_NOT_FOUND,
 } from '../utility/errorConstants';
 import { tryCatch } from '../utility/tryCatch';
+import { uploadOnCloudinary } from '../utility/cloudinary';
 
 interface decodedTypes {
   userId?: string;
@@ -47,6 +49,8 @@ export const createCommunity = tryCatch(async (req: Request, res: Response) => {
     moderator: decodedToken.userId,
     members: decodedToken.userId,
     author: decodedToken.userId,
+    avatar: undefined,
+    coverImage: undefined,
   });
   await newCommunity.save();
 
@@ -169,12 +173,71 @@ export const getCommunities = tryCatch(async (req: Request, res: Response) => {
   res.status(200).send(communities);
 });
 
+// type coverImgType =
+interface uploadFile {
+  path: string;
+  originalname: string;
+  mimetype: string;
+  size: number;
+  // add other properties as needed
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      files?: {
+        coverImg?: {
+          path: string;
+        }[];
+        avatarImg?: {
+          path: string;
+        }[];
+      };
+    }
+  }
+}
+
 export const editCommunity = tryCatch(async (req: Request, res: Response) => {
-  // const files = req.files;
-  const file = req.file;
-  // const body = req.body;
-  // console.log('files-', files);
-  console.log('file-', file);
-  // console.log(body);
-  // console.log(req);
+  const { name: newName, description, rules, communityName } = req.body;
+
+  const splittedRulesArr = rules.split(',');
+
+  const foundCommunity = await Community.findOne({ name: communityName });
+
+  if (!foundCommunity) return new ApiError('Community Not Found', 901, 404);
+
+  const avatarImgPath = (
+    req as Request & { files?: { coverImg?: { path: string }[] } }
+  ).files?.avatarImg?.[0]?.path;
+
+  const coverImgPath = (
+    req as Request & { files?: { coverImg?: { path: string }[] } }
+  ).files?.coverImg?.[0]?.path;
+
+  if (avatarImgPath) {
+    const uploadAvatarToCloudinary = async (imgPath: string) => {
+      const response = await uploadOnCloudinary(imgPath);
+      if (!response) throw new ApiError('Error Uploading Image', 908, 403);
+      foundCommunity.avatar = response?.url;
+    };
+    uploadAvatarToCloudinary(avatarImgPath);
+  }
+
+  if (coverImgPath) {
+    const uploadCoverToCloudinary = async (imgPath: string) => {
+      const response = await uploadOnCloudinary(imgPath);
+      if (!response) throw new ApiError('Error Uploading Image', 908, 403);
+      console.log(response.url);
+      foundCommunity.coverImage = response?.url;
+    };
+    uploadCoverToCloudinary(coverImgPath);
+  }
+  foundCommunity.userId = 343;
+  foundCommunity.name = newName;
+  foundCommunity.rule = splittedRulesArr;
+  foundCommunity.description = description;
+
+  await foundCommunity.save();
+
+  res.status(200).json({ message: 'Edit successful' });
 });

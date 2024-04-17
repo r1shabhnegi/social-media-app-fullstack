@@ -1,9 +1,6 @@
 import { useEditCommunityMutation } from '@/api/queries/communityQuery';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-// import { RiImage2Fill } from 'react-icons/ri';
-// import { BsCardImage } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 
 type CommunityEditTypes = {
@@ -18,19 +15,11 @@ const EditCommunityForm = ({
   communityName,
   cancel,
 }: {
-  communityName: string | undefined;
+  communityName: string;
   cancel: () => void;
 }) => {
   const [editCommunity] = useEditCommunityMutation();
-  const { register, handleSubmit, reset, watch } =
-    useForm<CommunityEditTypes>();
-  const avatarImg = watch('avatarImg');
-  const coverImg = watch('coverImg');
-  if (avatarImg && coverImg) {
-    console.log('yes');
-  }
-  console.log(avatarImg);
-  console.log(coverImg);
+  const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
 
   useEffect(() => {
     reset({ name: communityName });
@@ -39,12 +28,18 @@ const EditCommunityForm = ({
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     const formData = new FormData();
+    formData.append('communityName', communityName);
     formData.append('description', data.description);
     formData.append('name', data.name);
     formData.append('rules', data.rules);
 
     formData.append('avatarImg', data.avatarImg[0]);
     formData.append('coverImg', data.coverImg[0]);
+
+    for (const [key, val] of formData.entries()) {
+      console.log(key, val);
+    }
+
     editCommunity(formData);
   });
 

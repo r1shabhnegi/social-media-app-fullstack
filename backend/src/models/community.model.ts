@@ -4,8 +4,8 @@ export type CommunityTypes = {
   author: mongoose.Types.ObjectId;
   name: string;
   userId: number;
-  avatar: string;
-  coverImage: string;
+  avatar: string | undefined;
+  coverImage: string | undefined;
   description: string;
   rule: string[];
   members: mongoose.Types.ObjectId[];
