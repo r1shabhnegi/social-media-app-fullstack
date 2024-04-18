@@ -50,6 +50,7 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['getCommunity'],
     }),
   }),
 });

@@ -2,6 +2,8 @@ import { useEditCommunityMutation } from '@/api/queries/communityQuery';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/global/_store';
 
 type CommunityEditTypes = {
   name: string;
@@ -11,19 +13,19 @@ type CommunityEditTypes = {
   rules: string;
 };
 
-const EditCommunityForm = ({
-  communityName,
-  cancel,
-}: {
-  communityName: string;
-  cancel: () => void;
-}) => {
+const EditCommunityForm = ({ cancel }: { cancel: () => void }) => {
   const [editCommunity] = useEditCommunityMutation();
   const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
 
+  const {
+    name: communityName,
+    description,
+    rules,
+  } = useSelector((state: RootState) => state.community.currentCommunity);
+
   useEffect(() => {
-    reset({ name: communityName });
-  }, [communityName, reset]);
+    reset({ name: communityName, description, rules });
+  }, [communityName, description, reset, rules]);
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);

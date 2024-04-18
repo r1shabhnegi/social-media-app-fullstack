@@ -16,11 +16,15 @@ import EditCommunity from './EditCommunity';
 const AvatarAndOptions = ({
   isMod,
   communityName,
+  avatarImg,
   userId,
 }: {
   isMod?: boolean;
   communityName?: string;
+  avatarImg?: string;
   userId: string | null;
+  description: string;
+  rules?: string;
 }) => {
   const [editModal, setEditModal] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -50,12 +54,16 @@ const AvatarAndOptions = ({
   const handleCreatePostBtn = () => {
     navigate('/submit', { state: { communityName } });
   };
+  console.log(avatarImg);
   return (
     <div className='max-w-[67rem] justify-between h-24 bg-re-300 mx-auto -mt-12 flex items-end'>
       <span className='flex items-end gap-4'>
         <Avatar className='size-[5.4rem] border-4 border-[#0b1416]'>
-          <AvatarImage src='https://github.com/r1shabhnegi.png' />
-          <AvatarFallback>RN</AvatarFallback>
+          <AvatarImage
+            className='object-cover'
+            src={avatarImg}
+          />
+          <AvatarFallback className='bg-gray-700'>RN</AvatarFallback>
         </Avatar>
         <h1 className='text-4xl font-bold'>r/{communityName}</h1>
       </span>
@@ -89,12 +97,7 @@ const AvatarAndOptions = ({
           <RxDotsHorizontal className='size-6' />
         </button>
       </span>
-      {editModal && (
-        <EditCommunity
-          cancel={() => setEditModal(!editModal)}
-          communityName={communityName}
-        />
-      )}
+      {editModal && <EditCommunity cancel={() => setEditModal(!editModal)} />}
     </div>
   );
 };

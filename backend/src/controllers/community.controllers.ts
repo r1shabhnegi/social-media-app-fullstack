@@ -223,12 +223,12 @@ export const editCommunity = tryCatch(async (req: Request, res: Response) => {
 
   if (avatarImgPath) {
     const url = await uploadImageToCloudinary(avatarImgPath);
-    foundCommunity.avatar = url;
+    foundCommunity.avatarImg = url;
   }
 
   if (coverImgPath) {
     const url = await uploadImageToCloudinary(coverImgPath);
-    foundCommunity.coverImage = url;
+    foundCommunity.coverImg = url;
   }
 
   const splittedRulesArr = rules.split(',');

@@ -21,6 +21,8 @@ const CommunitiesList = () => {
     }
   }, [data, dispatch]);
 
-  return <span>ssdsad </span>;
+  console.log(data);
+
+  return <span className=''></span>;
 };
 export default CommunitiesList;

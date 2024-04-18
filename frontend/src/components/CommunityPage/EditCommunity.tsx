@@ -6,7 +6,7 @@ const EditCommunity = ({
   communityName,
   cancel,
 }: {
-  communityName: string | undefined;
+  communityName: string;
   cancel: () => void;
 }) => {
   return (

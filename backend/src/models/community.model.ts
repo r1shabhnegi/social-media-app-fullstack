@@ -3,8 +3,8 @@ import mongoose, { Schema } from 'mongoose';
 export type CommunityTypes = {
   author: mongoose.Types.ObjectId;
   name: string;
-  avatar: string;
-  coverImage: string;
+  avatarImg: string;
+  coverImg: string;
   description: string;
   rules: string[];
   members: mongoose.Types.ObjectId[];
@@ -25,10 +25,10 @@ const communitySchema = new mongoose.Schema<CommunityTypes>(
       trim: true,
       lowercase: true,
     },
-    avatar: {
+    avatarImg: {
       type: String,
     },
-    coverImage: {
+    coverImg: {
       type: String,
     },
 
