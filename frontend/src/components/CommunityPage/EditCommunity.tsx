@@ -3,7 +3,6 @@ import { MdOutlineCancel } from 'react-icons/md';
 import EditCommunityForm from '@/forms/EditCommunityForm';
 
 const EditCommunity = ({
-  communityName,
   cancel,
 }: {
   communityName: string;
@@ -22,10 +21,7 @@ const EditCommunity = ({
             <MdOutlineCancel size={25} />
           </span>
         </div>
-        <EditCommunityForm
-          communityName={communityName}
-          cancel={cancel}
-        />
+        <EditCommunityForm cancel={cancel} />
       </div>
     </div>
   );

@@ -2,8 +2,11 @@ import { useEditCommunityMutation } from '@/api/queries/communityQuery';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/global/_store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/global/_store';
+import { showToast } from '@/global/toastSlice';
+import Loading from '@/components/Loading';
+import LoadingCommon from '@/components/LoadingCommon';
 
 type CommunityEditTypes = {
   name: string;
@@ -14,7 +17,8 @@ type CommunityEditTypes = {
 };
 
 const EditCommunityForm = ({ cancel }: { cancel: () => void }) => {
-  const [editCommunity] = useEditCommunityMutation();
+  const dispatch = useDispatch<AppDispatch>();
+  const [editCommunity, { isLoading }] = useEditCommunityMutation();
   const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
 
   const {
@@ -27,7 +31,15 @@ const EditCommunityForm = ({ cancel }: { cancel: () => void }) => {
     reset({ name: communityName, description, rules });
   }, [communityName, description, reset, rules]);
 
-  const onSubmit = handleSubmit((data) => {
+  // isSuccess{
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     cancel();
+  //   }
+  // }, [cancel, isSuccess]);
+
+  const onSubmit = handleSubmit(async (data) => {
     console.log(data);
     const formData = new FormData();
     formData.append('communityName', communityName);
@@ -38,11 +50,16 @@ const EditCommunityForm = ({ cancel }: { cancel: () => void }) => {
     formData.append('avatarImg', data.avatarImg[0]);
     formData.append('coverImg', data.coverImg[0]);
 
-    for (const [key, val] of formData.entries()) {
-      console.log(key, val);
+    const res = await editCommunity(formData).unwrap();
+    if (res) {
+      dispatch(
+        showToast({
+          message: 'Community Edited Successfully!',
+          type: 'SUCCESS',
+        })
+      );
+      cancel();
     }
-
-    editCommunity(formData);
   });
 
   return (
@@ -118,15 +135,24 @@ const EditCommunityForm = ({ cancel }: { cancel: () => void }) => {
         </label>
       </span>
       <div className='flex justify-end gap-5 mt-3'>
-        <button
-          className='px-5 py-3 bg-[#223237] rounded-2xl'
-          type='button'
-          onClick={cancel}>
-          Cancel
-        </button>
-        <button className='px-5 py-3 bg-[#0045ac] hover:bg-[#0079d3] rounded-2xl'>
-          Submit
-        </button>
+        {isLoading ? (
+          <Loading isLoading={isLoading} />
+        ) : (
+          <>
+            <button
+              className='px-5 py-3 bg-[#223237] rounded-2xl'
+              type='button'
+              disabled={isLoading}
+              onClick={cancel}>
+              Cancel
+            </button>
+            <button
+              disabled={isLoading}
+              className='px-5 py-3 bg-[#0045ac] hover:bg-[#0079d3] rounded-2xl'>
+              Submit
+            </button>
+          </>
+        )}
       </div>
     </form>
   );

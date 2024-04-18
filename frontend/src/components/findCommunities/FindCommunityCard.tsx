@@ -4,14 +4,14 @@ import { RootState } from '@/global/_store';
 
 const FindCommunityCard = ({
   name,
-  avatar,
+  avatarImg,
   description,
   id,
   index,
   author,
 }: {
   name: string;
-  avatar: string;
+  avatarImg: string;
   description: string;
   id: string;
   index: number;
@@ -26,7 +26,7 @@ const FindCommunityCard = ({
       <span className='flex items-center gap-2 p-2 '>
         <Avatar className='size-8 sm:size-9'>
           <AvatarImage
-            src={avatar}
+            src={avatarImg}
             className='object-cover'
           />
           <AvatarFallback className='bg-gray-600'>

@@ -46,9 +46,7 @@ const LeftSideBar = () => {
           <p>Create a community</p>
         </span>
 
-        <span>
-          <CommunitiesList />
-        </span>
+        <CommunitiesList />
       </span>
 
       {showCommunityCreate && (

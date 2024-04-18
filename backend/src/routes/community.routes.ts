@@ -9,6 +9,7 @@ import {
   leaveCommunity,
   editCommunity,
   getModCommunities,
+  deleteCommunity,
 } from '../controllers/community.controllers';
 import { check } from 'express-validator';
 // import multer, { FileFilterCallback } from 'multer';
@@ -40,4 +41,6 @@ router.post('/joinCommunity', verifyJwt, joinCommunity);
 router.post('/leaveCommunity', verifyJwt, leaveCommunity);
 router.get('/getUserCommunitiesList', verifyJwt, getCommunities);
 router.get('/getUserModCommunities', verifyJwt, getModCommunities);
+router.post('/deleteCommunity', verifyJwt, deleteCommunity);
+
 export default router;

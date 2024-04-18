@@ -35,13 +35,13 @@ const FindCommunities = () => {
               (
                 {
                   name,
-                  avatar,
+                  avatarImg,
                   description,
                   _id: id,
                   author,
                 }: {
                   name: string;
-                  avatar: string;
+                  avatarImg: string;
                   description: string;
                   _id: string;
                   author: string;
@@ -53,7 +53,7 @@ const FindCommunities = () => {
                   to={`/community/${name}`}>
                   <FindCommunityCard
                     name={name}
-                    avatar={avatar}
+                    avatarImg={avatarImg}
                     description={description}
                     id={id}
                     author={author}

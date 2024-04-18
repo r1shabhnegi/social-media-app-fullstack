@@ -276,6 +276,14 @@ const editCommunity = tryCatch(async (req: Request, res: Response) => {
   res.status(200).json({ message: 'Edit successful' });
 });
 
+const deleteCommunity = tryCatch(async (req: Request, res: Response) => {
+  const userId = req.userId;
+  const { name } = req.body();
+
+  const foundCommunity = await Community.findOneAndDelete({ name });
+  console.log(foundCommunity);
+});
+
 export {
   createCommunity,
   editCommunity,
@@ -285,4 +293,5 @@ export {
   joinCommunity,
   leaveCommunity,
   getModCommunities,
+  deleteCommunity,
 };

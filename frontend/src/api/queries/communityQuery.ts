@@ -1,3 +1,4 @@
+import { url } from 'inspector';
 import { apiClient } from '../apiClient';
 
 const apiRequests = apiClient.injectEndpoints({
@@ -46,6 +47,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     getUserModCommunities: builder.query({
       query: () => '/api/community/getUserModCommunities',
+      providesTags: ['getUserModCommunities'],
     }),
     editCommunity: builder.mutation({
       query: (data) => ({
@@ -53,7 +55,19 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['getCommunity'],
+      invalidatesTags: [
+        'getCommunity',
+        'getUserCommunities',
+        'getUserModCommunities',
+      ],
+    }),
+
+    deleteCommunity: builder.mutation({
+      query: (data) => ({
+        url: '/api/community/deleteCommunity',
+        method: 'POST',
+        body: data,
+      }),
     }),
   }),
 });
@@ -67,4 +81,5 @@ export const {
   useFindCommunitiesQuery,
   useEditCommunityMutation,
   useLazyGetUserModCommunitiesQuery,
+  useDeleteCommunityMutation,
 } = apiRequests;
