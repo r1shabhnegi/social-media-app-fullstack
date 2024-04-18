@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   userCommunitiesList: [],
+  modCommunitiesList: [],
   currentCommunity: {
     name: '',
     description: '',
@@ -17,8 +18,12 @@ const communitySlice = createSlice({
   name: 'community',
   initialState,
   reducers: {
-    userCommunitiesList: (state, action) => {
+    setUserCommunitiesList: (state, action) => {
       state.userCommunitiesList = action.payload;
+    },
+
+    setModCommunitiesList: (state, action) => {
+      state.modCommunitiesList = action.payload;
     },
 
     setCurrentCommunity: (state, action) => {
@@ -44,7 +49,10 @@ const communitySlice = createSlice({
   },
 });
 
-export const { userCommunitiesList, setCurrentCommunity } =
-  communitySlice.actions;
+export const {
+  setUserCommunitiesList,
+  setModCommunitiesList,
+  setCurrentCommunity,
+} = communitySlice.actions;
 
 export default communitySlice.reducer;

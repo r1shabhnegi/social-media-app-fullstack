@@ -47,12 +47,7 @@ const LeftSideBar = () => {
         </span>
 
         <span>
-          <p className='flex flex-col p-2 text-[0.8rem] px-5 text-gray-400'>
-            COMMUNITIES
-          </p>
-          <span>
-            <CommunitiesList />
-          </span>
+          <CommunitiesList />
         </span>
       </span>
 

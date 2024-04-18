@@ -20,7 +20,7 @@ interface decodedTypes {
 
 // CREATE_COMMUNITY
 
-export const createCommunity = tryCatch(async (req: Request, res: Response) => {
+const createCommunity = tryCatch(async (req: Request, res: Response) => {
   const cookies = req.cookies;
   if (!cookies?.jwt)
     throw new ApiError('cookie missing', COM_COOKIE_MISSING, 403);
@@ -58,7 +58,7 @@ export const createCommunity = tryCatch(async (req: Request, res: Response) => {
 
 // FIND_COMMUNITIES
 
-export const findCommunities = tryCatch(async (req: Request, res: Response) => {
+const findCommunities = tryCatch(async (req: Request, res: Response) => {
   const pageCount = +req.params.pageCount;
   const pageSize = 9;
   const skipItems = pageCount * 9;
@@ -105,7 +105,7 @@ export const findCommunities = tryCatch(async (req: Request, res: Response) => {
   res.status(200).send(foundCommunities);
 });
 
-export const getCommunity = tryCatch(async (req: Request, res: Response) => {
+const getCommunity = tryCatch(async (req: Request, res: Response) => {
   const { name } = req.params;
 
   const foundCommunity = await Community.findOne({ name });
@@ -116,7 +116,7 @@ export const getCommunity = tryCatch(async (req: Request, res: Response) => {
   res.status(200).send(foundCommunity);
 });
 
-export const joinCommunity = tryCatch(async (req: Request, res: Response) => {
+const joinCommunity = tryCatch(async (req: Request, res: Response) => {
   const { communityName, userId } = req.body;
 
   const community = await Community.findOneAndUpdate(
@@ -138,7 +138,7 @@ export const joinCommunity = tryCatch(async (req: Request, res: Response) => {
   res.status(200).json({ message: 'done' });
 });
 
-export const leaveCommunity = tryCatch(async (req: Request, res: Response) => {
+const leaveCommunity = tryCatch(async (req: Request, res: Response) => {
   const { communityName, userId } = req.body;
 
   const community = await Community.findOneAndUpdate(
@@ -160,16 +160,50 @@ export const leaveCommunity = tryCatch(async (req: Request, res: Response) => {
   res.status(200).json({ message: 'done' });
 });
 
-export const getCommunities = tryCatch(async (req: Request, res: Response) => {
+const getCommunities = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
 
-  const communities = await Community.find({
-    members: {
-      $in: [userId],
+  const foundCommunities = await Community.find(
+    {
+      members: {
+        $in: [userId],
+      },
+      author: {
+        $ne: userId,
+      },
     },
-  }).lean();
+    {
+      name: 1,
+      description: 1,
+      avatarImg: 1,
+      author: 1,
+      _id: 1,
+    }
+  ).lean();
 
-  res.status(200).send(communities);
+  // if(!foundCommunities)
+
+  console.log(foundCommunities);
+  res.status(200).send(foundCommunities);
+});
+
+const getModCommunities = tryCatch(async (req: Request, res: Response) => {
+  const userId = req.userId;
+
+  const foundModCommunities = await Community.find(
+    {
+      author: userId,
+    },
+    {
+      name: 1,
+      description: 1,
+      avatarImg: 1,
+      author: 1,
+      _id: 1,
+    }
+  );
+
+  res.status(200).send(foundModCommunities);
 });
 
 // type coverImgType =
@@ -196,7 +230,7 @@ declare global {
   }
 }
 
-export const editCommunity = tryCatch(async (req: Request, res: Response) => {
+const editCommunity = tryCatch(async (req: Request, res: Response) => {
   const { name: newName, description, rules, communityName } = req.body;
 
   const foundCommunity = await Community.findOne({ name: communityName });
@@ -241,3 +275,14 @@ export const editCommunity = tryCatch(async (req: Request, res: Response) => {
 
   res.status(200).json({ message: 'Edit successful' });
 });
+
+export {
+  createCommunity,
+  editCommunity,
+  getCommunities,
+  findCommunities,
+  getCommunity,
+  joinCommunity,
+  leaveCommunity,
+  getModCommunities,
+};

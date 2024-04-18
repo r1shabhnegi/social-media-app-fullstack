@@ -44,6 +44,9 @@ const apiRequests = apiClient.injectEndpoints({
       providesTags: ['getUserCommunities'],
     }),
 
+    getUserModCommunities: builder.query({
+      query: () => '/api/community/getUserModCommunities',
+    }),
     editCommunity: builder.mutation({
       query: (data) => ({
         url: '/api/community/editCommunity',
@@ -63,4 +66,5 @@ export const {
   useLeaveCommunityMutation,
   useFindCommunitiesQuery,
   useEditCommunityMutation,
+  useLazyGetUserModCommunitiesQuery,
 } = apiRequests;
