@@ -46,11 +46,10 @@ export const createCommunity = tryCatch(async (req: Request, res: Response) => {
   const newCommunity = new Community({
     name,
     description,
+    userId: decodedToken.userId,
     moderator: decodedToken.userId,
     members: decodedToken.userId,
     author: decodedToken.userId,
-    avatar: undefined,
-    coverImage: undefined,
   });
   await newCommunity.save();
 
@@ -200,11 +199,13 @@ declare global {
 export const editCommunity = tryCatch(async (req: Request, res: Response) => {
   const { name: newName, description, rules, communityName } = req.body;
 
-  const splittedRulesArr = rules.split(',');
-
   const foundCommunity = await Community.findOne({ name: communityName });
 
   if (!foundCommunity) return new ApiError('Community Not Found', 901, 404);
+
+  if (req.userId !== foundCommunity.author.toString()) {
+    throw new ApiError('User not allowed to edit community', 909, 403);
+  }
 
   const avatarImgPath = (
     req as Request & { files?: { coverImg?: { path: string }[] } }
@@ -214,27 +215,26 @@ export const editCommunity = tryCatch(async (req: Request, res: Response) => {
     req as Request & { files?: { coverImg?: { path: string }[] } }
   ).files?.coverImg?.[0]?.path;
 
+  const uploadImageToCloudinary = async (imgPath: string) => {
+    const response = await uploadOnCloudinary(imgPath);
+    if (!response) throw new ApiError('Error Uploading Image', 908, 403);
+    return response?.url;
+  };
+
   if (avatarImgPath) {
-    const uploadAvatarToCloudinary = async (imgPath: string) => {
-      const response = await uploadOnCloudinary(imgPath);
-      if (!response) throw new ApiError('Error Uploading Image', 908, 403);
-      foundCommunity.avatar = response?.url;
-    };
-    uploadAvatarToCloudinary(avatarImgPath);
+    const url = await uploadImageToCloudinary(avatarImgPath);
+    foundCommunity.avatar = url;
   }
 
   if (coverImgPath) {
-    const uploadCoverToCloudinary = async (imgPath: string) => {
-      const response = await uploadOnCloudinary(imgPath);
-      if (!response) throw new ApiError('Error Uploading Image', 908, 403);
-      console.log(response.url);
-      foundCommunity.coverImage = response?.url;
-    };
-    uploadCoverToCloudinary(coverImgPath);
+    const url = await uploadImageToCloudinary(coverImgPath);
+    foundCommunity.coverImage = url;
   }
-  foundCommunity.userId = 343;
+
+  const splittedRulesArr = rules.split(',');
+
   foundCommunity.name = newName;
-  foundCommunity.rule = splittedRulesArr;
+  foundCommunity.rules = splittedRulesArr;
   foundCommunity.description = description;
 
   await foundCommunity.save();

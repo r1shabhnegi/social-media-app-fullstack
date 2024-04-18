@@ -3,11 +3,10 @@ import mongoose, { Schema } from 'mongoose';
 export type CommunityTypes = {
   author: mongoose.Types.ObjectId;
   name: string;
-  userId: number;
-  avatar: string | undefined;
-  coverImage: string | undefined;
+  avatar: string;
+  coverImage: string;
   description: string;
-  rule: string[];
+  rules: string[];
   members: mongoose.Types.ObjectId[];
   moderator: mongoose.Types.ObjectId[];
   posts: mongoose.Types.ObjectId[];
@@ -37,7 +36,7 @@ const communitySchema = new mongoose.Schema<CommunityTypes>(
       type: String,
       trim: true,
     },
-    rule: [String],
+    rules: [String],
     members: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] },
     ],

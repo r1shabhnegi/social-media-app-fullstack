@@ -25,14 +25,17 @@ const FindCommunityCard = ({
       <p>{index + 1}</p>
       <span className='flex items-center gap-2 p-2 '>
         <Avatar className='size-8 sm:size-9'>
-          <AvatarImage src={avatar} />
+          <AvatarImage
+            src={avatar}
+            className='object-cover'
+          />
           <AvatarFallback className='bg-gray-600'>
             {name.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <span>
           <span className='flex items-center justify-between pr-4'>
-            <h2>{name}</h2>
+            <h2 className='mr-1'>{name}</h2>
             <p
               className={`${
                 !isMod && 'hidden'

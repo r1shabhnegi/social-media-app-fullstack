@@ -28,10 +28,11 @@ router.post(
     { name: 'avatarImg', maxCount: 1 },
     { name: 'coverImg', maxCount: 1 },
   ]),
+  verifyJwt,
   editCommunity
 );
 
-router.post('/create', createCommunity);
+router.post('/create', verifyJwt, createCommunity);
 router.get('/findCommunities/:pageCount', findCommunities);
 router.get('/getCommunity/:name', getCommunity);
 router.post('/joinCommunity', verifyJwt, joinCommunity);
