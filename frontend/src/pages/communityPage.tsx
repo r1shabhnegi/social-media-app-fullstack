@@ -29,7 +29,6 @@ const CommunityPage = () => {
   return (
     <div className=''>
       <CommunityBanner coverImg={data?.coverImg} />
-
       <AvatarAndOptions
         isMod={isMod}
         description={data?.description}
@@ -38,6 +37,7 @@ const CommunityPage = () => {
         avatarImg={data?.avatarImg}
         userId={userId}
       />
+      <div className='flex'></div>
     </div>
   );
 };

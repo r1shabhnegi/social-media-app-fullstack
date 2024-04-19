@@ -1,16 +1,19 @@
 import { IoAdd } from 'react-icons/io5';
 import { RxDotsHorizontal } from 'react-icons/rx';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
 import {
+  useDeleteCommunityMutation,
   useJoinCommunityMutation,
   useLeaveCommunityMutation,
 } from '@/api/queries/communityQuery';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/global/_store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/global/_store';
 import { MdEditNote } from 'react-icons/md';
 import { useState } from 'react';
 import EditCommunity from './EditCommunity';
+import { showToast } from '@/global/toastSlice';
 // import Loading from '../Loading';
 
 const AvatarAndOptions = ({
@@ -28,6 +31,7 @@ const AvatarAndOptions = ({
 }) => {
   const [editModal, setEditModal] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const { userCommunitiesList } = useSelector(
     (state: RootState) => state.community
@@ -41,6 +45,7 @@ const AvatarAndOptions = ({
 
   const [joinCommunity] = useJoinCommunityMutation();
   const [leaveCommunity] = useLeaveCommunityMutation();
+  const [deleteCommunity] = useDeleteCommunityMutation();
 
   const handleJoinCommunity = async () => {
     if (!isNotJoined) {
@@ -50,11 +55,28 @@ const AvatarAndOptions = ({
       await leaveCommunity({ communityName, userId });
     }
   };
-  // console.log(editModal);
   const handleCreatePostBtn = () => {
     navigate('/submit', { state: { communityName } });
   };
-  console.log(avatarImg);
+
+  const handleDeleteCommunity = async () => {
+    try {
+      const res = await deleteCommunity({ communityName }).unwrap();
+      console.log(res);
+      if (res) {
+        navigate('/');
+        dispatch(
+          showToast({
+            message: 'Community Deleted Successfully!',
+            type: 'SUCCESS',
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className='max-w-[67rem] justify-between h-24 bg-re-300 mx-auto -mt-12 flex items-end'>
       <span className='flex items-end gap-4'>
@@ -93,9 +115,28 @@ const AvatarAndOptions = ({
           onClick={handleJoinCommunity}>
           {isNotJoined ? 'Leave' : 'Join'}
         </button>
-        <button className='flex items-center justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100'>
-          <RxDotsHorizontal className='size-6' />
-        </button>
+
+        <div className='dropdown dropdown-end'>
+          <button
+            tabIndex={0}
+            role='button'
+            // className='m-1 btn'>
+            className={`${
+              !isMod && 'hidden'
+            } flex items-center relative justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100`}>
+            <RxDotsHorizontal className='size-6' />
+          </button>
+          <ul
+            tabIndex={0}
+            className='dropdown-content z-[1] menu p-2 mt-5 shadow bg-base-100 rounded-box w-52'>
+            <li>
+              <a onClick={handleDeleteCommunity}>
+                <MdOutlineDeleteOutline className='size-6' />
+                <p>Delete Community</p>
+              </a>
+            </li>
+          </ul>
+        </div>
       </span>
       {editModal && <EditCommunity cancel={() => setEditModal(!editModal)} />}
     </div>

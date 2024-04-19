@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Router } from 'express';
 
 import {
   getCommunity,
@@ -11,15 +11,8 @@ import {
   getModCommunities,
   deleteCommunity,
 } from '../controllers/community.controllers';
-import { check } from 'express-validator';
-// import multer, { FileFilterCallback } from 'multer';
 import { verifyJwt } from '../middlewares/auth.middleware';
-import { uploadEditPhotosValidation } from '../utility/express-validations';
-import { tryCatch } from '../utility/tryCatch';
-import path from 'path';
-import fs from 'fs';
-import fileUpload from 'express-fileupload';
-import multer from 'multer';
+// import { uploadEditPhotosValidation } from '../utility/express-validations';
 import { upload } from '../middlewares/multer.middleware';
 
 const router = Router();

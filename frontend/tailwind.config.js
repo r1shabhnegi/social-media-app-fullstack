@@ -33,5 +33,6 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  // eslint-disable-next-line no-undef
+  plugins: [require('tailwindcss-animate'), require('daisyui')],
 };

@@ -14,6 +14,7 @@ export const COM_NOT_FOUND = 901; //404
 export const COM_NOT_JOINED = 907; //403
 export const COM_IMG_NOT_UPLOADED = 908; //403
 export const COM_NOT_ALLOW_TO_EDIT = 909; //403
+export const COM_ERROR_DELETE_COMMUNITY = 911; //401
 
 // USER_CONTROLLER
 export const USER_ALREADY_EXISTS = 701; //403
