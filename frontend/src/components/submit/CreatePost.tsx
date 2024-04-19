@@ -50,7 +50,6 @@ const CreatePost = ({
     formData.append('content', data.content);
     formData.append('communityName', selectOption);
     formData.append('image', data.image[0]);
-    console.log(formData);
     try {
       const res = await createPost(formData).unwrap();
       console.log(res);
@@ -61,12 +60,9 @@ const CreatePost = ({
       }
       navigate(`/community/${selectOption}`);
     } catch (error) {
-      console.log(error);
+      dispatch(showToast({ message: 'Error creating Post!', type: 'ERROR' }));
     }
   });
-  console.log();
-
-  isLoading && <Loading isLoading={isLoading} />;
 
   return (
     <div className='w-[45rem] mr-5 '>
@@ -120,7 +116,6 @@ const CreatePost = ({
               placeholder='Title'
             />
           </label>
-
           <label className='pb-3 text-sm font-semibold '>
             Description
             <Textarea
@@ -130,7 +125,6 @@ const CreatePost = ({
               placeholder='Text...'
             />
           </label>
-
           <label className='pb-3 text-sm font-semibold '>
             Add Photo
             <Input
@@ -139,11 +133,30 @@ const CreatePost = ({
               className='border-[.1rem] text-[#f2f2f1] border-gray-700 bg-[#1A1A1B]'
             />
           </label>
-
-          <span className='flex justify-end gap-5'>
+          {/* <span className='flex justify-end gap-5'>
             <button onClick={() => navigate(-1)}>Cancel</button>
             <button type='submit'>Submit</button>
-          </span>
+          </span> */}
+          <div className='flex justify-end gap-5 mt-3'>
+            {isLoading ? (
+              <Loading isLoading={isLoading} />
+            ) : (
+              <>
+                <button
+                  className='px-5 py-3 bg-[#223237] rounded-2xl'
+                  type='button'
+                  disabled={isLoading}
+                  onClick={() => navigate(-1)}>
+                  Cancel
+                </button>
+                <button
+                  disabled={isLoading}
+                  className='px-5 py-3 bg-[#0045ac] hover:bg-[#0079d3] rounded-2xl'>
+                  Submit
+                </button>
+              </>
+            )}
+          </div>
         </form>
       </div>
     </div>

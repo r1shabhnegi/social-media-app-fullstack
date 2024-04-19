@@ -32,7 +32,7 @@ const communitySchema = new mongoose.Schema<CommunityTypes>(
     moderator: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] },
     ],
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post', default: [] }],
+    // posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post', default: [] }],
   },
   { timestamps: true }
 );

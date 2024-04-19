@@ -224,6 +224,9 @@ declare global {
         avatarImg?: {
           path: string;
         }[];
+        image?: {
+          path: string;
+        }[];
       };
     }
   }

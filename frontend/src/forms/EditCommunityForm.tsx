@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/global/_store';
 import { showToast } from '@/global/toastSlice';
 import Loading from '@/components/Loading';
-import LoadingCommon from '@/components/LoadingCommon';
 
 type CommunityEditTypes = {
   name: string;

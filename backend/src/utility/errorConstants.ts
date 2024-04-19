@@ -24,3 +24,8 @@ export const USER_ERROR_REGISTERING = 702; //404
 export const RF_COOKIE_MISSING = 881; //403
 export const RF_INVALID_USER = 882; //401
 export const RF_INVALID_RF_TOKEN = 883; //401
+
+// POST_CONTROLLER
+export const POST_COMMUNITY_NOT_EXIST = 871; //401
+export const POST_NOT_CREATED = 872; //401
+export const POST_NOT_FOUND = 873; //404

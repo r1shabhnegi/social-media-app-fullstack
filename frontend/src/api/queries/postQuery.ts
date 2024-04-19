@@ -8,8 +8,11 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['getCommunity'],
     }),
+
+    getCommunityPosts: builder.query({ query: (id) => `/api/post/${id}` }),
   }),
 });
 
-export const { useCreatePostMutation } = apiRequests;
+export const { useCreatePostMutation, useGetCommunityPostsQuery } = apiRequests;
