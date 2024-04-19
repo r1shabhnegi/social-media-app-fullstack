@@ -60,6 +60,7 @@ const AvatarAndOptions = ({
   };
 
   const handleDeleteCommunity = async () => {
+    // console.log(communityName);
     try {
       const res = await deleteCommunity({ communityName }).unwrap();
       console.log(res);

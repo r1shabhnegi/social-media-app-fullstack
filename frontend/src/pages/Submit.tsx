@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const Submit = () => {
   const { state } = useLocation();
+  console.log(state);
   return (
     <>
       <Header />

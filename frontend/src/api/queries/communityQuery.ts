@@ -1,4 +1,3 @@
-import { url } from 'inspector';
 import { apiClient } from '../apiClient';
 
 const apiRequests = apiClient.injectEndpoints({
@@ -9,7 +8,11 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['findBestCommunities'],
+      invalidatesTags: [
+        'findBestCommunities',
+        'getUserModCommunities',
+        'getUserCommunities',
+      ],
     }),
 
     findCommunities: builder.query({
@@ -68,6 +71,7 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['getUserCommunities', 'getUserModCommunities'],
     }),
   }),
 });

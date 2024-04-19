@@ -41,4 +41,10 @@ const baseQueryAuthRF = async (
 export const apiClient = createApi({
   baseQuery: baseQueryAuthRF,
   endpoints: () => ({}),
+  tagTypes: [
+    'getCommunity',
+    'getUserCommunities',
+    'getUserModCommunities',
+    'findBestCommunities',
+  ],
 });

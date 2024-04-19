@@ -24,7 +24,7 @@ const CommunityPage = () => {
   }, [isSuccess, dispatch, data]);
   console.log(data);
   if (isLoading) return <Loading isLoading={isLoading} />;
-
+  console.log(data);
   const isMod = userId === data?.author;
   return (
     <div className=''>

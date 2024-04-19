@@ -2,23 +2,17 @@ import { useForm } from 'react-hook-form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/global/_store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/global/_store';
 import { useEffect, useState } from 'react';
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { useCreatePostMutation } from '@/api/queries/postQuery';
+import Loading from '../Loading';
+import { showToast } from '@/global/toastSlice';
 
 type PostTypes = {
   title: string;
-  description: string;
+  content: string;
+  image: string;
 };
 
 const CreatePost = ({
@@ -28,23 +22,51 @@ const CreatePost = ({
     communityName: string;
   };
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [selectOption, setSelectOption] = useState<string>('');
+  const [disableSelect, setDisableSelect] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<PostTypes>();
 
-  const { userCommunitiesList } = useSelector(
+  const { userCommunitiesList, modCommunitiesList } = useSelector(
     (state: RootState) => state.community
   );
 
   useEffect(() => {
     if (selectedCommunity) {
       setSelectOption(selectedCommunity.communityName);
+      setDisableSelect(true);
     }
-  }, [selectedCommunity]);
+  }, [disableSelect, selectedCommunity]);
 
-  const onSubmit = handleSubmit((formData) => {
+  useEffect(() => {
+    if (selectedCommunity === null) setSelectOption('Choose a community');
+  }, []);
+
+  const [createPost, { isLoading }] = useCreatePostMutation();
+  const onSubmit = handleSubmit(async (data) => {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('content', data.content);
+    formData.append('communityName', selectOption);
+    formData.append('image', data.image[0]);
     console.log(formData);
+    try {
+      const res = await createPost(formData).unwrap();
+      console.log(res);
+      if (res) {
+        dispatch(
+          showToast({ message: 'Post Created Successfully!', type: 'SUCCESS' })
+        );
+      }
+      navigate(`/community/${selectOption}`);
+    } catch (error) {
+      console.log(error);
+    }
   });
+  console.log();
+
+  isLoading && <Loading isLoading={isLoading} />;
 
   return (
     <div className='w-[45rem] mr-5 '>
@@ -54,20 +76,34 @@ const CreatePost = ({
 
       <div className='mt-5 w-72 mb-2 bg-[#1A1A1B] p-3'>
         <select
+          disabled={disableSelect}
           value={selectOption}
           onChange={(e) => setSelectOption(e.target.value)}
           className='bg-[#1A1A1B] w-full outline-none'>
-          {selectOption && <option>{selectOption}</option>}
-
+          {selectOption && (
+            <option
+              disabled={true}
+              className='hidden'>
+              {selectOption}
+            </option>
+          )}
+          <option
+            disabled={true}
+            className='bg-gray-700'>
+            Communities you follow ▼
+          </option>
           {userCommunitiesList?.map(
             ({ name, _id }) =>
-              selectOption !== name && (
-                <option
-                  className='p'
-                  key={_id}>
-                  {name}
-                </option>
-              )
+              selectOption !== name && <option key={_id}>{name}</option>
+          )}
+          <option
+            disabled={true}
+            className='bg-gray-700'>
+            Your communities ▼
+          </option>
+          {modCommunitiesList?.map(
+            ({ name, _id }) =>
+              selectOption !== name && <option key={_id}>{name}</option>
           )}
         </select>
       </div>
@@ -88,6 +124,7 @@ const CreatePost = ({
           <label className='pb-3 text-sm font-semibold '>
             Description
             <Textarea
+              {...register('content')}
               rows={8}
               className='border-[.1rem] border-gray-700 bg-[#1A1A1B]'
               placeholder='Text...'
@@ -97,6 +134,7 @@ const CreatePost = ({
           <label className='pb-3 text-sm font-semibold '>
             Add Photo
             <Input
+              {...register('image')}
               type='file'
               className='border-[.1rem] text-[#f2f2f1] border-gray-700 bg-[#1A1A1B]'
             />

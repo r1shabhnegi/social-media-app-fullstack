@@ -277,14 +277,23 @@ const editCommunity = tryCatch(async (req: Request, res: Response) => {
 
 const deleteCommunity = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
-  const { name } = req.body;
+  const { communityName } = req.body;
+  console.log(userId, communityName);
 
-  const foundCommunity = await Community.findOne({ name });
+  const foundCommunity = await Community.findOne({ name: communityName });
+
   if (foundCommunity?.author.toString() !== userId)
     return new ApiError('Invalid AC Token', 906, 403);
 
-  const deletedCommunity = await Community.findOneAndDelete({ name });
-  if (foundCommunity) return new ApiError('Error Editing Community', 911, 401);
+  const deletedCommunity = await Community.findOneAndDelete({
+    name: communityName,
+  }).then(() => {
+    console.log(deleteCommunity);
+  });
+  // console.log(await deleteCommunity);
+
+  // if (deletedCommunity)
+  //   return new ApiError('Error Editing Community', 911, 401);
 
   res.status(200).json({ message: 'Community Deleted!' });
 });

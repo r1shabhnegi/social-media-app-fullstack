@@ -14,10 +14,7 @@ export type CommunityTypes = {
 
 const communitySchema = new mongoose.Schema<CommunityTypes>(
   {
-    author: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
+    author: { type: Schema.Types.ObjectId, ref: 'User' },
     name: {
       type: String,
       unique: true,
@@ -25,17 +22,9 @@ const communitySchema = new mongoose.Schema<CommunityTypes>(
       trim: true,
       lowercase: true,
     },
-    avatarImg: {
-      type: String,
-    },
-    coverImg: {
-      type: String,
-    },
-
-    description: {
-      type: String,
-      trim: true,
-    },
+    avatarImg: { type: String },
+    coverImg: { type: String },
+    description: { type: String, trim: true },
     rules: [String],
     members: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] },
