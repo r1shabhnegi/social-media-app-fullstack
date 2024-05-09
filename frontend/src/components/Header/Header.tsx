@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';
 
-import LeftSideBar from '../LeftSideBar/LeftSideBar';
+import LeftSideBar from '../LeftSideBarAndCreateCom/LeftSideBar';
 import HeaderDropdown from './HeaderDropdown';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

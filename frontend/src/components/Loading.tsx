@@ -8,7 +8,7 @@ const Loading = ({
   size?: number;
 }) => {
   return (
-    <div className='flex items-center justify-center w-full h-full'>
+    <div className='flex items-center justify-center w-full '>
       <MoonLoader
         color='#f2f2f1'
         loading={isLoading}

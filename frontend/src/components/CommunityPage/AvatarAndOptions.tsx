@@ -26,7 +26,6 @@ const AvatarAndOptions = ({
   communityName?: string;
   avatarImg?: string;
   userId: string | null;
-  description: string;
   rules?: string;
 }) => {
   const [editModal, setEditModal] = useState<boolean>(false);
@@ -121,7 +120,6 @@ const AvatarAndOptions = ({
           <button
             tabIndex={0}
             role='button'
-            // className='m-1 btn'>
             className={`${
               !isMod && 'hidden'
             } flex items-center relative justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100`}>

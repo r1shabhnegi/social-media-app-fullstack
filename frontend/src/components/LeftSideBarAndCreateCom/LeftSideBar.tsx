@@ -18,8 +18,8 @@ const LeftSideBar = () => {
     setShowCommunityCreate(!showCommunityCreate);
   };
   return (
-    <ScrollArea>
-      <span className='bg-[#0b1416] flex flex-col h-screen w-[17rem] p-4 border-gray-600 border-r-[0.1rem] gap-1'>
+    <ScrollArea className='h-[44rem]'>
+      <span className='bg-[#0b1416] flex flex-col w-[17rem] p-4 border-gray-600 border-r-[0.1rem] gap-1'>
         <Link to='/'>
           <span
             className={`${

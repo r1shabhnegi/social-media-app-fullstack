@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { createPost, getCommunityPosts } from '../controllers/post.controller';
+import {
+  addUpVote,
+  createPost,
+  getCommunityPosts,
+  getPostStats,
+} from '../controllers/post.controller';
 import { upload } from '../middlewares/multer.middleware';
 import { verifyJwt } from '../middlewares/auth.middleware';
 
@@ -13,5 +18,7 @@ router.post(
 );
 
 router.get('/:id', getCommunityPosts);
+router.get('/getPostStats/:postId', getPostStats);
+router.post('/addUpVote', addUpVote);
 
 export default router;

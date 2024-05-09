@@ -10,13 +10,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import FindCommunityCard from '@/components/findCommunities/FindCommunityCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/global/_store';
 import Loading from '@/components/Loading';
 import { Link } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const FindCommunities = () => {
   const [page, setPage] = useState(0);
   const { data, isLoading } = useFindCommunitiesQuery(`${page}`);
+  const { userId } = useSelector((state: RootState) => state.auth);
 
   if (isLoading) {
     return <Loading isLoading={isLoading} />;
@@ -47,20 +50,43 @@ const FindCommunities = () => {
                   author: string;
                 },
                 index: number
-              ) => (
-                <Link
-                  key={id}
-                  to={`/community/${name}`}>
-                  <FindCommunityCard
-                    name={name}
-                    avatarImg={avatarImg}
-                    description={description}
-                    id={id}
-                    author={author}
-                    index={index + page * 9}
-                  />
-                </Link>
-              )
+              ) => {
+                const isMod = author === userId;
+                return (
+                  <Link
+                    key={id}
+                    to={`/community/${name}`}>
+                    <span className='flex items-center gap-4 p-2 mb-16 w-96'>
+                      <p>{index + 1}</p>
+                      <span className='flex items-center gap-2 p-2 '>
+                        <Avatar className='size-8 sm:size-9'>
+                          <AvatarImage
+                            src={avatarImg}
+                            className='object-cover'
+                          />
+                          <AvatarFallback className='bg-gray-600'>
+                            {name.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>
+                          <span className='flex items-center justify-between pr-4'>
+                            <h2 className='mr-1'>{name}</h2>
+                            <p
+                              className={`${
+                                !isMod && 'hidden'
+                              } px-[.2rem] text-xs bg-orange-700 `}>
+                              MOD
+                            </p>
+                          </span>
+                          <p className='w-full text-sm text-[#6f7c71] line-clamp-1'>
+                            {description}
+                          </p>
+                        </span>
+                      </span>
+                    </span>
+                  </Link>
+                );
+              }
             )
           : null}
       </div>

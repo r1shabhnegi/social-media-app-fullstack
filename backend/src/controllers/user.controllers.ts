@@ -53,3 +53,14 @@ export const signUp = tryCatch(async (req: Request, res: Response) => {
 
   res.status(200).send({ message: 'User Sign Up Successful!' });
 });
+
+export const getUserForCommunity = tryCatch(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const foundUser = await User.findById(id).select('avatar name');
+
+    console.log(foundUser);
+    res.status(200).send(foundUser);
+  }
+);

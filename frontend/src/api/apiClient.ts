@@ -43,6 +43,7 @@ export const apiClient = createApi({
   endpoints: () => ({}),
   tagTypes: [
     'getCommunity',
+    'communityPosts',
     'getUserCommunities',
     'getUserModCommunities',
     'findBestCommunities',

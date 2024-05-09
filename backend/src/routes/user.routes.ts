@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { signUp } from '../controllers/user.controllers';
+import { getUserForCommunity, signUp } from '../controllers/user.controllers';
 import { body, check } from 'express-validator';
 
 const router = Router();
@@ -32,5 +32,7 @@ router.post(
   ],
   signUp
 );
+
+router.get('/getUserForCommunity/:id', getUserForCommunity);
 
 export default router;

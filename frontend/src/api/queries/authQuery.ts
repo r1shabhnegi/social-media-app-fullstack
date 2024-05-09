@@ -1,4 +1,3 @@
-import { url } from 'inspector';
 import { apiClient } from '../apiClient';
 
 export const apiRequests = apiClient.injectEndpoints({

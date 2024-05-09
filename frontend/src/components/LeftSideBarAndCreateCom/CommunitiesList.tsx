@@ -9,9 +9,9 @@ import {
 } from '@/global/communitySlice';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CommunitiesSideBarCard from './CommunitiesSideBarCard';
 import { Link } from 'react-router-dom';
 import Loading from '../Loading';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const CommunitiesList = () => {
   const { isLoggedIn } = useSelector((state: RootState) => state.auth);
@@ -64,10 +64,21 @@ const CommunitiesList = () => {
               <Link
                 key={_id}
                 to={`/community/${name}`}>
-                <CommunitiesSideBarCard
-                  name={name}
-                  avatarImg={avatarImg}
-                />
+                <span className='flex items-center gap-3 px-4 py-2 hover:bg-gray-900 rounded-xl'>
+                  <Avatar className='size-8 sm:size-8'>
+                    <AvatarImage
+                      className='object-cover'
+                      src={avatarImg}
+                    />
+                    <AvatarFallback className='bg-gray-600'>
+                      {name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <span>
+                    <p>r/{name}</p>
+                  </span>
+                </span>
               </Link>
             )
           )}
@@ -92,10 +103,21 @@ const CommunitiesList = () => {
               <Link
                 key={_id}
                 to={`/community/${name}`}>
-                <CommunitiesSideBarCard
-                  name={name}
-                  avatarImg={avatarImg}
-                />
+                <span className='flex items-center gap-3 px-4 py-2 hover:bg-gray-900 rounded-xl'>
+                  <Avatar className='size-8 sm:size-8'>
+                    <AvatarImage
+                      className='object-cover'
+                      src={avatarImg}
+                    />
+                    <AvatarFallback className='bg-gray-600'>
+                      {name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <span>
+                    <p>r/{name}</p>
+                  </span>
+                </span>
               </Link>
             )
           )}

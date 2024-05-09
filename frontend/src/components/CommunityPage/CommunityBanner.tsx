@@ -1,4 +1,6 @@
-const CommunityBanner = ({ coverImg }: { coverImg: string }) => {
+import { memo } from 'react';
+
+const CommunityBanner = memo(({ coverImg }: { coverImg: string }) => {
   return (
     <div className=' sm:p-2'>
       {coverImg ? (
@@ -12,5 +14,5 @@ const CommunityBanner = ({ coverImg }: { coverImg: string }) => {
       )}
     </div>
   );
-};
+});
 export default CommunityBanner;

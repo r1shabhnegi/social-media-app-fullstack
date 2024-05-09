@@ -1,10 +1,10 @@
 import { useGetCommunityQuery } from '@/api/queries/communityQuery';
-import { useGetCommunityPostsQuery } from '@/api/queries/postQuery';
 import AvatarAndOptions from '@/components/CommunityPage/AvatarAndOptions';
 import CommunityBanner from '@/components/CommunityPage/CommunityBanner';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import CommunityRightSideBar from '@/components/CommunityPage/CommunityRightSideBar';
 import Loading from '@/components/Loading';
-import PostSection from '@/components/PostSection';
+import PostMainSection from '@/components/post/PostMainSection';
 import { AppDispatch, RootState } from '@/global/_store';
 import { setCurrentCommunity } from '@/global/communitySlice';
 import { useEffect } from 'react';
@@ -15,41 +15,38 @@ const CommunityPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { name: communityName } = useParams();
   const { userId } = useSelector((state: RootState) => state.auth);
-
   const { data, isLoading, isSuccess } = useGetCommunityQuery(
     `${communityName}`
   );
-  const { data: communityPosts } = useGetCommunityPostsQuery(data?._id);
 
-  console.log(communityPosts);
   useEffect(() => {
     if (isSuccess) {
       dispatch(setCurrentCommunity(data));
     }
   }, [isSuccess, dispatch, data]);
-  console.log(data);
-  if (isLoading) return <Loading isLoading={isLoading} />;
-  console.log(data);
+
   const isMod = userId === data?.author;
+  console.log(data);
+
+  if (isLoading) return <Loading isLoading={isLoading} />;
   return (
-    <div className=''>
+    <ScrollArea className='w-full overflow-hidden h-[44rem] rounded-md '>
       <CommunityBanner coverImg={data?.coverImg} />
       <AvatarAndOptions
         isMod={isMod}
-        description={data?.description}
         rules={data?.rules}
         communityName={communityName}
         avatarImg={data?.avatarImg}
         userId={userId}
       />
-      <div className='flex mt-10 w-full  max-w-[70rem] sm:h-20  md:h-32 mx-auto'>
-        <PostSection
-          _id={data?._id}
-          postData={communityPosts}
+      <div className='flex mt-10 w-full gap-20  max-w-[70rem]  mx-auto'>
+        <PostMainSection communityId={data?._id} />
+        <CommunityRightSideBar
+          description={data?.description}
+          author={data?.author}
         />
-        <CommunityRightSideBar />
       </div>
-    </div>
+    </ScrollArea>
   );
 };
 export default CommunityPage;
