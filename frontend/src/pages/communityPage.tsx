@@ -44,6 +44,8 @@ const CommunityPage = () => {
         <CommunityRightSideBar
           description={data?.description}
           author={data?.author}
+          communityName={communityName}
+          rules={data?.rule}
         />
       </div>
     </ScrollArea>

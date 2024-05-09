@@ -1,6 +1,5 @@
 import { multiFormatDateString } from '@/lib/checkDate';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import PostStats from './PostStats';
 import {
   useAddUpVoteMutation,
   useGetPostStatsQuery,
@@ -9,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 import { FaRegBookmark, FaRegCommentAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 type postDataType = {
   title: string;
@@ -53,13 +53,17 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
         </Avatar>
 
         <div className='flex flex-col justify-center'>
-          <p className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'>
-            r/{postData.communityName}
-          </p>
+          <Link to={`/community/${postData.communityName}`}>
+            <p className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'>
+              r/{postData.communityName}
+            </p>
+          </Link>
           <p className='text-xs'>
             by
             <span className='ml-1 cursor-pointer hover:underline'>
-              {postData.authorName}
+              <Link to={`/profile/${postData.authorName}`}>
+                {postData.authorName}
+              </Link>
             </span>
             {` • ${createAt}`}
           </p>

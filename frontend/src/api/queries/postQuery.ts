@@ -28,6 +28,8 @@ const apiRequests = apiClient.injectEndpoints({
         body: data,
       }),
     }),
+
+    getAllPost: builder.query({ query: () => '/api/post/getAllPosts' }),
   }),
 });
 
@@ -36,4 +38,5 @@ export const {
   useLazyGetCommunityPostsQuery,
   useGetPostStatsQuery,
   useAddUpVoteMutation,
+  useGetAllPostQuery,
 } = apiRequests;

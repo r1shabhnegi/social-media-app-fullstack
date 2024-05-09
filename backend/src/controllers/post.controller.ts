@@ -105,9 +105,15 @@ const addUpVote = tryCatch(async (req: Request, res: Response) => {
       },
     }
   );
-  const sdsds = await Post.findById(postId);
+  // const sdsds = await Post.findById(postId);
   console.log(foundPost);
   // console.log(foundPost);
 });
 
-export { createPost, getCommunityPosts, getPostStats, addUpVote };
+const getAllPosts = tryCatch(async (req: Request, res: Response) => {
+  const foundPosts = await Post.find();
+
+  res.status(200).send(foundPosts);
+});
+
+export { createPost, getCommunityPosts, getPostStats, addUpVote, getAllPosts };

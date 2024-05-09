@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   addUpVote,
   createPost,
+  getAllPosts,
   getCommunityPosts,
   getPostStats,
 } from '../controllers/post.controller';
@@ -16,6 +17,8 @@ router.post(
   upload.fields([{ name: 'image', maxCount: 1 }]),
   createPost
 );
+
+router.get('/getAllPosts', getAllPosts);
 
 router.get('/:id', getCommunityPosts);
 router.get('/getPostStats/:postId', getPostStats);
