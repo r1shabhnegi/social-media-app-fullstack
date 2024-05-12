@@ -28,10 +28,10 @@ export const apiRequests = apiClient.injectEndpoints({
 
     // SIGN_OUT
     logout: builder.mutation({
-      query: () => ({
+      query: (id) => ({
         url: '/api/auth/sign-out',
         method: 'POST',
-        response: {},
+        response: id,
       }),
     }),
   }),

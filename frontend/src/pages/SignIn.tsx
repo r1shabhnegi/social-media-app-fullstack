@@ -5,7 +5,6 @@ import { showToast } from '@/global/toastSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/global/_store';
 import { setCredentials } from '@/global/authSlice';
-// import Loading from '@/components/Loading';
 
 export type SignInTypes = {
   username: string;
@@ -22,11 +21,11 @@ const SignIn = () => {
     try {
       const signInUser = await login(formData).unwrap();
       if (signInUser) {
-        navigate('/');
         dispatch(setCredentials({ ...signInUser }));
         dispatch(
           showToast({ message: 'Sign In Successful!', type: 'SUCCESS' })
         );
+        navigate('/');
       }
     } catch (error) {
       dispatch(showToast({ message: 'Sign In Failed!', type: 'ERROR' }));

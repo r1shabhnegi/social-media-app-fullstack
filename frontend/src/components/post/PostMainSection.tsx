@@ -1,6 +1,5 @@
 import { useLazyGetAllCommunityPostsQuery } from '@/api/queries/postQuery';
 import { memo, useEffect } from 'react';
-import Loading from '../Loading';
 import PostCard from './PostCard';
 
 type postDataType = {
@@ -34,7 +33,7 @@ const PostMainSection = memo(function PostMainSection({
     }
   }, [communityId, fetchCommunityPost, userId]);
 
-  isLoading && <Loading isLoading={isLoading} />;
+  // isLoading && <Loading isLoading={isLoading} />;
 
   return (
     <div className='flex-1'>

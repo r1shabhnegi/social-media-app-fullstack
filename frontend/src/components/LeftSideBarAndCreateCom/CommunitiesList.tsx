@@ -10,8 +10,8 @@ import {
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Loading from '../Loading';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import CommonLoader from '../CommonLoader';
 
 const CommunitiesList = () => {
   const { isLoggedIn } = useSelector((state: RootState) => state.auth);
@@ -41,7 +41,9 @@ const CommunitiesList = () => {
   }, [userCommunitiesData, dispatch, modCommunitiesData]);
 
   userComLoading ||
-    (modComLoading && <Loading isLoading={userComLoading || modComLoading} />);
+    (modComLoading && (
+      <CommonLoader isLoading={userComLoading || modComLoading} />
+    ));
 
   return (
     <div className='flex flex-col'>

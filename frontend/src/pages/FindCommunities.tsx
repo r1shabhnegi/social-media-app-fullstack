@@ -12,9 +12,9 @@ import {
 } from '@/components/ui/pagination';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';
-import Loading from '@/components/Loading';
 import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import PageLoader from '@/components/PageLoader';
 
 const FindCommunities = () => {
   const [page, setPage] = useState(0);
@@ -22,7 +22,7 @@ const FindCommunities = () => {
   const { userId } = useSelector((state: RootState) => state.auth);
 
   if (isLoading) {
-    return <Loading isLoading={isLoading} />;
+    return <PageLoader isLoading={isLoading} />;
   }
 
   return (

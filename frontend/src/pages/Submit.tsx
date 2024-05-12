@@ -1,6 +1,5 @@
 import { useCreatePostMutation } from '@/api/queries/postQuery';
-import Header from '@/components/Header/Header';
-import Loading from '@/components/Loading';
+import CommonLoader from '@/components/CommonLoader';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { AppDispatch, RootState } from '@/global/_store';
@@ -22,11 +21,9 @@ const Submit = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   const { register, handleSubmit } = useForm<PostTypes>();
-
-  const { state } = useLocation();
-  console.log(state);
 
   const { userCommunitiesList, modCommunitiesList } = useSelector(
     (state: RootState) => state.community
@@ -142,7 +139,7 @@ const Submit = () => {
 
             <div className='flex justify-end gap-5 mt-3'>
               {isLoading ? (
-                <Loading isLoading={isLoading} />
+                <CommonLoader isLoading={isLoading} />
               ) : (
                 <>
                   <button

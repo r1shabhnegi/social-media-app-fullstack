@@ -81,13 +81,11 @@ export const signIn = tryCatch(
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res
-      .status(200)
-      .json({
-        accessToken,
-        username: foundUser.username,
-        userId: foundUser._id,
-      });
+    res.status(200).json({
+      accessToken,
+      username: foundUser.username,
+      userId: foundUser._id,
+    });
   }
 );
 // SIGN_OUT
@@ -115,5 +113,6 @@ export const signOut = tryCatch(async (req: Request, res: Response) => {
   await foundUser.save();
 
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
-  res.status(204).json({ message: 'Clear!' });
+
+  res.status(200).json({ message: 'success!' });
 });

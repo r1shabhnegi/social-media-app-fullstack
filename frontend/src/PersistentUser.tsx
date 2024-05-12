@@ -3,7 +3,7 @@ import { useRefreshTokenQuery } from './api/queries/authQuery';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from './global/authSlice';
 import { AppDispatch } from './global/_store';
-import Loading from './components/Loading';
+import PageLoader from './components/PageLoader';
 
 const PersistentUser = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,6 +15,6 @@ const PersistentUser = ({ children }: { children: React.ReactNode }) => {
     }
   }, [dispatch, data, isSuccess]);
 
-  return isLoading ? <Loading isLoading={isLoading} /> : children;
+  return isLoading ? <PageLoader isLoading={isLoading} /> : children;
 };
 export default PersistentUser;

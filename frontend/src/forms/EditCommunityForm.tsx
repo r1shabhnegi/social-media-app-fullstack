@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/global/_store';
 import { showToast } from '@/global/toastSlice';
-import Loading from '@/components/Loading';
+import CommonLoader from '@/components/CommonLoader';
 
 type CommunityEditTypes = {
   name: string;
@@ -135,7 +135,7 @@ const EditCommunityForm = ({ cancel }: { cancel: () => void }) => {
       </span>
       <div className='flex justify-end gap-5 mt-3'>
         {isLoading ? (
-          <Loading isLoading={isLoading} />
+          <CommonLoader isLoading={isLoading} />
         ) : (
           <>
             <button

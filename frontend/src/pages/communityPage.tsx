@@ -3,13 +3,13 @@ import AvatarAndOptions from '@/components/CommunityPage/AvatarAndOptions';
 import CommunityBanner from '@/components/CommunityPage/CommunityBanner';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import CommunityRightSideBar from '@/components/CommunityPage/CommunityRightSideBar';
-import Loading from '@/components/Loading';
 import PostMainSection from '@/components/post/PostMainSection';
 import { AppDispatch, RootState } from '@/global/_store';
 import { setCurrentCommunity } from '@/global/communitySlice';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import PageLoader from '@/components/PageLoader';
 
 const CommunityPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,7 +28,7 @@ const CommunityPage = () => {
   const isMod = userId === data?.author;
   console.log(data);
 
-  if (isLoading) return <Loading isLoading={isLoading} />;
+  if (isLoading) return <PageLoader isLoading={isLoading} />;
   return (
     <ScrollArea className='w-full overflow-hidden h-[44rem] rounded-md '>
       <CommunityBanner coverImg={data?.coverImg} />

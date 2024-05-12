@@ -28,7 +28,6 @@ type postDataType = {
 const PostCard = ({ postData }: { postData: postDataType }) => {
   const navigate = useNavigate();
   const createAt = multiFormatDateString(postData.createdAt);
-  console.log(createAt);
 
   const { data: postStats } = useGetPostStatsQuery(postData._id);
   const { userId } = useSelector((state: RootState) => state.auth);
