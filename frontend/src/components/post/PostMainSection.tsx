@@ -1,4 +1,4 @@
-import { useLazyGetCommunityPostsQuery } from '@/api/queries/postQuery';
+import { useLazyGetAllCommunityPostsQuery } from '@/api/queries/postQuery';
 import { memo, useEffect } from 'react';
 import Loading from '../Loading';
 import PostCard from './PostCard';
@@ -26,7 +26,7 @@ const PostMainSection = memo(function PostMainSection({
   userId?: number;
 }) {
   const [fetchCommunityPost, { isLoading, data }] =
-    useLazyGetCommunityPostsQuery();
+    useLazyGetAllCommunityPostsQuery();
 
   useEffect(() => {
     if (communityId && !userId) {

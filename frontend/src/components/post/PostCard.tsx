@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 import { FaRegBookmark, FaRegCommentAlt } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 type postDataType = {
   title: string;
@@ -26,6 +26,7 @@ type postDataType = {
 };
 
 const PostCard = ({ postData }: { postData: postDataType }) => {
+  const navigate = useNavigate();
   const createAt = multiFormatDateString(postData.createdAt);
   console.log(createAt);
 
@@ -54,7 +55,12 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
 
         <div className='flex flex-col justify-center'>
           <Link to={`/community/${postData.communityName}`}>
-            <p className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'>
+            <p
+              className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'
+              // onClick={() =>
+              //   navigate(`/community/${postData.communityName}`)
+              // }
+            >
               r/{postData.communityName}
             </p>
           </Link>
@@ -70,18 +76,20 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
         </div>
       </div>
 
-      <div className=''>
-        <h1 className='mb-3 text-lg font-semibold'>{postData.title}</h1>
-        <p className='text-sm text-gray-300'>{postData.content}</p>
-      </div>
-      <div>
-        {postData?.image && (
-          <img
-            className='w-full'
-            src={postData?.image}
-          />
-        )}
-      </div>
+      <Link to={`/post/${postData._id}`}>
+        <div className=''>
+          <h1 className='mb-3 text-lg font-semibold'>{postData.title}</h1>
+          <p className='text-sm text-gray-300'>{postData.content}</p>
+        </div>
+        <div>
+          {postData?.image && (
+            <img
+              className='w-full'
+              src={postData?.image}
+            />
+          )}
+        </div>
+      </Link>
 
       <div className='flex items-center gap-4 mb-5'>
         <div className='flex items-center justify-between gap-3 px-3 py-2 bg-gray-700 rounded-full'>

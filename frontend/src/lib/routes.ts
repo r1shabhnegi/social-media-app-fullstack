@@ -6,6 +6,7 @@ import Profile from '../pages/Profile';
 import Submit from '../pages/Submit';
 import FindCommunities from '../pages/FindCommunities';
 import communityPage from '../pages/CommunityPage';
+import PostDetail from '@/pages/PostDetail';
 
 export const privateRoutes: { path: string; element: ReactElement }[] = [
   {
@@ -27,6 +28,10 @@ export const privateRoutes: { path: string; element: ReactElement }[] = [
   {
     path: '/communities',
     element: React.createElement(FindCommunities),
+  },
+  {
+    path: '/post/:id',
+    element: React.createElement(PostDetail),
   },
 ];
 

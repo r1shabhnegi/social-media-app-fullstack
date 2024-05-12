@@ -111,9 +111,24 @@ const addUpVote = tryCatch(async (req: Request, res: Response) => {
 });
 
 const getAllPosts = tryCatch(async (req: Request, res: Response) => {
-  const foundPosts = await Post.find();
+  const foundPosts = await Post.find().sort({ createdAt: -1 });
 
   res.status(200).send(foundPosts);
 });
 
-export { createPost, getCommunityPosts, getPostStats, addUpVote, getAllPosts };
+const getDetailPost = tryCatch(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const foundPostDetail = await Post.findById(id);
+  console.log(foundPostDetail);
+
+  res.status(200).send(foundPostDetail);
+});
+export {
+  createPost,
+  getCommunityPosts,
+  getPostStats,
+  addUpVote,
+  getAllPosts,
+  getDetailPost,
+};

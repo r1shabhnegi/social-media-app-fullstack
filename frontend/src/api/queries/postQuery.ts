@@ -8,10 +8,10 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['getCommunity', 'communityPosts'],
+      invalidatesTags: ['getCommunity', 'communityPosts', 'getHomePosts'],
     }),
 
-    getCommunityPosts: builder.query({
+    getAllCommunityPosts: builder.query({
       query: (id) => `/api/post/${id}
     `,
       providesTags: ['communityPosts'],
@@ -29,14 +29,20 @@ const apiRequests = apiClient.injectEndpoints({
       }),
     }),
 
-    getAllPost: builder.query({ query: () => '/api/post/getAllPosts' }),
+    getAllPost: builder.query({
+      query: () => '/api/post/getAllPosts',
+      providesTags: ['getHomePosts'],
+    }),
+
+    getPostDetails: builder.query({ query: (id) => `/api/post/detail/${id}` }),
   }),
 });
 
 export const {
   useCreatePostMutation,
-  useLazyGetCommunityPostsQuery,
+  useLazyGetAllCommunityPostsQuery,
   useGetPostStatsQuery,
   useAddUpVoteMutation,
   useGetAllPostQuery,
+  useGetPostDetailsQuery,
 } = apiRequests;

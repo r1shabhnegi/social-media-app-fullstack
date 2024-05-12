@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const CommunityRightSideBar = ({
   description,
   author,
-  communityName,
+  // communityName,
   rules,
 }: {
   description: string;
@@ -45,7 +45,7 @@ const CommunityRightSideBar = ({
           </Link>
         </div>
       </div>
-      {rules.length > 0 ? (
+      {rules?.length > 0 ? (
         <>
           <h1 className='text-sm font-semibold text-gray-100 '>Rules</h1>
           <div className='p-3 bg-gray-700 rounded-lg'>

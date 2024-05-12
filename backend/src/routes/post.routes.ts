@@ -4,6 +4,7 @@ import {
   createPost,
   getAllPosts,
   getCommunityPosts,
+  getDetailPost,
   getPostStats,
 } from '../controllers/post.controller';
 import { upload } from '../middlewares/multer.middleware';
@@ -23,5 +24,6 @@ router.get('/getAllPosts', getAllPosts);
 router.get('/:id', getCommunityPosts);
 router.get('/getPostStats/:postId', getPostStats);
 router.post('/addUpVote', addUpVote);
+router.get('/detail/:id', getDetailPost);
 
 export default router;

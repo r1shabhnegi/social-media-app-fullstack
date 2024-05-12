@@ -49,12 +49,12 @@ const HeaderDropdown = ({ username }: { username: string | null }) => {
             <p className='text-xs text-gray-400'>u/{username}</p>
           </span>
         </li>
-        <li
+        {/* <li
           className='flex items-center gap-3 pl-2 cursor-pointer'
           onClick={handleLogout}>
           <IoSettingsOutline className='size-6' />
           <p className='text-sm'>Settings</p>
-        </li>
+        </li> */}
         <li
           className='flex items-center gap-2 pl-2 cursor-pointer'
           onClick={handleLogout}>
