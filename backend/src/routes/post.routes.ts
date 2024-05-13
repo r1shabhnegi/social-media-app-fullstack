@@ -3,7 +3,7 @@ import {
   addUpVote,
   createPost,
   getAllPosts,
-  getCommunityPosts,
+  getAllCommunityPosts,
   getDetailPost,
   getPostStats,
 } from '../controllers/post.controller';
@@ -19,9 +19,9 @@ router.post(
   createPost
 );
 
-router.get('/getAllPosts', getAllPosts);
+router.get('/getAllPosts/:page', getAllPosts);
 
-router.get('/:id', getCommunityPosts);
+router.get('/:id', getAllCommunityPosts);
 router.get('/getPostStats/:postId', getPostStats);
 router.post('/addUpVote', addUpVote);
 router.get('/detail/:id', getDetailPost);

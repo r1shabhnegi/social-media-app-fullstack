@@ -30,7 +30,7 @@ const apiRequests = apiClient.injectEndpoints({
     }),
 
     getAllPost: builder.query({
-      query: () => '/api/post/getAllPosts',
+      query: (page) => `/api/post/getAllPosts/${page}`,
       providesTags: ['getHomePosts'],
     }),
 

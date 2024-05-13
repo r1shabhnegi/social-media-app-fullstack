@@ -41,7 +41,7 @@ const Header = () => {
   };
 
   return (
-    <header className='flex items-center justify-between h-12 py-1 bg-[#0b1416] border-b-[.1rem] border-gray-600 sm:h-14 px-[1rem]'>
+    <header className='flex sticky z-[100] top-0 items-center justify-between h-12 py-1 bg-[#0b1416] border-b-[.1rem] border-gray-600 sm:h-14 px-[1rem]'>
       <span className='flex items-center gap-2'>
         {isLoggedIn && (
           <Sheet>

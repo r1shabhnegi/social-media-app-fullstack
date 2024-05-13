@@ -68,7 +68,7 @@ const createPost = tryCatch(async (req: Request, res: Response) => {
   res.status(200).json({ message: 'Post Created Successfully' });
 });
 
-const getCommunityPosts = tryCatch(async (req: Request, res: Response) => {
+const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
   const { id } = req.params;
   console.log(id);
   const foundPosts = await Post.find({
@@ -111,7 +111,17 @@ const addUpVote = tryCatch(async (req: Request, res: Response) => {
 });
 
 const getAllPosts = tryCatch(async (req: Request, res: Response) => {
-  const foundPosts = await Post.find().sort({ createdAt: -1 });
+  const { page } = req.params;
+
+  const skipPosts = +page * 5;
+  const pageItems = 5;
+
+  const foundPosts = await Post.find()
+    .skip(skipPosts)
+    .limit(pageItems)
+    .sort({ createdAt: -1 });
+
+  console.log(foundPosts);
 
   res.status(200).send(foundPosts);
 });
@@ -126,7 +136,7 @@ const getDetailPost = tryCatch(async (req: Request, res: Response) => {
 });
 export {
   createPost,
-  getCommunityPosts,
+  getAllCommunityPosts,
   getPostStats,
   addUpVote,
   getAllPosts,

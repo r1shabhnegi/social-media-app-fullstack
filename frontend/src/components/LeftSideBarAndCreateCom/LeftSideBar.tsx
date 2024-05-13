@@ -18,43 +18,45 @@ const LeftSideBar = () => {
     setShowCommunityCreate(!showCommunityCreate);
   };
   return (
-    <ScrollArea className='h-[44rem]'>
-      <span className='bg-[#0b1416] flex flex-col w-[17rem] p-4 border-gray-600 border-r-[0.1rem] gap-1'>
-        <Link to='/'>
-          <span
-            className={`${
-              pathname === '/' ? 'bg-[#1a282d]' : 'bg-[#0b1416]'
-            } flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5`}>
-            <AiFillHome className='size-6' />
-            <p>Home</p>
-          </span>
-        </Link>
-        <Link to='/communities'>
-          <span
-            className={`${
-              pathname === '/communities' ? 'bg-[#1a282d]' : 'bg-[#0b1416]'
-            } flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5`}>
-            <MdGroups3 className='size-6' />
-            <p>Find Communities</p>
-          </span>
-        </Link>
+    <div className='fixed w-[17rem]  sm:top-14 top-12  hidden lg:inline'>
+      <ScrollArea className='h-[44.3rem]'>
+        <span className='bg-[#0b1416] pb-10 flex flex-col  p-4 border-gray-600 border-r-[0.1rem] gap-1'>
+          <Link to='/'>
+            <span
+              className={`${
+                pathname === '/' ? 'bg-[#1a282d]' : 'bg-[#0b1416]'
+              } flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5`}>
+              <AiFillHome className='size-6' />
+              <p>Home</p>
+            </span>
+          </Link>
+          <Link to='/communities'>
+            <span
+              className={`${
+                pathname === '/communities' ? 'bg-[#1a282d]' : 'bg-[#0b1416]'
+              } flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5`}>
+              <MdGroups3 className='size-6' />
+              <p>Find Communities</p>
+            </span>
+          </Link>
 
-        <span
-          className='flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5'
-          onClick={showCreateCommunity}>
-          <IoAdd className='size-6' />
-          <p>Create a community</p>
+          <span
+            className='flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5'
+            onClick={showCreateCommunity}>
+            <IoAdd className='size-6' />
+            <p>Create a community</p>
+          </span>
+
+          <CommunitiesList />
         </span>
 
-        <CommunitiesList />
-      </span>
-
-      {showCommunityCreate && (
-        <CreateCommunity
-          cancelBtn={() => setShowCommunityCreate(!showCommunityCreate)}
-        />
-      )}
-    </ScrollArea>
+        {showCommunityCreate && (
+          <CreateCommunity
+            cancelBtn={() => setShowCommunityCreate(!showCommunityCreate)}
+          />
+        )}
+      </ScrollArea>
+    </div>
   );
 };
 export default LeftSideBar;
