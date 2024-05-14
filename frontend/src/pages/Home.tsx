@@ -1,7 +1,7 @@
 import { useGetAllPostQuery } from '@/api/queries/postQuery';
 import CommonLoader from '@/components/CommonLoader';
 import PageLoader from '@/components/PageLoader';
-import PostCard from '@/components/post/PostCard';
+import PostCard from '@/components/PostCard';
 import { RootState } from '@/global/_store';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -68,7 +68,7 @@ const Home = () => {
 
   isLoading && <PageLoader isLoading={isLoading} />;
   return (
-    <div className='flex min-h-screen gap-16 py-5 mx-20'>
+    <div className='flex max-w-[65rem] mx-auto min-h-screen gap-16 py-5'>
       <div className='flex-1'>
         <Link to='/submit'>
           <div className='bg-[#0B1416] border-[0.01rem] mb-5 border-gray-600 h-10 gap-1 w-full flex justify-center items-center p-1'>
@@ -79,16 +79,16 @@ const Home = () => {
           </div>
         </Link>
         <div>
-          {postsData?.map((postData: postDataType) => (
+          {postsData?.map((postData: postDataType, i: number) => (
             <PostCard
               postData={postData}
-              key={postData._id}
+              key={postData._id + i / 3}
             />
           ))}
         </div>
         <CommonLoader isLoading={postsLoading} />
       </div>
-      <div className='bg-red-600 rounded-lg h-min w-80'>sidebar</div>
+      <div className='bg-gray-600 rounded-lg h-min w-80'>sidebar</div>
     </div>
   );
 };

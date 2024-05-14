@@ -60,7 +60,7 @@ const Submit = () => {
     } catch (error) {
       dispatch(
         showToast({
-          message: 'Error/Over sized image',
+          message: 'Error posting!',
           type: 'ERROR',
         })
       );

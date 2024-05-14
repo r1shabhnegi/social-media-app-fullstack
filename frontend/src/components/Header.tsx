@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';
 
-import LeftSideBar from '../LeftSideBarAndCreateCom/LeftSideBar';
+import LeftSideBar from './LeftSideBar';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -15,7 +15,7 @@ import { IoAdd } from 'react-icons/io5';
 import { useLogoutMutation } from '@/api/queries/authQuery';
 import { setLogout } from '@/global/authSlice';
 import { showToast } from '@/global/toastSlice';
-import CommonLoader from '../CommonLoader';
+import CommonLoader from './CommonLoader';
 
 const Header = () => {
   const navigate = useNavigate();

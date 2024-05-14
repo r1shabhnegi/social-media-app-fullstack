@@ -1,5 +1,5 @@
 import { multiFormatDateString } from '@/lib/checkDate';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import {
   useAddUpVoteMutation,
   useGetPostStatsQuery,
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/global/_store';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
 import { FaRegBookmark, FaRegCommentAlt } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 type postDataType = {
   title: string;
@@ -26,7 +26,6 @@ type postDataType = {
 };
 
 const PostCard = ({ postData }: { postData: postDataType }) => {
-  const navigate = useNavigate();
   const createAt = multiFormatDateString(postData.createdAt);
 
   const { data: postStats } = useGetPostStatsQuery(postData._id);
@@ -53,15 +52,10 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
         </Avatar>
 
         <div className='flex flex-col justify-center'>
-          <Link to={`/community/${postData.communityName}`}>
-            <p
-              className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'
-              // onClick={() =>
-              //   navigate(`/community/${postData.communityName}`)
-              // }
-            >
-              r/{postData.communityName}
-            </p>
+          <Link
+            to={`/community/${postData.communityName}`}
+            className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'>
+            r/{postData.communityName}
           </Link>
           <p className='text-xs'>
             by

@@ -23,7 +23,7 @@ router.post(
 router.get('/numberOfPosts', getNumberOfPosts);
 router.get('/getAllPosts/:page', getAllPosts);
 
-router.get('/:id', getAllCommunityPosts);
+router.get('/:id/:page', getAllCommunityPosts);
 router.get('/getPostStats/:postId', getPostStats);
 router.post('/addUpVote', addUpVote);
 router.get('/detail/:id', getDetailPost);

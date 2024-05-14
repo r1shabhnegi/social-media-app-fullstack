@@ -14,8 +14,7 @@ const apiRequests = apiClient.injectEndpoints({
     }),
 
     getAllCommunityPosts: builder.query({
-      query: (id) => `/api/post/${id}
-    `,
+      query: ({ communityId, page }) => `/api/post/${communityId}/${page}`,
       providesTags: ['communityPosts'],
     }),
 
@@ -43,7 +42,7 @@ const apiRequests = apiClient.injectEndpoints({
 export const {
   useNumberOfPostsQuery,
   useCreatePostMutation,
-  useGetAllCommunityPostsQuery,
+  useLazyGetAllCommunityPostsQuery,
   useGetPostStatsQuery,
   useAddUpVoteMutation,
   useGetAllPostQuery,

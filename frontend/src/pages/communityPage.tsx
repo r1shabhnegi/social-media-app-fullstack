@@ -1,7 +1,6 @@
-import CommunityRightSideBar from '@/components/CommunityPage/CommunityRightSideBar';
 import { AppDispatch, RootState } from '@/global/_store';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PageLoader from '@/components/PageLoader';
 
 import { IoAdd } from 'react-icons/io5';
@@ -16,13 +15,13 @@ import {
   useLeaveCommunityMutation,
 } from '@/api/queries/communityQuery';
 import { MdEditNote } from 'react-icons/md';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { showToast } from '@/global/toastSlice';
 import { MdOutlineCancel } from 'react-icons/md';
 
 import EditCommunityForm from '@/forms/EditCommunityForm';
-import { useGetAllCommunityPostsQuery } from '@/api/queries/postQuery';
-import PostCard from '@/components/post/PostCard';
+import { useLazyGetAllCommunityPostsQuery } from '@/api/queries/postQuery';
+import PostCard from '@/components/PostCard';
 import CommonLoader from '@/components/CommonLoader';
 
 type postDataType = {
@@ -34,14 +33,16 @@ type postDataType = {
   communityId: string;
   communityName: string;
   authorAvatar: string;
-  createdAt: string;
   image: string;
   downVotes: number;
   upVotes: number;
+  createdAt: string;
 };
 
 const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
+  const [page, setPage] = useState(0);
+  const [postsData, setPostsData] = useState<postDataType[]>([]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -49,17 +50,57 @@ const CommunityPage = () => {
   const { userCommunitiesList } = useSelector(
     (state: RootState) => state.community
   );
+  const { numberOfPosts } = useSelector((state: RootState) => state.posts);
   const { name: communityName } = useParams();
 
-  const { data: communityData, isLoading: communityLoading } =
-    useGetCommunityQuery(communityName);
-  const { data: postsData, isLoading: postsLoading } =
-    useGetAllCommunityPostsQuery(communityData?._id);
+  const {
+    data: communityData,
+    isSuccess,
+    isLoading: communityLoading,
+  } = useGetCommunityQuery(communityName);
+  const [fetchCommunityData, { isLoading: loadingCommunityPosts }] =
+    useLazyGetAllCommunityPostsQuery();
   const [joinCommunity] = useJoinCommunityMutation();
   const [leaveCommunity] = useLeaveCommunityMutation();
   const [deleteCommunity] = useDeleteCommunityMutation();
 
-  // console.log(data);
+  useEffect(() => {
+    if (page + 1 * 5 < numberOfPosts) {
+      const fetchPosts = async () => {
+        if (isSuccess) {
+          try {
+            const response = await fetchCommunityData({
+              communityId: communityData?._id,
+              page,
+            }).unwrap();
+            if (response) {
+              setPostsData((prev) => [...prev, ...response]);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      };
+      fetchPosts();
+    }
+  }, [communityData?._id, fetchCommunityData, isSuccess, numberOfPosts, page]);
+
+  const handleScrollPagination = () => {
+    if (
+      document.documentElement.scrollTop + window.innerHeight + 1 >=
+      document.documentElement.scrollHeight
+    ) {
+      setPage((prev) => prev + 1);
+      console.log(page);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollPagination);
+
+    return () => window.removeEventListener('scroll', handleScrollPagination);
+  }, []);
+
   const isMod = userId === communityData?.authorId;
 
   const joined = userCommunitiesList.filter(
@@ -198,8 +239,8 @@ const CommunityPage = () => {
 
       <div className='flex gap-20 mt-10 w-ful'>
         <div className='flex-1'>
-          {postsLoading ? (
-            <CommonLoader isLoading={postsLoading} />
+          {loadingCommunityPosts ? (
+            <CommonLoader isLoading={loadingCommunityPosts} />
           ) : (
             <>
               {postsData?.map((postData: postDataType) => (
@@ -210,12 +251,47 @@ const CommunityPage = () => {
             </>
           )}
         </div>
-        <CommunityRightSideBar
-          description={communityData?.description}
-          author={communityData?.authorId}
-          communityName={communityName}
-          rules={communityData?.rule}
-        />
+        <div className='bg-[#1A282D] rounded-lg w-80 flex flex-col gap-2 p-3 h-min'>
+          <h1 className='text-sm font-semibold text-gray-100 '>Description</h1>
+          <div className='p-3 bg-gray-700 rounded-lg'>
+            <p className='text-sm text-gray-300'>
+              {communityData?.description}
+            </p>
+          </div>
+
+          <h1 className='text-sm font-semibold text-gray-100 '>Moderator</h1>
+          <div className='p-3 bg-gray-700 rounded-lg'>
+            <div className='flex items-center gap-3'>
+              <Link to={`/profile/${communityData?.name}`}>
+                <Avatar className='bg-gray-700 size-8 sm:size-9'>
+                  <AvatarImage src={communityData?.avatar} />
+                  <AvatarFallback className='bg-gray-500 '>
+                    {communityData?.name.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
+              <Link to={`/profile/${communityData?.authorName}`}>
+                <p className='text-sm text-gray-300 cursor-pointer hover:underline'>
+                  {communityData?.authorName}
+                </p>
+              </Link>
+            </div>
+          </div>
+          {communityData?.rules?.length > 0 ? (
+            <>
+              <h1 className='text-sm font-semibold text-gray-100 '>Rules</h1>
+              <div className='p-3 bg-gray-700 rounded-lg'>
+                {communityData?.rules?.map((r: string, i: number) => (
+                  <p
+                    className='text-sm text-gray-300'
+                    key={r + i}>
+                    {i + 1}. {r}
+                  </p>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
       </div>
     </div>
   );

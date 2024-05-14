@@ -6,8 +6,8 @@ import ProtectedRoutes from './ProtectedRoutes';
 const PagesContainer = () => {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route element={<ProtectedRoutes />}>
+      <Route element={<ProtectedRoutes />}>
+        <Route element={<Layout />}>
           {privateRoutes.map(({ path, element }) => (
             <Route
               key={path}

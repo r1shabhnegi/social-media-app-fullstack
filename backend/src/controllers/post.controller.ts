@@ -73,11 +73,21 @@ const createPost = tryCatch(async (req: Request, res: Response) => {
 });
 
 const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  console.log(id);
+  const { id, page } = req.params;
+  console.log('page', page);
+  console.log('id', id);
+
+  const skipPosts = +page * 5;
+  const pageItems = 5;
+
   const foundPosts = await Post.find({
     communityId: id,
-  }).sort({ createdAt: -1 });
+  })
+    .skip(skipPosts)
+    .limit(pageItems)
+    .sort({ createdAt: -1 });
+
+  console.log(foundPosts);
 
   if (!foundPosts) throw new ApiError('Posts Not Found', POST_NOT_FOUND, 404);
   res.status(200).json(foundPosts);
