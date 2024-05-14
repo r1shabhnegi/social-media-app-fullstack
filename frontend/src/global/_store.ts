@@ -2,8 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import toastReducer from './toastSlice';
 import authReducer from './authSlice';
 import { apiClient } from '@/api/apiClient';
-import communityReducer from './communitySlice'
-// import { useDispatch } from 'react-redux';
+import communityReducer from './communitySlice';
+import postsReducer from './postsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +11,7 @@ export const store = configureStore({
     toast: toastReducer,
     auth: authReducer,
     community: communityReducer,
+    posts: postsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiClient.middleware),

@@ -6,6 +6,7 @@ import {
   getAllCommunityPosts,
   getDetailPost,
   getPostStats,
+  getNumberOfPosts,
 } from '../controllers/post.controller';
 import { upload } from '../middlewares/multer.middleware';
 import { verifyJwt } from '../middlewares/auth.middleware';
@@ -19,6 +20,7 @@ router.post(
   createPost
 );
 
+router.get('/numberOfPosts', getNumberOfPosts);
 router.get('/getAllPosts/:page', getAllPosts);
 
 router.get('/:id', getAllCommunityPosts);

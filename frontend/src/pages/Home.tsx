@@ -2,7 +2,9 @@ import { useGetAllPostQuery } from '@/api/queries/postQuery';
 import CommonLoader from '@/components/CommonLoader';
 import PageLoader from '@/components/PageLoader';
 import PostCard from '@/components/post/PostCard';
+import { RootState } from '@/global/_store';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 type postDataType = {
@@ -24,24 +26,31 @@ const Home = () => {
   const [page, setPage] = useState<number>(0);
   const [postsData, setPostsData] = useState<postDataType[]>([]);
   const [postsLoading, setPostLoading] = useState<boolean>(false);
+  const { numberOfPosts } = useSelector((state: RootState) => state.posts);
 
   const { refetch, isLoading } = useGetAllPostQuery(page);
   useEffect(() => {
-    const fetchMorePosts = async () => {
-      try {
-        setPostLoading(true);
-        const res = await refetch().unwrap();
-        if (res) {
-          setPostsData((prev) => [...prev, ...res]);
+    if (page + 1 * 5 < numberOfPosts) {
+      // console.log((page + 1) * 5 < numberOfPosts);
+      // console.log((page + 1) * 5);
+      // console.log(numberOfPosts);
+      const fetchMorePosts = async () => {
+        try {
+          setPostLoading(true);
+          const response = await refetch().unwrap();
+          if (response) {
+            // console.log(response);
+            setPostsData((prev) => [...prev, ...response]);
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setPostLoading(false);
         }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setPostLoading(false);
-      }
-    };
-    fetchMorePosts();
-  }, [page, refetch]);
+      };
+      fetchMorePosts();
+    }
+  }, [numberOfPosts, page, refetch]);
 
   const handleScrollPagination = () => {
     if (
@@ -51,7 +60,6 @@ const Home = () => {
       setPage((prev) => prev + 1);
     }
   };
-  console.log(postsData);
   useEffect(() => {
     window.addEventListener('scroll', handleScrollPagination);
 

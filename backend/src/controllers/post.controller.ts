@@ -11,7 +11,11 @@ import {
 } from '../utility/errorConstants';
 import User from '../models/user.model';
 import mongoose from 'mongoose';
-const ObjectId = mongoose.Types.ObjectId;
+
+const getNumberOfPosts = tryCatch(async (req: Request, res: Response) => {
+  const numberOfPosts = await Post.countDocuments();
+  res.status(200).send(numberOfPosts.toString());
+});
 
 const createPost = tryCatch(async (req: Request, res: Response) => {
   const { title, content, communityName } = req.body;
@@ -106,7 +110,7 @@ const addUpVote = tryCatch(async (req: Request, res: Response) => {
     }
   );
   // const sdsds = await Post.findById(postId);
-  console.log(foundPost);
+  // console.log(foundPost);
   // console.log(foundPost);
 });
 
@@ -121,8 +125,6 @@ const getAllPosts = tryCatch(async (req: Request, res: Response) => {
     .limit(pageItems)
     .sort({ createdAt: -1 });
 
-  console.log(foundPosts);
-
   res.status(200).send(foundPosts);
 });
 
@@ -135,6 +137,7 @@ const getDetailPost = tryCatch(async (req: Request, res: Response) => {
   res.status(200).send(foundPostDetail);
 });
 export {
+  getNumberOfPosts,
   createPost,
   getAllCommunityPosts,
   getPostStats,

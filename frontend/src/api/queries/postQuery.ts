@@ -2,6 +2,8 @@ import { apiClient } from '../apiClient';
 
 const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
+    numberOfPosts: builder.query({ query: () => '/api/post/numberOfPosts' }),
+
     createPost: builder.mutation({
       query: (data) => ({
         url: '/api/post/createPost',
@@ -39,6 +41,7 @@ const apiRequests = apiClient.injectEndpoints({
 });
 
 export const {
+  useNumberOfPostsQuery,
   useCreatePostMutation,
   useLazyGetAllCommunityPostsQuery,
   useGetPostStatsQuery,
