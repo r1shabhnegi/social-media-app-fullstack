@@ -48,7 +48,7 @@ const CreateCommunity = ({ cancelBtn }: { cancelBtn: () => void }) => {
   });
 
   return (
-    <div className='fixed top-0 left-0 z-10 flex items-center justify-center w-full h-screen bg-black bg-opacity-30'>
+    <div className='fixed top-0 left-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-30'>
       <form
         className='bg-[#0f1a1c] w-[35rem] p-6 rounded-3xl gap-2 flex flex-col'
         onSubmit={onSubmit}>

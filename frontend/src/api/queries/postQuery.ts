@@ -43,7 +43,7 @@ const apiRequests = apiClient.injectEndpoints({
 export const {
   useNumberOfPostsQuery,
   useCreatePostMutation,
-  useLazyGetAllCommunityPostsQuery,
+  useGetAllCommunityPostsQuery,
   useGetPostStatsQuery,
   useAddUpVoteMutation,
   useGetAllPostQuery,

@@ -15,16 +15,24 @@ type CommunityEditTypes = {
   rules: string;
 };
 
-const EditCommunityForm = ({ cancel }: { cancel: () => void }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const [editCommunity, { isLoading }] = useEditCommunityMutation();
-  const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
+type EditCommunityFormProps = {
+  cancel: () => void;
+  name: string;
+  description: string;
+  rules: string;
+};
 
-  const {
-    name: communityName,
-    description,
-    rules,
-  } = useSelector((state: RootState) => state.community.currentCommunity);
+const EditCommunityForm = ({
+  cancel,
+  name: communityName,
+  description,
+  rules,
+}: EditCommunityFormProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [editCommunity, { isLoading }] = useEditCommunityMutation();
+
+  const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
 
   useEffect(() => {
     reset({ name: communityName, description, rules });

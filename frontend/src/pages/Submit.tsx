@@ -8,12 +8,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-type PostTypes = {
-  title: string;
-  content: string;
-  image: string;
-};
+import imageCompression from 'browser-image-compression';
 
 const Submit = () => {
   const [selectOption, setSelectOption] = useState<string>('');
@@ -23,7 +18,7 @@ const Submit = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const { register, handleSubmit } = useForm<PostTypes>();
+  const { register, handleSubmit } = useForm();
 
   const { userCommunitiesList, modCommunitiesList } = useSelector(
     (state: RootState) => state.community
@@ -41,15 +36,21 @@ const Submit = () => {
   }, []);
 
   const [createPost, { isLoading }] = useCreatePostMutation();
+
   const onSubmit = handleSubmit(async (data) => {
-    const formData = new FormData();
-    formData.append('title', data.title);
-    formData.append('content', data.content);
-    formData.append('communityName', selectOption);
-    formData.append('image', data.image[0]);
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+    };
     try {
+      const postImage = await imageCompression(data.image[0], options);
+
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('content', data.content);
+      formData.append('communityName', selectOption);
+      formData.append('image', postImage);
       const res = await createPost(formData).unwrap();
-      console.log(res);
       if (res) {
         dispatch(
           showToast({ message: 'Post Created Successfully!', type: 'SUCCESS' })

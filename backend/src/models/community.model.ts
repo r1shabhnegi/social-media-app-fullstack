@@ -1,7 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 
 export type CommunityTypes = {
-  author: mongoose.Types.ObjectId;
+  authorId: mongoose.Types.ObjectId;
+  authorName: string;
+  authorAvatar: string;
   name: string;
   avatarImg: string;
   coverImg: string;
@@ -9,12 +11,13 @@ export type CommunityTypes = {
   rules: string[];
   members: mongoose.Types.ObjectId[];
   moderator: mongoose.Types.ObjectId[];
-  posts: mongoose.Types.ObjectId[];
 };
 
 const communitySchema = new mongoose.Schema<CommunityTypes>(
   {
-    author: { type: Schema.Types.ObjectId, ref: 'User' },
+    authorId: { type: Schema.Types.ObjectId, ref: 'User' },
+    authorName: { type: String },
+    authorAvatar: { type: String },
     name: {
       type: String,
       unique: true,
@@ -32,7 +35,6 @@ const communitySchema = new mongoose.Schema<CommunityTypes>(
     moderator: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] },
     ],
-    // posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post', default: [] }],
   },
   { timestamps: true }
 );

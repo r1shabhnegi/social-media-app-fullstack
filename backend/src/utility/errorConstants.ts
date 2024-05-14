@@ -8,6 +8,7 @@ export const AUTH_COOKIE_MISSING = 802; //403
 // COMMUNITY_CONTROLLER
 export const COM_COOKIE_MISSING = 902; //403
 export const COM_ALREADY_EXISTS = 903; //403
+export const COM_AUTHOR_NOT_FOUND = 904; //403
 export const COM_INVALID_RF_TOKEN = 905; //401
 export const COM_INVALID_AC_TOKEN = 906; //403
 export const COM_NOT_FOUND = 901; //404

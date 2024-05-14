@@ -59,7 +59,6 @@ const CommunitiesList = () => {
               _id,
             }: {
               name: string;
-
               avatarImg: string;
               _id: number;
             }) => (

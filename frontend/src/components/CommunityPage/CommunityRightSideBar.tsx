@@ -14,14 +14,9 @@ const CommunityRightSideBar = ({
   rules: string[];
 }) => {
   const { data } = useUserQuery(author);
-  console.log('user-', data);
+  // console.log('user-', data);
   return (
     <div className='bg-[#1A282D] rounded-lg w-80 flex flex-col gap-2 p-3 h-min'>
-      {/* <div className='flex justify-between mb-2'>
-        <h1 className='text-xl font-bold'>r/{communityName}</h1>
-        <h1></h1>
-      </div> */}
-
       <h1 className='text-sm font-semibold text-gray-100 '>Description</h1>
       <div className='p-3 bg-gray-700 rounded-lg'>
         <p className='text-sm text-gray-300'>{description}</p>
@@ -57,8 +52,6 @@ const CommunityRightSideBar = ({
           </div>
         </>
       ) : null}
-
-      {/* <h1 className='text-sm font-semibold text-gray-100 '>Members</h1> */}
     </div>
   );
 };

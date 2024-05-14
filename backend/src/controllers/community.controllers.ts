@@ -10,9 +10,11 @@ import {
   COM_ALREADY_EXISTS,
   COM_INVALID_RF_TOKEN,
   COM_NOT_FOUND,
+  COM_AUTHOR_NOT_FOUND,
 } from '../utility/errorConstants';
 import { tryCatch } from '../utility/tryCatch';
 import { uploadOnCloudinary } from '../utility/cloudinary';
+import User from '../models/user.model';
 
 interface decodedTypes {
   userId?: string;
@@ -21,18 +23,12 @@ interface decodedTypes {
 // CREATE_COMMUNITY
 
 const createCommunity = tryCatch(async (req: Request, res: Response) => {
+  const { name: communityName, description } = req.body;
   const cookies = req.cookies;
   if (!cookies?.jwt)
     throw new ApiError('cookie missing', COM_COOKIE_MISSING, 403);
 
   const refreshToken = cookies?.jwt;
-
-  const { name, description } = req.body;
-
-  let foundCommunity = await Community.findOne({ name });
-  if (foundCommunity) {
-    throw new ApiError('Community Already Exists', COM_ALREADY_EXISTS, 403);
-  }
 
   const decodedToken = jwt.verify(
     refreshToken,
@@ -43,13 +39,25 @@ const createCommunity = tryCatch(async (req: Request, res: Response) => {
     throw new ApiError('Refresh Token Invalid', COM_INVALID_RF_TOKEN, 401);
   }
 
+  let foundCommunity = await Community.findOne({ communityName });
+  let foundAuthor = await User.findById(decodedToken.userId);
+
+  if (foundCommunity) {
+    throw new ApiError('Community Already Exists', COM_ALREADY_EXISTS, 403);
+  }
+  if (!foundAuthor) {
+    throw new ApiError('Author not found', COM_AUTHOR_NOT_FOUND, 403);
+  }
+
   const newCommunity = new Community({
-    name,
+    authorId: foundAuthor._id,
+    authorName: foundAuthor.name,
+    authorAvatar: foundAuthor.avatar,
+    name: communityName,
     description,
-    userId: decodedToken.userId,
-    moderator: decodedToken.userId,
-    members: decodedToken.userId,
-    author: decodedToken.userId,
+    userId: foundAuthor._id,
+    moderator: foundAuthor._id,
+    members: foundAuthor._id,
   });
   await newCommunity.save();
 
@@ -168,7 +176,7 @@ const getCommunities = tryCatch(async (req: Request, res: Response) => {
       members: {
         $in: [userId],
       },
-      author: {
+      authorId: {
         $ne: userId,
       },
     },
@@ -191,7 +199,7 @@ const getModCommunities = tryCatch(async (req: Request, res: Response) => {
 
   const foundModCommunities = await Community.find(
     {
-      author: userId,
+      authorId: userId,
     },
     {
       name: 1,
@@ -239,7 +247,7 @@ const editCommunity = tryCatch(async (req: Request, res: Response) => {
 
   if (!foundCommunity) return new ApiError('Community Not Found', 901, 404);
 
-  if (req.userId !== foundCommunity.author.toString()) {
+  if (req.userId !== foundCommunity.authorId.toString()) {
     throw new ApiError('User not allowed to edit community', 909, 403);
   }
 
@@ -281,22 +289,19 @@ const editCommunity = tryCatch(async (req: Request, res: Response) => {
 const deleteCommunity = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
   const { communityName } = req.body;
-  console.log(userId, communityName);
 
   const foundCommunity = await Community.findOne({ name: communityName });
 
-  if (foundCommunity?.author.toString() !== userId)
+  if (foundCommunity?.authorId.toString() !== userId)
     return new ApiError('Invalid AC Token', 906, 403);
 
-  const deletedCommunity = await Community.findOneAndDelete({
+  await Community.findOneAndDelete({
     name: communityName,
-  }).then(() => {
-    console.log(deleteCommunity);
   });
   // console.log(await deleteCommunity);
 
-  // if (deletedCommunity)
-  //   return new ApiError('Error Editing Community', 911, 401);
+  // if (!deletedCommunity)
+  //   return new ApiError('Error Deleting Community', 911, 401);
 
   res.status(200).json({ message: 'Community Deleted!' });
 });

@@ -41,17 +41,17 @@ const FindCommunities = () => {
                   avatarImg,
                   description,
                   _id: id,
-                  author,
+                  authorId,
                 }: {
                   name: string;
                   avatarImg: string;
                   description: string;
                   _id: string;
-                  author: string;
+                  authorId: string;
                 },
                 index: number
               ) => {
-                const isMod = author === userId;
+                const isMod = authorId === userId;
                 return (
                   <Link
                     key={id}
@@ -59,10 +59,10 @@ const FindCommunities = () => {
                     <span className='flex items-center gap-4 p-2 mb-16 w-96'>
                       <p>{index + 1}</p>
                       <span className='flex items-center gap-2 p-2 '>
-                        <Avatar className='size-8 sm:size-9'>
+                        <Avatar className=' size-8 sm:size-9'>
                           <AvatarImage
                             src={avatarImg}
-                            className='object-cover'
+                            className='z-0 object-cover'
                           />
                           <AvatarFallback className='bg-gray-600'>
                             {name.slice(0, 2).toUpperCase()}
