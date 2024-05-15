@@ -18,33 +18,45 @@ const apiRequests = apiClient.injectEndpoints({
       providesTags: ['communityPosts'],
     }),
 
-    getPostStats: builder.query({
-      query: (postId) => `/api/post/getPostStats/${postId}`,
-    }),
-
-    addUpVote: builder.mutation({
-      query: (data) => ({
-        url: '/api/post/addUpVote',
-        method: 'POST',
-        body: data,
-      }),
-    }),
-
-    getAllPost: builder.query({
+    getAllPosts: builder.query({
       query: (page) => `/api/post/getAllPosts/${page}`,
       providesTags: ['getHomePosts'],
     }),
 
     getPostDetails: builder.query({ query: (id) => `/api/post/detail/${id}` }),
+
+    getPostStats: builder.query({
+      query: ({ postId, userId }) => `/api/post/postStats/${postId}/${userId}`,
+      providesTags: ['postStats'],
+    }),
+
+    upVote: builder.mutation({
+      query: (data) => ({
+        url: '/api/post/upVote',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['postStats'],
+    }),
+
+    downVote: builder.mutation({
+      query: (data) => ({
+        url: '/api/post/downVote',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['postStats'],
+    }),
   }),
 });
 
 export const {
   useNumberOfPostsQuery,
   useCreatePostMutation,
-  useLazyGetAllCommunityPostsQuery,
-  useGetPostStatsQuery,
-  useAddUpVoteMutation,
-  useGetAllPostQuery,
+  useGetAllCommunityPostsQuery,
+  useGetAllPostsQuery,
   useGetPostDetailsQuery,
+  useGetPostStatsQuery,
+  useUpVoteMutation,
+  useDownVoteMutation,
 } = apiRequests;

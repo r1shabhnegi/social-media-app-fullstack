@@ -18,8 +18,16 @@ const postSchema = new mongoose.Schema(
     },
     communityName: { type: String, required: true },
     authorAvatar: { type: String },
-    upVotes: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    downVotes: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    upVotes: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: 0 },
+    ],
+    downVotes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: 0,
+      },
+    ],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   },
   { timestamps: true }

@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import {
-  addUpVote,
   createPost,
-  getAllPosts,
   getAllCommunityPosts,
+  getAllPosts,
   getDetailPost,
-  getPostStats,
   getNumberOfPosts,
+  getPostStats,
+  handleDownVote,
+  handleUpVote,
 } from '../controllers/post.controller';
 import { upload } from '../middlewares/multer.middleware';
 import { verifyJwt } from '../middlewares/auth.middleware';
@@ -20,12 +21,12 @@ router.post(
   createPost
 );
 
-router.get('/numberOfPosts', getNumberOfPosts);
 router.get('/getAllPosts/:page', getAllPosts);
-
 router.get('/:id/:page', getAllCommunityPosts);
-router.get('/getPostStats/:postId', getPostStats);
-router.post('/addUpVote', addUpVote);
+router.get('/numberOfPosts', getNumberOfPosts);
 router.get('/detail/:id', getDetailPost);
+router.get('/postStats/:postId/:userId', getPostStats);
+router.post('/upVote', handleUpVote);
+router.post('/downVote', handleDownVote);
 
 export default router;

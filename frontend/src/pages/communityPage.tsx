@@ -15,34 +15,15 @@ import {
   useLeaveCommunityMutation,
 } from '@/api/queries/communityQuery';
 import { MdEditNote } from 'react-icons/md';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { showToast } from '@/global/toastSlice';
 import { MdOutlineCancel } from 'react-icons/md';
 
-import EditCommunityForm from '@/forms/EditCommunityForm';
-import { useLazyGetAllCommunityPostsQuery } from '@/api/queries/postQuery';
-import PostCard from '@/components/PostCard';
-import CommonLoader from '@/components/CommonLoader';
-
-type postDataType = {
-  _id: string;
-  title: string;
-  content: string;
-  authorId: string;
-  authorName: string;
-  communityId: string;
-  communityName: string;
-  authorAvatar: string;
-  image: string;
-  downVotes: number;
-  upVotes: number;
-  createdAt: string;
-};
+import EditCommunityForm from '@/components/EditCommunityForm';
+import CommunityPosts from '@/components/CommunityPosts';
 
 const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
-  const [page, setPage] = useState(0);
-  const [postsData, setPostsData] = useState<postDataType[]>([]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -50,56 +31,15 @@ const CommunityPage = () => {
   const { userCommunitiesList } = useSelector(
     (state: RootState) => state.community
   );
-  const { numberOfPosts } = useSelector((state: RootState) => state.posts);
+
   const { name: communityName } = useParams();
 
-  const {
-    data: communityData,
-    isSuccess,
-    isLoading: communityLoading,
-  } = useGetCommunityQuery(communityName);
-  const [fetchCommunityData, { isLoading: loadingCommunityPosts }] =
-    useLazyGetAllCommunityPostsQuery();
+  const { data: communityData, isLoading: communityLoading } =
+    useGetCommunityQuery(communityName);
+
   const [joinCommunity] = useJoinCommunityMutation();
   const [leaveCommunity] = useLeaveCommunityMutation();
   const [deleteCommunity] = useDeleteCommunityMutation();
-
-  useEffect(() => {
-    if (page + 1 * 5 < numberOfPosts) {
-      const fetchPosts = async () => {
-        if (isSuccess) {
-          try {
-            const response = await fetchCommunityData({
-              communityId: communityData?._id,
-              page,
-            }).unwrap();
-            if (response) {
-              setPostsData((prev) => [...prev, ...response]);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      };
-      fetchPosts();
-    }
-  }, [communityData?._id, fetchCommunityData, isSuccess, numberOfPosts, page]);
-
-  const handleScrollPagination = () => {
-    if (
-      document.documentElement.scrollTop + window.innerHeight + 1 >=
-      document.documentElement.scrollHeight
-    ) {
-      setPage((prev) => prev + 1);
-      console.log(page);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScrollPagination);
-
-    return () => window.removeEventListener('scroll', handleScrollPagination);
-  }, []);
 
   const isMod = userId === communityData?.authorId;
 
@@ -238,19 +178,7 @@ const CommunityPage = () => {
       </div>
 
       <div className='flex gap-20 mt-10 w-ful'>
-        <div className='flex-1'>
-          {loadingCommunityPosts ? (
-            <CommonLoader isLoading={loadingCommunityPosts} />
-          ) : (
-            <>
-              {postsData?.map((postData: postDataType) => (
-                <div key={postData._id}>
-                  <PostCard postData={postData} />
-                </div>
-              ))}
-            </>
-          )}
-        </div>
+        <CommunityPosts communityId={communityData?._id} />
         <div className='bg-[#1A282D] rounded-lg w-80 flex flex-col gap-2 p-3 h-min'>
           <h1 className='text-sm font-semibold text-gray-100 '>Description</h1>
           <div className='p-3 bg-gray-700 rounded-lg'>

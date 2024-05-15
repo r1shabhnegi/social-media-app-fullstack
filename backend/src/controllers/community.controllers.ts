@@ -15,6 +15,7 @@ import {
 import { tryCatch } from '../utility/tryCatch';
 import { uploadOnCloudinary } from '../utility/cloudinary';
 import User from '../models/user.model';
+import { Post } from '../models/post.model';
 
 interface decodedTypes {
   userId?: string;
@@ -294,6 +295,8 @@ const deleteCommunity = tryCatch(async (req: Request, res: Response) => {
 
   if (foundCommunity?.authorId.toString() !== userId)
     return new ApiError('Invalid AC Token', 906, 403);
+
+  await Post.deleteMany({ communityId: foundCommunity._id });
 
   await Community.findOneAndDelete({
     name: communityName,

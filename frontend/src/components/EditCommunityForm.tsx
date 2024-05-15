@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/global/_store';
 import { showToast } from '@/global/toastSlice';
 import CommonLoader from '@/components/CommonLoader';
+import imageCompression from 'browser-image-compression';
 
 type CommunityEditTypes = {
   name: string;
@@ -38,34 +39,44 @@ const EditCommunityForm = ({
     reset({ name: communityName, description, rules });
   }, [communityName, description, reset, rules]);
 
-  // isSuccess{
-
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     cancel();
-  //   }
-  // }, [cancel, isSuccess]);
-
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-    const formData = new FormData();
-    formData.append('communityName', communityName);
-    formData.append('description', data.description);
-    formData.append('name', data.name);
-    formData.append('rules', data.rules);
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+    try {
+      const avatarImage = await imageCompression(data.avatarImg[0], options);
+      const coverImage = await imageCompression(data.coverImg[0], options);
 
-    formData.append('avatarImg', data.avatarImg[0]);
-    formData.append('coverImg', data.coverImg[0]);
+      const formData = new FormData();
+      formData.append('communityName', communityName);
+      formData.append('description', data.description);
+      formData.append('name', data.name);
+      formData.append('rules', data.rules);
 
-    const res = await editCommunity(formData).unwrap();
-    if (res) {
+      formData.append('avatarImg', avatarImage);
+      formData.append('coverImg', coverImage);
+      const res = await editCommunity(formData).unwrap();
+
+      if (res) {
+        dispatch(
+          showToast({
+            message: 'Community Edited Successfully!',
+            type: 'SUCCESS',
+          })
+        );
+        cancel();
+      } else {
+        throw new Error('Error Editing Community!');
+      }
+    } catch (error) {
       dispatch(
         showToast({
-          message: 'Community Edited Successfully!',
-          type: 'SUCCESS',
+          message: 'Error Editing Community!',
+          type: 'ERROR',
         })
       );
-      cancel();
     }
   });
 

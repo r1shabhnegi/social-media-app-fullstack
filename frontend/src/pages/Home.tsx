@@ -1,4 +1,4 @@
-import { useGetAllPostQuery } from '@/api/queries/postQuery';
+import { useGetAllPostsQuery } from '@/api/queries/postQuery';
 import CommonLoader from '@/components/CommonLoader';
 import PageLoader from '@/components/PageLoader';
 import PostCard from '@/components/PostCard';
@@ -28,7 +28,7 @@ const Home = () => {
   const [postsLoading, setPostLoading] = useState<boolean>(false);
   const { numberOfPosts } = useSelector((state: RootState) => state.posts);
 
-  const { refetch, isLoading } = useGetAllPostQuery(page);
+  const { refetch, isLoading } = useGetAllPostsQuery(page);
   useEffect(() => {
     if (page + 1 * 5 < numberOfPosts) {
       // console.log((page + 1) * 5 < numberOfPosts);
@@ -38,6 +38,7 @@ const Home = () => {
         try {
           setPostLoading(true);
           const response = await refetch().unwrap();
+          console.log(response);
           if (response) {
             // console.log(response);
             setPostsData((prev) => [...prev, ...response]);

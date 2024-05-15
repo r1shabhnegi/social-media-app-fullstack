@@ -68,7 +68,7 @@ const Submit = () => {
   });
 
   return (
-    <div className=' bg-[#030303] min-h-screen pt-8 text-[#f2f2f1] flex items-start justify-center'>
+    <div className=' bg-[#030303] py-8 text-[#f2f2f1] flex items-start justify-center'>
       <div className='w-[45rem] mr-5 '>
         <h1 className='px-1 font-semibold py-3 border-b-[.1rem] border-gray-700'>
           Create a post

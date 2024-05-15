@@ -74,9 +74,6 @@ const createPost = tryCatch(async (req: Request, res: Response) => {
 
 const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
   const { id, page } = req.params;
-  console.log('page', page);
-  console.log('id', id);
-
   const skipPosts = +page * 5;
   const pageItems = 5;
 
@@ -87,46 +84,13 @@ const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
     .limit(pageItems)
     .sort({ createdAt: -1 });
 
-  console.log(foundPosts);
-
   if (!foundPosts) throw new ApiError('Posts Not Found', POST_NOT_FOUND, 404);
+
   res.status(200).json(foundPosts);
-});
-
-const getPostStats = tryCatch(async (req: Request, res: Response) => {
-  const { postId } = req.params;
-  // console.log(postId);
-  const postStats = await Post.findById(postId)
-    .select('upVotes downVotes')
-    .lean()
-    .exec();
-  // console.log(postStats);
-  if (!postStats) throw new ApiError('something went wrong', 999, 404);
-
-  res.status(200).send(postStats);
-});
-
-const addUpVote = tryCatch(async (req: Request, res: Response) => {
-  const { userId, postId } = req.body;
-  // console.log(userId, postId);
-  const foundPost = await Post.findOneAndUpdate(
-    {
-      _id: postId,
-    },
-    {
-      upVotes: {
-        $push: userId,
-      },
-    }
-  );
-  // const sdsds = await Post.findById(postId);
-  // console.log(foundPost);
-  // console.log(foundPost);
 });
 
 const getAllPosts = tryCatch(async (req: Request, res: Response) => {
   const { page } = req.params;
-
   const skipPosts = +page * 5;
   const pageItems = 5;
 
@@ -142,16 +106,159 @@ const getDetailPost = tryCatch(async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const foundPostDetail = await Post.findById(id);
-  console.log(foundPostDetail);
+  // console.log(foundPostDetail);
 
   res.status(200).send(foundPostDetail);
+});
+
+const getPostStats = tryCatch(async (req: Request, res: Response) => {
+  const { postId, userId } = req.params;
+
+  const foundVotes = await Post.findById(postId);
+
+  let totalScore;
+  if (foundVotes) {
+    totalScore = foundVotes?.upVotes?.length - foundVotes?.downVotes?.length;
+  }
+
+  const foundUserUpvote = await Post.findOne(
+    { _id: postId, upVotes: [userId] },
+    {
+      projection: { _id: 1 },
+    }
+  );
+  const foundUserDownvote = await Post.findOne(
+    { _id: postId, downVotes: [userId] },
+    {
+      projection: { _id: 1 },
+    }
+  );
+
+  const isUpvoted = foundUserUpvote ? true : false;
+  const isDownvoted = foundUserDownvote ? true : false;
+
+  console.log(foundUserUpvote);
+
+  res.status(200).send({ totalScore, isUpvoted, isDownvoted });
+});
+
+const handleUpVote = tryCatch(async (req: Request, res: Response) => {
+  const { postId, userId } = req.body;
+  console.log(postId);
+
+  const foundDownVote = await Post.findOne(
+    {
+      _id: postId,
+      downVotes: [userId],
+    },
+    {
+      projection: { _id: 1 },
+    }
+  );
+
+  if (foundDownVote) {
+    await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { downVotes: userId } },
+      { new: true }
+    );
+  }
+
+  const foundUpvoteInPost = await Post.findOne(
+    {
+      _id: postId,
+      upVotes: [userId],
+    },
+    {
+      projection: { _id: 1 },
+    }
+  );
+
+  if (!foundUpvoteInPost) {
+    const upVoted = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $addToSet: { upVotes: userId },
+      },
+      {
+        new: true,
+      }
+    );
+    if (!upVoted) return new ApiError('Error up-voting the post', 1000, 1000);
+  } else {
+    const removedUpVote = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { upVotes: userId } },
+      { new: true }
+    );
+    if (!removedUpVote)
+      return new ApiError('Error up-voting the post', 1000, 1000);
+  }
+  res.status(200).json({ message: 'upVoted' });
+});
+
+const handleDownVote = tryCatch(async (req: Request, res: Response) => {
+  const { postId, userId } = req.body;
+
+  // console.log(postId);
+
+  const foundUpVote = await Post.findOne(
+    {
+      _id: postId,
+      upVotes: [userId],
+    },
+    {
+      projection: { _id: 1 },
+    }
+  );
+
+  if (foundUpVote) {
+    await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { upVotes: userId } },
+      { new: true }
+    );
+  }
+
+  const foundDownvoteInPost = await Post.findOne(
+    {
+      _id: postId,
+      downVotes: [userId],
+    },
+    {
+      projection: { _id: 1 },
+    }
+  );
+
+  if (!foundDownvoteInPost) {
+    const downVoted = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $addToSet: { downVotes: userId },
+      },
+      {
+        new: true,
+      }
+    );
+    if (!downVoted) return new ApiError('Error up-voting the post', 1000, 1000);
+  } else {
+    const removedDownVote = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { downVotes: userId } },
+      { new: true }
+    );
+    if (!removedDownVote)
+      return new ApiError('Error up-voting the post', 1000, 1000);
+  }
+  res.status(200).json({ message: 'downVoted' });
 });
 export {
   getNumberOfPosts,
   createPost,
   getAllCommunityPosts,
-  getPostStats,
-  addUpVote,
   getAllPosts,
   getDetailPost,
+  getPostStats,
+  handleUpVote,
+  handleDownVote,
 };
