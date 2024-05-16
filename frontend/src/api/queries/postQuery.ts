@@ -1,3 +1,4 @@
+import { url } from 'inspector';
 import { apiClient } from '../apiClient';
 
 const apiRequests = apiClient.injectEndpoints({
@@ -47,6 +48,15 @@ const apiRequests = apiClient.injectEndpoints({
       }),
       invalidatesTags: ['postStats'],
     }),
+
+    savePost: builder.mutation({
+      query: (data) => ({
+        url: '/api/post/savePost',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['postStats'],
+    }),
   }),
 });
 
@@ -59,4 +69,5 @@ export const {
   useGetPostStatsQuery,
   useUpVoteMutation,
   useDownVoteMutation,
+  useSavePostMutation,
 } = apiRequests;

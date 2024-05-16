@@ -134,17 +134,22 @@ const getPostStats = tryCatch(async (req: Request, res: Response) => {
     }
   );
 
+  const savedPost = await User.findOne(
+    { _id: userId, savedPosts: postId },
+    { projection: { _id: 1 } }
+  );
+
+  const postSaved = !!savedPost?._id;
+  console.log(postSaved);
+
   const isUpvoted = foundUserUpvote ? true : false;
   const isDownvoted = foundUserDownvote ? true : false;
 
-  console.log(foundUserUpvote);
-
-  res.status(200).send({ totalScore, isUpvoted, isDownvoted });
+  res.status(200).send({ totalScore, isUpvoted, isDownvoted, postSaved });
 });
 
 const handleUpVote = tryCatch(async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
-  console.log(postId);
 
   const foundDownVote = await Post.findOne(
     {
@@ -200,8 +205,6 @@ const handleUpVote = tryCatch(async (req: Request, res: Response) => {
 const handleDownVote = tryCatch(async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
-  // console.log(postId);
-
   const foundUpVote = await Post.findOne(
     {
       _id: postId,
@@ -252,6 +255,44 @@ const handleDownVote = tryCatch(async (req: Request, res: Response) => {
   }
   res.status(200).json({ message: 'downVoted' });
 });
+// Save post
+
+const savePost = tryCatch(async (req: Request, res: Response) => {
+  const { postId, userId } = req.body;
+
+  const savedPost = await User.findOne(
+    { _id: userId, savedPosts: postId },
+    { projection: { _id: 1 } }
+  );
+
+  if (savedPost?._id) {
+    const removedPost = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { savedPosts: postId },
+      },
+      {
+        new: true,
+      }
+    );
+    res
+      .status(200)
+      .send({ message: 'post removed from bookmarked', code: '11' });
+    return;
+  } else {
+    const savedPostToUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: { savedPosts: postId },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ message: 'post bookmarked', code: '22' });
+    return;
+  }
+});
 export {
   getNumberOfPosts,
   createPost,
@@ -261,4 +302,5 @@ export {
   getPostStats,
   handleUpVote,
   handleDownVote,
+  savePost,
 };

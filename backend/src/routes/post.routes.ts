@@ -8,6 +8,7 @@ import {
   getPostStats,
   handleDownVote,
   handleUpVote,
+  savePost,
 } from '../controllers/post.controller';
 import { upload } from '../middlewares/multer.middleware';
 import { verifyJwt } from '../middlewares/auth.middleware';
@@ -28,5 +29,6 @@ router.get('/detail/:id', getDetailPost);
 router.get('/postStats/:postId/:userId', getPostStats);
 router.post('/upVote', handleUpVote);
 router.post('/downVote', handleDownVote);
+router.post('/savePost', savePost);
 
 export default router;

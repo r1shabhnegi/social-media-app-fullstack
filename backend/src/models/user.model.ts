@@ -56,7 +56,6 @@ const userSchema = new mongoose.Schema<UserTypes>(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post',
-        default: [],
       },
     ],
     refreshToken: [String],
