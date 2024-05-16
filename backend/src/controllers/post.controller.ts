@@ -140,7 +140,6 @@ const getPostStats = tryCatch(async (req: Request, res: Response) => {
   );
 
   const postSaved = !!savedPost?._id;
-  console.log(postSaved);
 
   const isUpvoted = foundUserUpvote ? true : false;
   const isDownvoted = foundUserDownvote ? true : false;
@@ -293,6 +292,28 @@ const savePost = tryCatch(async (req: Request, res: Response) => {
     return;
   }
 });
+
+const deletePost = tryCatch(async (req: Request, res: Response) => {
+  const { postId, userId } = req.body;
+  const deletedPost = await Post.findOneAndDelete({ _id: postId });
+
+  const removerFromSaved = await User.findByIdAndUpdate(
+    userId,
+    {
+      $pull: { savedPosts: postId },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!deletePost && !removerFromSaved) {
+    throw new ApiError('error deleting post', 1000, 1000);
+  }
+
+  res.status(200).json({ message: 'Post Deleted Successfully!' });
+});
+
 export {
   getNumberOfPosts,
   createPost,
@@ -303,4 +324,5 @@ export {
   handleUpVote,
   handleDownVote,
   savePost,
+  deletePost,
 };

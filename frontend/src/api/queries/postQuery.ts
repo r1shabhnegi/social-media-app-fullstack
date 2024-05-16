@@ -57,6 +57,19 @@ const apiRequests = apiClient.injectEndpoints({
       }),
       invalidatesTags: ['postStats'],
     }),
+
+    deletePost: builder.mutation({
+      query: (postId) => ({
+        url: '/api/post/deletePost',
+        method: 'POST',
+        body: postId,
+      }),
+      invalidatesTags: ['getHomePosts', 'communityPosts'],
+    }),
+
+    postDetails: builder.query({
+      query: (postId) => `/api/post/postDetails/${postId}`,
+    }),
   }),
 });
 
@@ -70,4 +83,5 @@ export const {
   useUpVoteMutation,
   useDownVoteMutation,
   useSavePostMutation,
+  useDeletePostMutation,
 } = apiRequests;

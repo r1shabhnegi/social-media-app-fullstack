@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createPost,
+  deletePost,
   getAllCommunityPosts,
   getAllPosts,
   getDetailPost,
@@ -30,5 +31,6 @@ router.get('/postStats/:postId/:userId', getPostStats);
 router.post('/upVote', handleUpVote);
 router.post('/downVote', handleDownVote);
 router.post('/savePost', savePost);
+router.post('/deletePost', deletePost);
 
 export default router;

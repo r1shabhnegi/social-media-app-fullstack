@@ -9,13 +9,18 @@ import { BiSolidUpvote } from 'react-icons/bi';
 import { BiSolidDownvote } from 'react-icons/bi';
 import { MdBookmarkBorder } from 'react-icons/md';
 import { MdOutlineBookmark } from 'react-icons/md';
+import { BsThreeDots } from 'react-icons/bs';
+import { MdEdit } from 'react-icons/md';
+import { MdModeEditOutline } from 'react-icons/md';
 import {
+  useDeletePostMutation,
   useDownVoteMutation,
   useGetPostStatsQuery,
   useSavePostMutation,
   useUpVoteMutation,
 } from '@/api/queries/postQuery';
 import { showToast } from '@/global/toastSlice';
+import { MdDelete } from 'react-icons/md';
 
 type postDataType = {
   _id: string;
@@ -42,9 +47,10 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
     postId: postData._id,
     userId,
   });
-  const [upVote, { isLoading: loadingUpvote }] = useUpVoteMutation();
-  const [downVote, { isLoading: loadingDownvote }] = useDownVoteMutation();
+  const [upVote, { isLoading: loadingUpVote }] = useUpVoteMutation();
+  const [downVote, { isLoading: loadingDownVote }] = useDownVoteMutation();
   const [savePost, { isLoading: loadingSavePost }] = useSavePostMutation();
+  const [deletePostQuery] = useDeletePostMutation();
 
   const handleUpVote = async () => {
     try {
@@ -71,35 +77,80 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
     }
   };
 
+  const deletePost = async () => {
+    const res = await deletePostQuery({ postId: postData?._id, userId });
+    if (res) {
+      dispatch(
+        showToast({ message: 'Post deleted successfully!', type: 'SUCCESS' })
+      );
+    } else {
+      dispatch(showToast({ message: 'Failed Deleting Post!', type: 'ERROR' }));
+    }
+  };
+
+  const isMod = postData?.authorId === userId;
+
   return (
     <div className='overflow-auto border-t-2 border-gray-700 bg-re-400 '>
       <div className='p-4 hover:bg-[#131d20] my-4 rounded-md flex flex-col gap-4'>
-        <div className='flex items-center justify-start gap-2'>
-          <Avatar className='size-8 sm:size-10 hover:cursor-pointer'>
-            <AvatarImage
-              className='object-cover'
-              src={postData.authorAvatar}
-            />
-            <AvatarFallback className='object-cover bg-gray-800'>
-              {postData.authorName?.slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
+        <div className='flex items-center justify-between'>
+          <div className='flex gap-2'>
+            <Avatar className='size-8 sm:size-10 hover:cursor-pointer'>
+              <AvatarImage
+                className='object-cover'
+                src={postData.authorAvatar}
+              />
+              <AvatarFallback className='object-cover bg-gray-800'>
+                {postData.authorName?.slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
 
-          <div className='flex flex-col justify-center'>
-            <Link
-              to={`/community/${postData.communityName}`}
-              className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'>
-              r/{postData.communityName}
-            </Link>
-            <p className='text-xs'>
-              by
-              <span className='ml-1 cursor-pointer hover:underline'>
-                <Link to={`/profile/${postData.authorName}`}>
-                  {postData.authorName}
-                </Link>
-              </span>
-              {` • ${createAt}`}
-            </p>
+            <div className='flex flex-col justify-center'>
+              <Link
+                to={`/community/${postData.communityName}`}
+                className='-mt-[.3rem] text-sm font-semibold hover:underline cursor-pointer'>
+                r/{postData.communityName}
+              </Link>
+              <p className='text-xs'>
+                by
+                <span className='ml-1 cursor-pointer hover:underline'>
+                  <Link to={`/profile/${postData.authorName}`}>
+                    {postData.authorName}
+                  </Link>
+                </span>
+                {` • ${createAt}`}
+              </p>
+            </div>
+          </div>
+          <div>
+            {isMod ? (
+              <div className='dropdown dropdown-end'>
+                <button
+                  tabIndex={0}
+                  role='button'
+                  className='p-2 hover:bg-[#2d2f2f] rounded-full '>
+                  <BsThreeDots className='size-6' />
+                </button>
+                <ul
+                  tabIndex={0}
+                  className='dropdown-content z-[1] menu mt-5 shadow bg-base-100 rounded-box w-44'>
+                  {/* <li>
+                    <Link to='/'>
+                      <a className='flex items-center justify-start gap-3'>
+                        <MdModeEditOutline className='size-6' />
+                        <p className='text-base'>Edit Post</p>
+                      </a>
+                    </Link>
+                  </li> */}
+                  <li onClick={deletePost}>
+                    <a className='flex items-center justify-start gap-3'>
+                      <MdDelete className=' size-6' />
+                      <p className='text-base'>Delete Post</p>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -122,7 +173,7 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
           <div className='flex items-center justify-between gap-3 px-3 py-1.5 bg-gray-700 rounded-full'>
             <button
               onClick={handleUpVote}
-              disabled={loadingUpvote || loadingDownvote}>
+              disabled={loadingUpVote || loadingDownVote}>
               {postsStats?.isUpvoted ? (
                 <BiSolidUpvote className='size-6' />
               ) : (
@@ -132,7 +183,7 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
             <p className='text-xl '>{postsStats?.totalScore}</p>
             <button
               onClick={handleDownVote}
-              disabled={loadingUpvote || loadingDownvote}>
+              disabled={loadingUpVote || loadingDownVote}>
               {postsStats?.isDownvoted ? (
                 <BiSolidDownvote className='size-6' />
               ) : (
@@ -141,11 +192,12 @@ const PostCard = ({ postData }: { postData: postDataType }) => {
             </button>
           </div>
 
-          <button className='flex items-center justify-center px-[1rem] py-[.7rem] bg-gray-700 rounded-full'>
+          <button className='flex items-center justify-center px-3 py-1.5 bg-gray-700 rounded-full'>
             <FaRegCommentAlt className='-mb-1 size-5' />
-            {/* <p className='ml-2 text-xl '>{downVotes}</p> */}
+            <p className='ml-3 text-xl'>0</p>
           </button>
           <button
+            disabled={loadingSavePost}
             className='flex items-center justify-center px-[1rem] py-[0.6rem]  bg-gray-700 rounded-full'
             onClick={handleSavePosts}>
             {postsStats?.postSaved ? (

@@ -70,6 +70,12 @@ const LeftSideBar = () => {
             <p>Home</p>
           </span>
         </Link>
+        <span
+          className='flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5'
+          onClick={() => setShowCommunityCreate(!showCommunityCreate)}>
+          <IoAdd className='size-6' />
+          <p>Create a community</p>
+        </span>
         <Link to='/communities'>
           <span
             className={`${
@@ -79,13 +85,6 @@ const LeftSideBar = () => {
             <p>Find Communities</p>
           </span>
         </Link>
-
-        <span
-          className='flex cursor-pointer rounded-lg hover:bg-[#1a282d] p-2 items-center gap-4 text-sm px-5'
-          onClick={() => setShowCommunityCreate(!showCommunityCreate)}>
-          <IoAdd className='size-6' />
-          <p>Create a community</p>
-        </span>
 
         <div className='flex flex-col'>
           <span>
