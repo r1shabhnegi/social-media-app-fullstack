@@ -11,6 +11,7 @@ import {
 } from '../utility/errorConstants';
 import User from '../models/user.model';
 import mongoose from 'mongoose';
+import { Comment } from '../models/comment.model';
 
 const getNumberOfPosts = tryCatch(async (req: Request, res: Response) => {
   const numberOfPosts = await Post.countDocuments();
@@ -102,10 +103,10 @@ const getAllPosts = tryCatch(async (req: Request, res: Response) => {
   res.status(200).send(foundPosts);
 });
 
-const getDetailPost = tryCatch(async (req: Request, res: Response) => {
-  const { id } = req.params;
+const getDetailsPost = tryCatch(async (req: Request, res: Response) => {
+  const { postId } = req.params;
 
-  const foundPostDetail = await Post.findById(id);
+  const foundPostDetail = await Post.findById(postId);
   // console.log(foundPostDetail);
 
   res.status(200).send(foundPostDetail);
@@ -144,7 +145,11 @@ const getPostStats = tryCatch(async (req: Request, res: Response) => {
   const isUpvoted = foundUserUpvote ? true : false;
   const isDownvoted = foundUserDownvote ? true : false;
 
-  res.status(200).send({ totalScore, isUpvoted, isDownvoted, postSaved });
+  const totalComments = await Comment.countDocuments({ postId });
+
+  res
+    .status(200)
+    .send({ totalScore, isUpvoted, isDownvoted, postSaved, totalComments });
 });
 
 const handleUpVote = tryCatch(async (req: Request, res: Response) => {
@@ -314,15 +319,29 @@ const deletePost = tryCatch(async (req: Request, res: Response) => {
   res.status(200).json({ message: 'Post Deleted Successfully!' });
 });
 
+const postDetailsCommunityInfo = tryCatch(
+  async (req: Request, res: Response) => {
+    const { comId } = req.params;
+    // console.log(comId);
+    const communityInfo = await Community.findById(comId).select(
+      'authorName avatar description name rules'
+    );
+
+    // console.log(communityInfo);
+    res.status(200).send(communityInfo);
+  }
+);
+
 export {
   getNumberOfPosts,
   createPost,
   getAllCommunityPosts,
   getAllPosts,
-  getDetailPost,
+  getDetailsPost,
   getPostStats,
   handleUpVote,
   handleDownVote,
   savePost,
   deletePost,
+  postDetailsCommunityInfo,
 };

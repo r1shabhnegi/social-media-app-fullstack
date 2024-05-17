@@ -1,4 +1,3 @@
-import { url } from 'inspector';
 import { apiClient } from '../apiClient';
 
 const apiRequests = apiClient.injectEndpoints({
@@ -70,6 +69,10 @@ const apiRequests = apiClient.injectEndpoints({
     postDetails: builder.query({
       query: (postId) => `/api/post/postDetails/${postId}`,
     }),
+
+    postDetailsCommunityInfo: builder.query({
+      query: (id) => `/api/post/postDetailsCommunityInfo/${id}`,
+    }),
   }),
 });
 
@@ -78,10 +81,11 @@ export const {
   useCreatePostMutation,
   useGetAllCommunityPostsQuery,
   useGetAllPostsQuery,
-  useGetPostDetailsQuery,
-  useGetPostStatsQuery,
+  useLazyGetPostStatsQuery,
   useUpVoteMutation,
   useDownVoteMutation,
   useSavePostMutation,
   useDeletePostMutation,
+  usePostDetailsQuery,
+  useLazyPostDetailsCommunityInfoQuery,
 } = apiRequests;

@@ -24,6 +24,8 @@ const Submit = () => {
     (state: RootState) => state.community
   );
 
+  console.log(selectOption);
+
   useEffect(() => {
     if (state) {
       setSelectOption(state.communityName);
@@ -38,32 +40,41 @@ const Submit = () => {
   const [createPost, { isLoading }] = useCreatePostMutation();
 
   const onSubmit = handleSubmit(async (data) => {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-    };
-    try {
-      const postImage = await imageCompression(data.image[0], options);
+    if (selectOption !== 'Choose a community') {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+      };
 
-      const formData = new FormData();
-      formData.append('title', data.title);
-      formData.append('content', data.content);
-      formData.append('communityName', selectOption);
-      formData.append('image', postImage);
-      const res = await createPost(formData).unwrap();
-      if (res) {
+      try {
+        const postImage = await imageCompression(data.image[0], options);
+
+        const formData = new FormData();
+        formData.append('title', data.title);
+        formData.append('content', data.content);
+        formData.append('communityName', selectOption);
+        formData.append('image', postImage);
+
+        const res = await createPost(formData).unwrap();
+        if (res) {
+          dispatch(
+            showToast({
+              message: 'Post Created Successfully!',
+              type: 'SUCCESS',
+            })
+          );
+        }
+        navigate(`/community/${selectOption}`);
+      } catch (error) {
         dispatch(
-          showToast({ message: 'Post Created Successfully!', type: 'SUCCESS' })
+          showToast({
+            message: 'Error posting!',
+            type: 'ERROR',
+          })
         );
       }
-      navigate(`/community/${selectOption}`);
-    } catch (error) {
-      dispatch(
-        showToast({
-          message: 'Error posting!',
-          type: 'ERROR',
-        })
-      );
+    } else {
+      dispatch(showToast({ message: 'Select Community', type: 'ERROR' }));
     }
   });
 

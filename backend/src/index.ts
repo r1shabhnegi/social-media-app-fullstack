@@ -9,6 +9,7 @@ import communityRouter from './routes/community.routes';
 import refreshRouter from './routes/refresh.routes';
 import serverStatusRouter from './routes/serverStatus.routes';
 import postRouter from './routes/post.routes';
+import commentRouter from './routes/comment.routes';
 import bodyParser from 'body-parser';
 
 import { corsOptions } from './config/corsOption';
@@ -33,6 +34,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/community', communityRouter);
 app.use('/api/post', postRouter);
+app.use('/api/comment', commentRouter);
 
 app.use(handleErrors);
 

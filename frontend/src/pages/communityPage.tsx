@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from '@/global/_store';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PageLoader from '@/components/PageLoader';
 
 import { IoAdd } from 'react-icons/io5';
@@ -21,6 +21,7 @@ import { MdOutlineCancel } from 'react-icons/md';
 
 import EditCommunityForm from '@/components/EditCommunityForm';
 import CommunityPosts from '@/components/CommunityPosts';
+import CommunityRightSideBar from '@/components/CommunityRightSideBar';
 
 const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
@@ -177,49 +178,15 @@ const CommunityPage = () => {
         )}
       </div>
 
-      <div className='flex gap-20 mt-10 w-ful'>
+      <div className='flex gap-20 mt-10'>
         <CommunityPosts communityId={communityData?._id} />
-        <div className='bg-[#1A282D] rounded-lg w-80 flex flex-col gap-2 p-3 h-min'>
-          <h1 className='text-sm font-semibold text-gray-100 '>Description</h1>
-          <div className='p-3 bg-gray-700 rounded-lg'>
-            <p className='text-sm text-gray-300'>
-              {communityData?.description}
-            </p>
-          </div>
-
-          <h1 className='text-sm font-semibold text-gray-100 '>Moderator</h1>
-          <div className='p-3 bg-gray-700 rounded-lg'>
-            <div className='flex items-center gap-3'>
-              <Link to={`/profile/${communityData?.name}`}>
-                <Avatar className='bg-gray-700 size-8 sm:size-9'>
-                  <AvatarImage src={communityData?.avatar} />
-                  <AvatarFallback className='bg-gray-500 '>
-                    {communityData?.name.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-              </Link>
-              <Link to={`/profile/${communityData?.authorName}`}>
-                <p className='text-sm text-gray-300 cursor-pointer hover:underline'>
-                  {communityData?.authorName}
-                </p>
-              </Link>
-            </div>
-          </div>
-          {communityData?.rules?.length > 0 ? (
-            <>
-              <h1 className='text-sm font-semibold text-gray-100 '>Rules</h1>
-              <div className='p-3 bg-gray-700 rounded-lg'>
-                {communityData?.rules?.map((r: string, i: number) => (
-                  <p
-                    className='text-sm text-gray-300'
-                    key={r + i}>
-                    {i + 1}. {r}
-                  </p>
-                ))}
-              </div>
-            </>
-          ) : null}
-        </div>
+        <CommunityRightSideBar
+          authorName={communityData?.authorName}
+          avatar={communityData?.avatar}
+          description={communityData?.description}
+          name={communityData?.name}
+          rules={communityData?.rules}
+        />
       </div>
     </div>
   );

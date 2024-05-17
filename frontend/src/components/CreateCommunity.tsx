@@ -48,9 +48,9 @@ const CreateCommunity = ({ cancelBtn }: { cancelBtn: () => void }) => {
   });
 
   return (
-    <div className='fixed top-0 left-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-30'>
+    <div className='fixed top-0 left-0 z-[20] flex items-center justify-center w-full h-screen bg-black bg-opacity-30'>
       <form
-        className='bg-[#0f1a1c] w-[35rem] p-6 rounded-3xl gap-2 flex flex-col'
+        className='bg-[#0f1a1c] w-[35rem] z-50 p-6 rounded-3xl gap-2 flex flex-col'
         onSubmit={onSubmit}>
         <span className='flex items-end justify-between mb-3'>
           <h1 className='text-3xl '>Create a community</h1>

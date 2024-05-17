@@ -31,9 +31,6 @@ const Home = () => {
   const { refetch, isLoading } = useGetAllPostsQuery(page);
   useEffect(() => {
     if (page + 1 * 5 < numberOfPosts) {
-      // console.log((page + 1) * 5 < numberOfPosts);
-      // console.log((page + 1) * 5);
-      // console.log(numberOfPosts);
       const fetchMorePosts = async () => {
         try {
           setPostLoading(true);

@@ -34,7 +34,7 @@ const CommunityPosts = memo(function CommunityPosts({
     communityId,
     page,
   });
-
+  console.log(postsData);
   useEffect(() => {
     if (page + 1 * 5 < numberOfPosts) {
       const fetchPosts = async () => {
@@ -75,7 +75,7 @@ const CommunityPosts = memo(function CommunityPosts({
           {postsData?.map((postData: postDataType) => (
             <PostCard
               postData={postData}
-              key={`${postData.title}${postData._id}`}
+              key={`${postData._id}${Math.random()}`}
             />
           ))}
         </>
