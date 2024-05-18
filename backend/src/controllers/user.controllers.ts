@@ -8,6 +8,7 @@ import {
   USER_ERROR_REGISTERING,
 } from '../utility/errorConstants';
 import { tryCatch } from '../utility/tryCatch';
+import { Post } from '../models/post.model';
 
 export const signUp = tryCatch(async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -54,13 +55,24 @@ export const signUp = tryCatch(async (req: Request, res: Response) => {
   res.status(200).send({ message: 'User Sign Up Successful!' });
 });
 
-export const getUserForCommunity = tryCatch(
+export const getUserData = tryCatch(async (req: Request, res: Response) => {
+  const { username } = req.params;
+  console.log(username);
+
+  const userData = await User.findOne({ username }).select(
+    '_id createdAt email name username'
+  );
+  if (!userData) throw new ApiError('Error', 3000, 3000);
+  res.status(200).send(userData);
+});
+
+export const getUserProfilePosts = tryCatch(
   async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { username } = req.params;
 
-    const foundUser = await User.findById(id).select('avatar name');
+    const userPosts = await Post.find({ authorName: username });
 
-    console.log(foundUser);
-    res.status(200).send(foundUser);
+    console.log(userPosts);
+    res.status(200).send(userPosts);
   }
 );

@@ -2,10 +2,14 @@ import { apiClient } from '../apiClient';
 
 const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    user: builder.query({
-      query: (id) => `/api/user/getUserForCommunity/${id}`,
+    getUserData: builder.query({
+      query: (username) => `/api/user/${username}`,
+    }),
+
+    getUserPosts: builder.query({
+      query: (username) => `/api/user/${username}/posts`,
     }),
   }),
 });
 
-export const { useUserQuery } = apiRequests;
+export const { useGetUserDataQuery, useGetUserPostsQuery } = apiRequests;

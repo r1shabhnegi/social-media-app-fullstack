@@ -1,7 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
-import { privateRoutes, independentPageRoutes } from './lib/routes';
+import {
+  privateRoutes,
+  independentPageRoutes,
+  profileRoutes,
+} from './lib/routes';
 import ProtectedRoutes from './ProtectedRoutes';
+import Profile from './Layout/ProfileLayout';
+import Home from './pages/Home';
 
 const PagesContainer = () => {
   return (
@@ -15,6 +21,16 @@ const PagesContainer = () => {
               element={element}
             />
           ))}
+
+          <Route element={<Profile />}>
+            {profileRoutes?.map(({ path, element }) => (
+              <Route
+                key={path}
+                path={path}
+                element={element}
+              />
+            ))}
+          </Route>
         </Route>
       </Route>
 

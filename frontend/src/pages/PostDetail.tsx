@@ -137,7 +137,11 @@ const PostDetail = () => {
                 <div
                   key={comment._id + comment?.content}
                   className='border-[0.1rem] border-gray-700 p-4 rounded-lg my-5'>
-                  <p className='text-xs text-gray-400 hover:underline'>
+                  <p
+                    className='text-xs text-gray-400 cursor-pointer hover:underline'
+                    onClick={() =>
+                      navigate(`/profile/${postData?.authorName}/posts`)
+                    }>
                     u/{comment?.authorName}
                   </p>
                   <p className='font-semibold text-gray-300 '>

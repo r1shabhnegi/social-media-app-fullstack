@@ -27,10 +27,11 @@ const Home = () => {
   const [postsData, setPostsData] = useState<postDataType[]>([]);
   const [postsLoading, setPostLoading] = useState<boolean>(false);
   const { numberOfPosts } = useSelector((state: RootState) => state.posts);
-
+  console.log(numberOfPosts);
   const { refetch, isLoading } = useGetAllPostsQuery(page);
   useEffect(() => {
-    if (page + 1 * 5 < numberOfPosts) {
+    if (numberOfPosts < 5 || page + 1 * 5 < numberOfPosts) {
+      // return;
       const fetchMorePosts = async () => {
         try {
           setPostLoading(true);

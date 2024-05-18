@@ -139,7 +139,7 @@ const PostCard = ({
               <p className='text-xs'>
                 by
                 <span className='ml-1 cursor-pointer hover:underline'>
-                  <Link to={`/profile/${postData?.authorName}`}>
+                  <Link to={`/profile/${postData?.authorName}/posts`}>
                     {postData?.authorName}
                   </Link>
                 </span>
@@ -232,9 +232,9 @@ const PostCard = ({
             className='flex items-center justify-center px-[1rem] py-[0.6rem]  bg-gray-700 rounded-full'
             onClick={handleSavePosts}>
             {postsStats?.postSaved ? (
-              <MdBookmarkBorder className='-mb-1 size-6' />
-            ) : (
               <MdOutlineBookmark className='-mb-1 size-6' />
+            ) : (
+              <MdBookmarkBorder className='-mb-1 size-6' />
             )}
           </button>
         </div>

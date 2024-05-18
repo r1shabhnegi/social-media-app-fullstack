@@ -25,14 +25,14 @@ const CommunityRightSideBar = ({
       <div className='p-3 bg-[#131a1d] rounded-lg'>
         <div className='flex items-center gap-3'>
           <Link to={`/profile/${name}`}>
-            <Avatar className='bg-[#131a1d] size-8 sm:size-9'>
+            <Avatar className='bg-[#1f2426] size-8 sm:size-9'>
               <AvatarImage src={avatar} />
-              <AvatarFallback className='bg-[#131a1d] '>
+              <AvatarFallback className='bg-[#272d2f] '>
                 {name?.slice(0, 2)}
               </AvatarFallback>
             </Avatar>
           </Link>
-          <Link to={`/profile/${authorName}`}>
+          <Link to={`/profile/${authorName}/posts`}>
             <p className='text-sm text-gray-300 cursor-pointer hover:underline'>
               {authorName}
             </p>

@@ -110,7 +110,7 @@ const Header = () => {
                 <li className='flex items-center gap-2 py-3 cursor-pointer'>
                   <span
                     className='flex flex-col rounded-full group'
-                    onClick={() => navigate(`/profile/${username}`)}>
+                    onClick={() => navigate(`/profile/${username}/posts`)}>
                     <Avatar className='size-8 sm:size-9'>
                       <AvatarImage src='https://github.com/r1shabhnegi.png' />
                       <AvatarFallback>RN</AvatarFallback>

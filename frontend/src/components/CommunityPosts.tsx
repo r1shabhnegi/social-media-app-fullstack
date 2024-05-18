@@ -36,7 +36,7 @@ const CommunityPosts = memo(function CommunityPosts({
   });
   console.log(postsData);
   useEffect(() => {
-    if (page + 1 * 5 < numberOfPosts) {
+    if (numberOfPosts < 5 || page + 1 * 5 < numberOfPosts) {
       const fetchPosts = async () => {
         try {
           const response = await fetchPostsData().unwrap();
