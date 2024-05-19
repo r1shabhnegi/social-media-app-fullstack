@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getUserData,
   getUserProfilePosts,
+  getUserProfileSaved,
   signUp,
 } from '../controllers/user.controllers';
 import { body, check } from 'express-validator';
@@ -39,5 +40,6 @@ router.post(
 
 router.get('/:username', getUserData);
 router.get('/:username/posts', getUserProfilePosts);
+router.get('/:username/saved', getUserProfileSaved);
 
 export default router;

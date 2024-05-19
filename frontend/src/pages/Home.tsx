@@ -87,7 +87,9 @@ const Home = () => {
         </div>
         <CommonLoader isLoading={postsLoading} />
       </div>
-      <div className='bg-gray-600 rounded-lg h-min w-80'>sidebar</div>
+      <div className='sticky bg-gray-600 rounded-lg top-20 h-min w-80'>
+        sidebar
+      </div>
     </div>
   );
 };

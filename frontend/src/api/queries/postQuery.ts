@@ -73,13 +73,17 @@ const apiRequests = apiClient.injectEndpoints({
     postDetailsCommunityInfo: builder.query({
       query: (id) => `/api/post/postDetailsCommunityInfo/${id}`,
     }),
+
+    communityNumberOfPosts: builder.query({
+      query: (communityId) => `/api/post/communityNumberOfPosts/${communityId}`,
+    }),
   }),
 });
 
 export const {
   useNumberOfPostsQuery,
   useCreatePostMutation,
-  useGetAllCommunityPostsQuery,
+  // useGetAllCommunityPostsQuery,
   useGetAllPostsQuery,
   useLazyGetPostStatsQuery,
   useUpVoteMutation,
@@ -88,4 +92,6 @@ export const {
   useDeletePostMutation,
   usePostDetailsQuery,
   useLazyPostDetailsCommunityInfoQuery,
+  useCommunityNumberOfPostsQuery,
+  useGetAllCommunityPostsQuery,
 } = apiRequests;

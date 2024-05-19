@@ -25,6 +25,7 @@ import CommunityRightSideBar from '@/components/CommunityRightSideBar';
 
 const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
+  const { name: communityName } = useParams();
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -32,8 +33,6 @@ const CommunityPage = () => {
   const { userCommunitiesList } = useSelector(
     (state: RootState) => state.community
   );
-
-  const { name: communityName } = useParams();
 
   const { data: communityData, isLoading: communityLoading } =
     useGetCommunityQuery(communityName);
@@ -179,7 +178,10 @@ const CommunityPage = () => {
       </div>
 
       <div className='flex gap-20 mt-10'>
-        <CommunityPosts communityId={communityData?._id} />
+        <CommunityPosts
+          communityId={communityData?._id}
+          communityName={communityName}
+        />
         <CommunityRightSideBar
           authorName={communityData?.authorName}
           avatar={communityData?.avatar}

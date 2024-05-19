@@ -9,7 +9,15 @@ const apiRequests = apiClient.injectEndpoints({
     getUserPosts: builder.query({
       query: (username) => `/api/user/${username}/posts`,
     }),
+
+    getUserSaved: builder.query({
+      query: (username) => `/api/user/${username}/saved`,
+    }),
   }),
 });
 
-export const { useGetUserDataQuery, useGetUserPostsQuery } = apiRequests;
+export const {
+  useGetUserDataQuery,
+  useGetUserPostsQuery,
+  useLazyGetUserSavedQuery,
+} = apiRequests;

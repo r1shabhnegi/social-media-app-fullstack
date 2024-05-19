@@ -74,12 +74,12 @@ const createPost = tryCatch(async (req: Request, res: Response) => {
 });
 
 const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
-  const { id, page } = req.params;
+  const { page, communityId } = req.params;
+  // const { communityId } = req.body;
   const skipPosts = +page * 5;
   const pageItems = 5;
-
   const foundPosts = await Post.find({
-    communityId: id,
+    communityId,
   })
     .skip(skipPosts)
     .limit(pageItems)
@@ -332,6 +332,14 @@ const postDetailsCommunityInfo = tryCatch(
   }
 );
 
+const getCommunityNumberOfPosts = tryCatch(
+  async (req: Request, res: Response) => {
+    const { communityId } = req.params;
+    const numberOfPosts = await Post.countDocuments({ communityId });
+    res.status(200).json(numberOfPosts);
+  }
+);
+
 export {
   getNumberOfPosts,
   createPost,
@@ -344,4 +352,5 @@ export {
   savePost,
   deletePost,
   postDetailsCommunityInfo,
+  getCommunityNumberOfPosts,
 };

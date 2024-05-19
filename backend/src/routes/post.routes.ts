@@ -4,6 +4,7 @@ import {
   deletePost,
   getAllCommunityPosts,
   getAllPosts,
+  getCommunityNumberOfPosts,
   getDetailsPost,
   getNumberOfPosts,
   getPostStats,
@@ -22,7 +23,8 @@ router.get('/numberOfPosts', getNumberOfPosts);
 router.get('/postDetails/:postId', getDetailsPost);
 router.get('/postStats/:postId/:userId', getPostStats);
 router.get('/postDetailsCommunityInfo/:comId', postDetailsCommunityInfo);
-router.get('/:id/:page', getAllCommunityPosts);
+router.get('/communityNumberOfPosts/:communityId', getCommunityNumberOfPosts);
+router.get('/:communityId/:page', getAllCommunityPosts);
 router.post('/upVote', handleUpVote);
 router.post('/downVote', handleDownVote);
 router.post('/savePost', savePost);

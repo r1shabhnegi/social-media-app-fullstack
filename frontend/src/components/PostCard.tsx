@@ -52,9 +52,8 @@ const PostCard = ({
   const { userId } = useSelector((state: RootState) => state.auth);
 
   const [fetchPostStats, { data: postsStats }] = useLazyGetPostStatsQuery();
-
   useEffect(() => {
-    if (postData) {
+    if (postData?._id) {
       const fetchStats = async () => {
         const res = await fetchPostStats({
           postId: postData?._id,

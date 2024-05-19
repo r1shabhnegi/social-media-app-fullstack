@@ -57,7 +57,6 @@ export const signUp = tryCatch(async (req: Request, res: Response) => {
 
 export const getUserData = tryCatch(async (req: Request, res: Response) => {
   const { username } = req.params;
-  console.log(username);
 
   const userData = await User.findOne({ username }).select(
     '_id createdAt email name username'
@@ -70,9 +69,30 @@ export const getUserProfilePosts = tryCatch(
   async (req: Request, res: Response) => {
     const { username } = req.params;
 
-    const userPosts = await Post.find({ authorName: username });
+    const userPosts = await Post.find({ authorName: username }).sort({
+      createdAt: -1,
+    });
 
-    console.log(userPosts);
     res.status(200).send(userPosts);
+  }
+);
+
+export const getUserProfileSaved = tryCatch(
+  async (req: Request, res: Response) => {
+    const { username } = req.params;
+
+    const userSaved = await User.findOne({ username })
+      .select('savedPosts')
+      .sort({ createdAt: -1 });
+
+    const posts = await Promise.all(
+      userSaved?.savedPosts.map(async (postId) => {
+        const savedPost = await Post.findById(postId);
+        return savedPost;
+      }) || []
+    );
+    const reversePosts = posts.reverse();
+
+    res.status(200).send(posts);
   }
 );
