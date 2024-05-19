@@ -13,6 +13,18 @@ const apiRequests = apiClient.injectEndpoints({
     getUserSaved: builder.query({
       query: (username) => `/api/user/${username}/saved`,
     }),
+
+    getUserComments: builder.query({
+      query: (username) => `/api/user/${username}/comments`,
+    }),
+
+    editUser: builder.mutation({
+      query: (data) => ({
+        url: '/api/user/editUser',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -20,4 +32,6 @@ export const {
   useGetUserDataQuery,
   useGetUserPostsQuery,
   useLazyGetUserSavedQuery,
+  useLazyGetUserCommentsQuery,
+  useEditUserMutation,
 } = apiRequests;

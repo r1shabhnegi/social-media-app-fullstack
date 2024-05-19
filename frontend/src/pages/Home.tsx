@@ -4,6 +4,7 @@ import PageLoader from '@/components/PageLoader';
 import PostCard from '@/components/PostCard';
 import { RootState } from '@/global/_store';
 import { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -23,47 +24,35 @@ type postDataType = {
 };
 
 const Home = () => {
-  const [page, setPage] = useState<number>(0);
   const [postsData, setPostsData] = useState<postDataType[]>([]);
-  const [postsLoading, setPostLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
   const { numberOfPosts } = useSelector((state: RootState) => state.posts);
-  console.log(numberOfPosts);
-  const { refetch, isLoading } = useGetAllPostsQuery(page);
-  useEffect(() => {
-    if (numberOfPosts < 5 || page + 1 * 5 < numberOfPosts) {
-      // return;
-      const fetchMorePosts = async () => {
-        try {
-          setPostLoading(true);
-          const response = await refetch().unwrap();
-          console.log(response);
-          if (response) {
-            // console.log(response);
-            setPostsData((prev) => [...prev, ...response]);
-          }
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setPostLoading(false);
-        }
-      };
-      fetchMorePosts();
-    }
-  }, [numberOfPosts, page, refetch]);
+  const [hasMore, setHasMore] = useState(true);
 
-  const handleScrollPagination = () => {
-    if (
-      document.documentElement.scrollTop + window.innerHeight + 1 >=
-      document.documentElement.scrollHeight
-    ) {
-      setPage((prev) => prev + 1);
+  const {
+    data: postsFetchedData,
+    refetch: fetchPostsData,
+    isLoading,
+  } = useGetAllPostsQuery(page);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    if (postsFetchedData) {
+      setPostsData((prev) => [...prev, ...postsFetchedData]);
+    }
+  }, [postsFetchedData]);
+
+  const fetchMorePostsData = async () => {
+    setPage((prev) => prev + 1);
+    if (postsData.length < numberOfPosts) {
+      await fetchPostsData();
+    } else {
+      setHasMore(false);
     }
   };
-  useEffect(() => {
-    window.addEventListener('scroll', handleScrollPagination);
-
-    return () => window.removeEventListener('scroll', handleScrollPagination);
-  }, []);
 
   isLoading && <PageLoader isLoading={isLoading} />;
   return (
@@ -77,15 +66,20 @@ const Home = () => {
             </div>
           </div>
         </Link>
-        <div>
+        <InfiniteScroll
+          dataLength={postsData.length}
+          hasMore={hasMore}
+          loader={<CommonLoader />}
+          next={fetchMorePostsData}>
           {postsData?.map((postData: postDataType, i: number) => (
             <PostCard
               postData={postData}
               key={postData._id + i / 3}
             />
           ))}
-        </div>
-        <CommonLoader isLoading={postsLoading} />
+        </InfiniteScroll>
+
+        {/* <CommonLoader isLoading={postsLoading} /> */}
       </div>
       <div className='sticky bg-gray-600 rounded-lg top-20 h-min w-80'>
         sidebar

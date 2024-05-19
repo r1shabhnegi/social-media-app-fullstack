@@ -1,6 +1,7 @@
 import { useGetUserPostsQuery } from '@/api/queries/userQuery';
 import CommonLoader from '@/components/CommonLoader';
 import PostCard from '@/components/PostCard';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 type postDataType = {
@@ -21,6 +22,9 @@ type postDataType = {
 const ProfilePosts = () => {
   const { username } = useParams();
   console.log(username);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const { data: postsData, isLoading } = useGetUserPostsQuery(username);
 

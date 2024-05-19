@@ -144,6 +144,7 @@ const Submit = () => {
               Add Photo
               <Input
                 {...register('image')}
+                accept='image/*'
                 type='file'
                 className='border-[.1rem] text-[#f2f2f1] border-gray-700 bg-[#1A1A1B]'
               />

@@ -9,6 +9,7 @@ import {
 } from '../utility/errorConstants';
 import { tryCatch } from '../utility/tryCatch';
 import { Post } from '../models/post.model';
+import { Comment } from '../models/comment.model';
 
 export const signUp = tryCatch(async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -96,3 +97,19 @@ export const getUserProfileSaved = tryCatch(
     res.status(200).send(posts);
   }
 );
+
+export const getUserProfileComments = tryCatch(
+  async (req: Request, res: Response) => {
+    const { username } = req.params;
+
+    const userComments = await Comment.find({ authorName: username }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).send(userComments);
+  }
+);
+
+export const editUser = tryCatch(async (req: Request, res: Response) => {
+  console.log(req.body);
+});

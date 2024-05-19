@@ -25,6 +25,11 @@ const ProfileSaved = () => {
 
   const [fetchSaved, { data: postsData, isLoading }] =
     useLazyGetUserSavedQuery();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   useEffect(() => {
     async function fetch() {
       if (pathname === `/profile/${username}/saved`) {
@@ -34,7 +39,7 @@ const ProfileSaved = () => {
     fetch();
   }, [fetchSaved, pathname, username]);
 
-  isLoading && <CommonLoader isLoading={isLoading} />;
+  isLoading && <CommonLoader />;
 
   return (
     <div>

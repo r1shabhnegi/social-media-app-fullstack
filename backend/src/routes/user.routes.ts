@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import {
+  editUser,
   getUserData,
+  getUserProfileComments,
   getUserProfilePosts,
   getUserProfileSaved,
   signUp,
@@ -38,8 +40,10 @@ router.post(
   signUp
 );
 
+router.post('/editUser', editUser);
 router.get('/:username', getUserData);
 router.get('/:username/posts', getUserProfilePosts);
 router.get('/:username/saved', getUserProfileSaved);
+router.get('/:username/comments', getUserProfileComments);
 
 export default router;

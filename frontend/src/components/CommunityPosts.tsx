@@ -45,6 +45,10 @@ const CommunityPosts = ({
   }, [pathname, communityId]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
     const fetch = async () => {
       const res = await fetchNumberOfPosts().unwrap();
       if (res) {
@@ -52,7 +56,7 @@ const CommunityPosts = ({
       }
     };
     fetch();
-  }, [fetchNumberOfPosts]);
+  }, [fetchNumberOfPosts, communityId]);
 
   const { data: postsFetchedData, refetch: fetchPostsData } =
     useGetAllCommunityPostsQuery({
