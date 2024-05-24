@@ -35,7 +35,7 @@ const Submit = () => {
 
   useEffect(() => {
     if (state === null) setSelectOption('Choose a community');
-  }, []);
+  }, [state]);
 
   const [createPost, { isLoading }] = useCreatePostMutation();
 

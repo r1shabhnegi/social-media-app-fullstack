@@ -50,15 +50,22 @@ const PostCard = ({
   const navigate = useNavigate();
   const createAt = multiFormatDateString(postData?.createdAt);
   const { userId } = useSelector((state: RootState) => state.auth);
+  const [fetchPostStats, { data: postsStats, isLoading: loadingStats }] =
+    useLazyGetPostStatsQuery();
 
-  const [fetchPostStats, { data: postsStats }] = useLazyGetPostStatsQuery();
   useEffect(() => {
     if (postData?._id) {
       const fetchStats = async () => {
-        const res = await fetchPostStats({
-          postId: postData?._id,
-          userId,
-        }).unwrap();
+        try {
+          const res = await fetchPostStats({
+            postId: postData?._id,
+            userId,
+          }).unwrap();
+
+          if (!res) throw new Error('Error fetching post data');
+        } catch (error) {
+          console.log(error);
+        }
       };
       fetchStats();
     }
