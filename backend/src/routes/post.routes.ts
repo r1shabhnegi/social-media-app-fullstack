@@ -14,7 +14,6 @@ import {
   savePost,
 } from '../controllers/post.controller';
 import { upload } from '../middlewares/multer.middleware';
-import { verifyJwt } from '../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -31,7 +30,6 @@ router.post('/savePost', savePost);
 router.post('/deletePost', deletePost);
 router.post(
   '/createPost',
-  verifyJwt,
   upload.fields([{ name: 'image', maxCount: 1 }]),
   createPost
 );

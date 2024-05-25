@@ -6,7 +6,7 @@ export const apiRequests = apiClient.injectEndpoints({
     serverStatus: builder.query({ query: () => '/server-status' }),
 
     // REFRESH_TOKEN
-    refreshToken: builder.query({ query: () => '/refresh' }),
+    refreshToken: builder.query({ query: () => '/api/auth/refresh' }),
 
     // SIGN_IN
     login: builder.mutation({

@@ -1,16 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import Jwt from 'jsonwebtoken';
+import Jwt, { JwtPayload } from 'jsonwebtoken';
 
 declare global {
   namespace Express {
     interface Request {
       userId: string;
+      username: string;
     }
   }
-}
-
-interface decodedTypes {
-  userId: string;
 }
 
 export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
@@ -22,14 +19,15 @@ export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
 
   const accessToken = authHeader.split(' ')[1];
 
-  const decodedAccessToken: decodedTypes = Jwt.verify(
+  const decodedAccessToken = Jwt.verify(
     accessToken,
     process.env.ACCESS_TOKEN_SECRET as string
-  ) as decodedTypes;
+  ) as JwtPayload;
 
   if (!decodedAccessToken)
     res.status(403).json({ message: 'Invalid Credentials!' });
 
   req.userId = decodedAccessToken.userId;
+  req.username = decodedAccessToken.username;
   next();
 };

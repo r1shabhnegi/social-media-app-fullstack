@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -6,11 +6,9 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.routes';
 import authRouter from './routes/auth.routes';
 import communityRouter from './routes/community.routes';
-import refreshRouter from './routes/refresh.routes';
 import serverStatusRouter from './routes/serverStatus.routes';
 import postRouter from './routes/post.routes';
 import commentRouter from './routes/comment.routes';
-import bodyParser from 'body-parser';
 
 import { corsOptions } from './config/corsOption';
 import { credentials } from './middlewares/credentials.middleware';
@@ -27,14 +25,14 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+
 app.use('/server-status', serverStatusRouter);
-app.use('/refresh', refreshRouter);
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
-app.use('/api/community', communityRouter);
-app.use('/api/post', postRouter);
-app.use('/api/comment', commentRouter);
+app.use('/api/community', verifyJwt, communityRouter);
+app.use('/api/post', verifyJwt, postRouter);
+app.use('/api/comment', verifyJwt, commentRouter);
 
 app.use(handleErrors);
 

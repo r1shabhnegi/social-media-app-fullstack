@@ -1,6 +1,7 @@
 export const EXPRESS_VALIDATION = 751;
 
 // AUTH_CONTROLLER
+export const AUTH_INVALID_CREDENTIALS = 803; // 401
 export const AUTH_USER_NOT_FOUND = 800; //404
 export const AUTH_INVALID_PW = 801; //401
 export const AUTH_COOKIE_MISSING = 802; //403
@@ -18,6 +19,7 @@ export const COM_NOT_ALLOW_TO_EDIT = 909; //403
 export const COM_ERROR_DELETE_COMMUNITY = 911; //401
 
 // USER_CONTROLLER
+export const USER_INVALID_CREDENTIALS = 703;
 export const USER_ALREADY_EXISTS = 701; //403
 export const USER_ERROR_REGISTERING = 702; //404
 

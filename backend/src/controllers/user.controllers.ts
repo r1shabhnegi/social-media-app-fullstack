@@ -1,32 +1,42 @@
 import User from '../models/user.model';
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
-import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { ApiError } from '../utility/apiError';
 import {
   USER_ALREADY_EXISTS,
   USER_ERROR_REGISTERING,
+  USER_INVALID_CREDENTIALS,
 } from '../utility/errorConstants';
 import { tryCatch } from '../utility/tryCatch';
 import { Post } from '../models/post.model';
 import { Comment } from '../models/comment.model';
+import { signupInput } from '@rishabhnegi/circlesss-common';
 
 export const signUp = tryCatch(async (req: Request, res: Response) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.json({ message: errors.array() });
+  const parsedInput = signupInput.safeParse(req.body);
+  if (parsedInput.error) {
+    throw new ApiError(
+      'User Invalid Credentials',
+      USER_INVALID_CREDENTIALS,
+      401
+    );
   }
 
-  let foundUser = await User.findOne({
-    username: req.body.username,
-  });
+  const name = parsedInput.data.name;
+  const username = parsedInput.data.username;
+  const email = parsedInput.data.email;
+  const password = parsedInput.data.password;
+
+  let foundUser = await User.findOne({ username });
 
   if (foundUser) {
     throw new ApiError('User already exists', USER_ALREADY_EXISTS, 403);
   }
 
-  const newUser = new User(req.body);
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = new User({ name, username, email, password: hashedPassword });
+
   await newUser.save();
 
   if (!newUser) {
@@ -36,22 +46,6 @@ export const signUp = tryCatch(async (req: Request, res: Response) => {
       404
     );
   }
-
-  const token = jwt.sign(
-    {
-      userId: newUser._id,
-    },
-    process.env.ACCESS_TOKEN_SECRET as string,
-    {
-      expiresIn: '3d',
-    }
-  );
-
-  res.cookie('auth_token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 259200000,
-  });
 
   res.status(200).send({ message: 'User Sign Up Successful!' });
 });

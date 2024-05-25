@@ -5,16 +5,17 @@ import { showToast } from '@/global/toastSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/global/_store';
 import { setCredentials } from '@/global/authSlice';
-
-export type SignInTypes = {
-  username: string;
-  password: string;
-};
+import { signinType } from '@rishabhnegi/circlesss-common';
+import { Input } from '@/components/ui/input';
 
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { register, handleSubmit } = useForm<SignInTypes>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<signinType>();
   const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit = handleSubmit(async (formData) => {
@@ -33,55 +34,67 @@ const SignIn = () => {
   });
 
   return (
-    <div className='container px-16 py-20 sm:px-28 md:px-40 lg:px-56 xl:px-80'>
+    <div className='bg-[rgb(26,40,45)] sm:bg-[#0f1a1c] min-h-screen flex justify-center items-center'>
       <form
-        className='flex flex-col gap-5'
+        className='flex mx-4  flex-col gap-2 sm:gap-3 md:gap-4 max-w-[40rem] w-full px-3 sm:px-6 sm:py-6 rounded-3xl bg-[#1a282d]'
         onSubmit={onSubmit}>
-        <h1 className='pb-10 text-3xl font-semibold text-gray-600'>
+        <h1 className='pb-10 text-3xl text-center font-bold text-[#67787e]'>
           Sign In User
         </h1>
 
-        <label className='flex flex-col text-sm text-gray-700 md:text-md'>
-          Username
-          <input
-            type='username'
-            className='h-8 p-2 bg-gray-100 border-2 border-gray-300 rounded-lg md:h-10 focus:outline-none focus:border-gray-500'
+        <label className='flex flex-1 flex-col text-[#67787e] font-semibold text-sm'>
+          &nbsp;&nbsp;Username
+          <Input
+            type='text'
+            className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none mb-1'
             {...register('username', {
-              required: 'This field is required',
-            })}
-          />
-        </label>
-        <label className='flex flex-col text-sm text-gray-700 md:text-md'>
-          Password
-          <input
-            type='password'
-            className='h-8 p-2 bg-gray-100 border-2 border-gray-300 rounded-lg md:h-10 focus:outline-none focus:border-gray-500'
-            {...register('password', {
-              validate: (val) => {
-                if (val.length < 8) {
-                  return 'Password should be have 8 characters or more.';
-                } else if (val === '') {
-                  return 'This field is required';
-                }
+              required: 'This field is required.',
+              minLength: {
+                value: 4,
+                message: 'This field cannot have less than 4 characters.',
+              },
+              maxLength: {
+                value: 16,
+                message: 'This field cannot have more than 16 characters.',
               },
             })}
           />
+          {errors?.username && (
+            <p className='text-xs font-semibold text-red-500'>
+              &nbsp;&nbsp;{errors?.username.message}
+            </p>
+          )}
+        </label>
+        <label className='flex flex-1 flex-col text-[#67787e] font-semibold text-sm'>
+          &nbsp;&nbsp;Password
+          <Input
+            type='password'
+            className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none mb-1'
+            {...register('password', {
+              required: 'This field is required.',
+            })}
+          />
+          {errors?.password && (
+            <p className='ml-2 text-xs font-semibold text-red-500'>
+              {errors?.password.message}
+            </p>
+          )}
         </label>
 
         <div>
           <button
             type='submit'
             disabled={isLoading}
-            className={`flex items-center justify-center w-full h-8 p-2 mt-6 font-semibold text-gray-700 ${
-              isLoading ? 'bg-gray-200' : 'bg-gray-300'
-            } rounded-lg md:h-10 hover:bg-gray-400`}>
+            className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-16 rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '>
             Submit
           </button>
-          <p className='mt-1 text-md md:text-base'>
+          <p className='mt-1 ml-2 text-sm text-[#a0b6bd]'>
             Create an Account
-            <span className='ml-1 font-semibold text-gray-700 underline hover:text-green-500'>
-              <Link to='/sign-up'>Sign Up</Link>
-            </span>
+            <Link
+              to='/sign-up'
+              className='ml-2 font-semibold text-green-400 underline hover:text-green-600'>
+              Sign Up
+            </Link>
           </p>
         </div>
       </form>

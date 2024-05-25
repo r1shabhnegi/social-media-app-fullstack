@@ -25,11 +25,13 @@ import CommunityRightSideBar from '@/components/CommunityRightSideBar';
 
 const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
-  const { name: communityName } = useParams();
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+
+  const { name: communityName } = useParams();
   const { userId } = useSelector((state: RootState) => state.auth);
+
   const { userCommunitiesList } = useSelector(
     (state: RootState) => state.community
   );

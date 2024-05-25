@@ -6,8 +6,7 @@ import {
   profileRoutes,
 } from './lib/routes';
 import ProtectedRoutes from './ProtectedRoutes';
-import Profile from './Layout/ProfileLayout';
-import Home from './pages/Home';
+import ProfileLayout from './Layout/ProfileLayout';
 
 const PagesContainer = () => {
   return (
@@ -22,7 +21,7 @@ const PagesContainer = () => {
             />
           ))}
 
-          <Route element={<Profile />}>
+          <Route element={<ProfileLayout />}>
             {profileRoutes?.map(({ path, element }) => (
               <Route
                 key={path}

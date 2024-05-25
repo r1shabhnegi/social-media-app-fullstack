@@ -11,8 +11,6 @@ import {
   getModCommunities,
   deleteCommunity,
 } from '../controllers/community.controllers';
-import { verifyJwt } from '../middlewares/auth.middleware';
-// import { uploadEditPhotosValidation } from '../utility/express-validations';
 import { upload } from '../middlewares/multer.middleware';
 
 const router = Router();
@@ -23,17 +21,16 @@ router.post(
     { name: 'avatarImg', maxCount: 1 },
     { name: 'coverImg', maxCount: 1 },
   ]),
-  verifyJwt,
   editCommunity
 );
 
-router.post('/create', verifyJwt, createCommunity);
+router.post('/create', createCommunity);
 router.get('/findCommunities/:pageCount', findCommunities);
 router.get('/getCommunity/:name', getCommunity);
-router.post('/joinCommunity', verifyJwt, joinCommunity);
-router.post('/leaveCommunity', verifyJwt, leaveCommunity);
-router.get('/getUserCommunitiesList', verifyJwt, getCommunities);
-router.get('/getUserModCommunities', verifyJwt, getModCommunities);
-router.post('/deleteCommunity', verifyJwt, deleteCommunity);
+router.post('/joinCommunity', joinCommunity);
+router.post('/leaveCommunity', leaveCommunity);
+router.get('/getUserCommunitiesList', getCommunities);
+router.get('/getUserModCommunities', getModCommunities);
+router.post('/deleteCommunity', deleteCommunity);
 
 export default router;

@@ -63,12 +63,12 @@ const userSchema = new mongoose.Schema<UserTypes>(
   { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, 8);
-  }
-  next();
-});
+// userSchema.pre('save', async function (next) {
+//   if (this.isModified('password')) {
+//     this.password = await bcrypt.hash(this.password, 8);
+//   }
+//   next();
+// });
 
 const User = mongoose.model<UserTypes>('User', userSchema);
 

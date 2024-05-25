@@ -8,7 +8,6 @@ import PageLoader from './components/PageLoader';
 const PersistentUser = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data, isSuccess, isLoading } = useRefreshTokenQuery({});
-
   useEffect(() => {
     if (isSuccess) {
       dispatch(setCredentials({ ...data }));

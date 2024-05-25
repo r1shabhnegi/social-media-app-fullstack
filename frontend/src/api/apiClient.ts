@@ -27,7 +27,11 @@ const baseQueryAuthRF = async (
   let result = await baseQuery(args, api, extraOptions);
 
   if (result.error?.status === 403) {
-    const refreshResult = await baseQuery('/refresh', api, extraOptions);
+    const refreshResult = await baseQuery(
+      '/api/auth/refresh',
+      api,
+      extraOptions
+    );
     if (refreshResult?.data) {
       api.dispatch(setCredentials({ ...refreshResult.data }));
       result = await baseQuery(args, api, extraOptions);
