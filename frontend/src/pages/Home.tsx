@@ -23,10 +23,6 @@ type postDataType = {
   upVotes: number;
 };
 
-import { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { resolveObjectURL } from 'buffer';
-
 const Home = () => {
   const [postsData, setPostsData] = useState<postDataType[]>([]);
   const [page, setPage] = useState<number>(0);
@@ -60,8 +56,8 @@ const Home = () => {
 
   isLoading && <PageLoader isLoading={isLoading} />;
   return (
-    <div className='flex max-w-[65rem] mx-auto min-h-screen gap-16 py-5'>
-      <div className='flex-1'>
+    <div className='flex max-w-[65rem] mx-auto justify-center min-h-screen gap-16 py-5'>
+      <div className='flex-1 mx-0.5'>
         <Link to='/submit'>
           <div className='bg-[#0B1416] border-[0.01rem] mb-5 border-gray-600 h-10 gap-1 w-full flex justify-center items-center p-1'>
             <div className='border-[0.01rem] border-gray-600 h-8 w-full'></div>
@@ -71,6 +67,7 @@ const Home = () => {
           </div>
         </Link>
         <InfiniteScroll
+          className='flex flex-col items-center justify-center'
           dataLength={postsData.length}
           hasMore={hasMore}
           loader={<CommonLoader />}
@@ -85,7 +82,7 @@ const Home = () => {
 
         {/* <CommonLoader isLoading={postsLoading} /> */}
       </div>
-      <div className='sticky bg-gray-600 rounded-lg top-20 h-min w-80'>
+      <div className='sticky hidden mr-3 bg-gray-600 rounded-lg md:block top-20 h-min md:w-60 lg:w-72 xl:w-80'>
         sidebar
       </div>
     </div>

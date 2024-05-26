@@ -51,7 +51,7 @@ export const signUp = tryCatch(async (req: Request, res: Response) => {
 });
 
 export const getUserData = tryCatch(async (req: Request, res: Response) => {
-  const username = req.username;
+  const { username } = req.params;
 
   const userData = await User.findOne({ username }).select(
     '_id createdAt email name username'
@@ -62,7 +62,8 @@ export const getUserData = tryCatch(async (req: Request, res: Response) => {
 
 export const getUserProfilePosts = tryCatch(
   async (req: Request, res: Response) => {
-    const username = req.username;
+    const { username } = req.params;
+    console.log(username);
     const userPosts = await Post.find({ authorName: username }).sort({
       createdAt: -1,
     });
@@ -73,7 +74,7 @@ export const getUserProfilePosts = tryCatch(
 
 export const getUserProfileSaved = tryCatch(
   async (req: Request, res: Response) => {
-    const username = req.username;
+    const { username } = req.params;
 
     const userSaved = await User.findOne({ username })
       .select('savedPosts')
@@ -93,7 +94,7 @@ export const getUserProfileSaved = tryCatch(
 
 export const getUserProfileComments = tryCatch(
   async (req: Request, res: Response) => {
-    const username = req.username;
+    const { username } = req.params;
 
     const userComments = await Comment.find({ authorName: username }).sort({
       createdAt: -1,

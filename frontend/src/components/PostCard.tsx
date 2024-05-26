@@ -216,14 +216,14 @@ const PostCard = ({
                 <BiUpvote className='size-6' />
               )}
             </button>
-            <p className='text-xl '>{postsStats?.totalScore}</p>
+            <p className='text-md sm:text-lg'>{postsStats?.totalScore}</p>
             <button
               onClick={handleDownVote}
               disabled={loadingUpVote || loadingDownVote}>
               {postsStats?.isDownvoted ? (
-                <BiSolidDownvote className='size-6' />
+                <BiSolidDownvote className='size-5 sm:size-6' />
               ) : (
-                <BiDownvote className='size-6' />
+                <BiDownvote className='size-5 sm:size-6' />
               )}
             </button>
           </div>
@@ -232,8 +232,10 @@ const PostCard = ({
             <button
               className='flex items-center justify-center px-3 py-1.5 bg-gray-700 rounded-full'
               onClick={() => navigate(`/post/${postData?._id}`)}>
-              <FaRegCommentAlt className='-mb-1 size-5' />
-              <p className='ml-3 text-xl'>{postsStats?.totalComments}</p>
+              <FaRegCommentAlt className='-mb-1 size-4 sm:size-5' />
+              <p className='ml-3 text-md sm:text-lg'>
+                {postsStats?.totalComments}
+              </p>
             </button>
           ) : null}
           <button
@@ -241,9 +243,9 @@ const PostCard = ({
             className='flex items-center justify-center px-[1rem] py-[0.6rem]  bg-gray-700 rounded-full'
             onClick={handleSavePosts}>
             {postsStats?.postSaved ? (
-              <MdOutlineBookmark className='-mb-1 size-6' />
+              <MdOutlineBookmark className='-mb-1 size-5 sm:size-6' />
             ) : (
-              <MdBookmarkBorder className='-mb-1 size-6' />
+              <MdBookmarkBorder className='-mb-1 size-5 sm:size-6' />
             )}
           </button>
         </div>

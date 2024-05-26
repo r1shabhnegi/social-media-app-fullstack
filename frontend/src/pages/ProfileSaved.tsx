@@ -33,7 +33,7 @@ const ProfileSaved = () => {
   useEffect(() => {
     async function fetch() {
       if (pathname === `/profile/${username}/saved`) {
-        fetchSaved({});
+        fetchSaved(username);
       }
     }
     fetch();

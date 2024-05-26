@@ -13,10 +13,10 @@ import { verifyJwt } from '../middlewares/auth.middleware';
 const router = Router();
 router.post('/sign-up', signUp);
 
-router.get('/', verifyJwt, getUserData);
-router.get('/posts', verifyJwt, getUserProfilePosts);
-router.get('/saved', verifyJwt, getUserProfileSaved);
-router.get('/comments', verifyJwt, getUserProfileComments);
-router.post('/editUser', verifyJwt, editUser);
+router.get('/get/:username', verifyJwt, getUserData);
+router.get('/posts/:username', verifyJwt, getUserProfilePosts);
+router.get('/saved/:username', verifyJwt, getUserProfileSaved);
+router.get('/comments/:username', verifyJwt, getUserProfileComments);
+router.post('/:editUser', verifyJwt, editUser);
 
 export default router;

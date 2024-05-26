@@ -107,14 +107,14 @@ const PostDetail = () => {
   if (postDataLoading) <PageLoader isLoading={postDataLoading} />;
 
   return (
-    <div className='max-w-[65rem] mx-auto pb-10'>
-      <div className='flex gap-20'>
+    <div className='max-w-[65rem] flex justify-center mx-auto pb-10'>
+      <div className='flex gap-20 '>
         <div>
           <PostCard
             postData={postData}
             fromPostDetail={true}
           />
-          <div className='mx-4'>
+          <div className='mx-2'>
             <form
               onSubmit={submitComment}
               className='flex gap-2'>
@@ -152,7 +152,7 @@ const PostDetail = () => {
             </div>
           </div>
         </div>
-        <div className='mt-8'>
+        <div className='hidden mt-8 mr-3 lg:block w-80'>
           <CommunityRightSideBar
             authorName={CommunityInfo?.authorName}
             avatar={CommunityInfo?.avatar}

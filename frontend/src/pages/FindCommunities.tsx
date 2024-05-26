@@ -56,7 +56,7 @@ const FindCommunities = () => {
                   <Link
                     key={id}
                     to={`/community/${name}`}>
-                    <span className='flex items-center gap-4 p-2 mb-16 w-96'>
+                    <span className='flex items-center h-16 gap-4 p-2 mx-4 my-2 mb-10 border border-gray-600 rounded-2xl w-80 sm:w-96'>
                       <p>{index + 1}</p>
                       <span className='flex items-center gap-2 p-2 '>
                         <Avatar className=' size-8 sm:size-9'>

@@ -17,22 +17,7 @@ import { setLogout } from '@/global/authSlice';
 import { showToast } from '@/global/toastSlice';
 import CommonLoader from './CommonLoader';
 
-import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-} from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -107,9 +92,9 @@ const Header = () => {
         </span>
         {isLoggedIn ? (
           <>
-            <span className='cursor-pointer text-[#f2f2f1]'>
+            {/* <span className='cursor-pointer text-[#f2f2f1]'>
               <IoChatbubbleEllipsesOutline className='size-6' />
-            </span>
+            </span> */}
             <Link to='/submit'>
               <span className='flex gap-1 items-center font-bold text-[#f2f2f1] rounded cursor-pointer sm:mr-2'>
                 <IoAdd className='size-7 ' />

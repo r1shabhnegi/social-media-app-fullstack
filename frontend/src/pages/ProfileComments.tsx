@@ -17,7 +17,7 @@ const ProfileComments = () => {
   useEffect(() => {
     async function fetch() {
       if (pathname === `/profile/${username}/comments`) {
-        fetchComments({});
+        fetchComments(username);
       }
     }
     fetch();
@@ -30,7 +30,7 @@ const ProfileComments = () => {
       {commentsData?.map((comment) => (
         <div
           key={comment._id + comment?.content}
-          className='border-[0.1rem] border-gray-700 p-4 rounded-lg my-5 flex justify-between items-center'>
+          className='border-[0.1rem] w-80 sm:w-[35rem] border-gray-700 p-4 rounded-lg my-5 flex justify-between items-center'>
           <div>
             <p className='text-xs text-gray-400 cursor-pointer hover:underline'>
               u/{comment?.authorName}

@@ -26,7 +26,7 @@ const ProfilePosts = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const { data: postsData, isLoading } = useGetUserPostsQuery({});
+  const { data: postsData, isLoading } = useGetUserPostsQuery(username);
 
   isLoading && <CommonLoader isLoading={isLoading} />;
 

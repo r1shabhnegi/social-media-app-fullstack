@@ -43,6 +43,14 @@ const EditCommunityForm = ({
       preview: URL.createObjectURL(acceptedFiles[0]),
     });
   }, []);
+  const {
+    getRootProps: getAvatarRootProps,
+    isDragActive: isAvatarDragActive,
+    getInputProps: getAvatarInputProps,
+  } = useDropzone({
+    onDrop: onDropAvatar,
+    maxSize: 1024 * 4000,
+  });
   const onDropCover = useCallback((acceptedFiles: File[]) => {
     setCover({
       File: acceptedFiles[0],
@@ -52,16 +60,14 @@ const EditCommunityForm = ({
 
   // console.log(file);
 
-  const { getRootProps: getAvatarRootProps, isDragActive: isAvatarDragActive } =
-    useDropzone({
-      onDrop: onDropAvatar,
-      maxSize: 1024 * 4000,
-    });
-  const { getRootProps: getCoverRootProps, isDragActive: isCoverDragActive } =
-    useDropzone({
-      onDrop: onDropCover,
-      maxSize: 1024 * 4000,
-    });
+  const {
+    getRootProps: getCoverRootProps,
+    isDragActive: isCoverDragActive,
+    getInputProps: getCoverInputProps,
+  } = useDropzone({
+    onDrop: onDropCover,
+    maxSize: 1024 * 4000,
+  });
 
   useEffect(() => {
     reset({ name: communityName, description, rules });
@@ -170,10 +176,11 @@ const EditCommunityForm = ({
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avatar Image
           <div
             {...getAvatarRootProps({
-              className: `rounded-3xl flex mt-1 flex justify-center items-center size-32 ${
+              className: `rounded-3xl flex mt-1 flex bg-[#1A282D] justify-center items-center size-32 ${
                 !avatar?.preview && 'border'
               }`,
             })}>
+            <input {...getAvatarInputProps()} />
             {isAvatarDragActive ? (
               <p className='font-bold text-gray-700'>Drop</p>
             ) : (
@@ -197,10 +204,11 @@ const EditCommunityForm = ({
           &nbsp;&nbsp;Cover Image
           <div
             {...getCoverRootProps({
-              className: `rounded-3xl h-32 flex mt-1 flex justify-center items-center h-full flex-1 ${
+              className: `rounded-3xl h-32 flex mt-1 flex bg-[#1A282D] justify-center items-center h-full flex-1 ${
                 !cover?.preview && 'border'
               }`,
             })}>
+            <input {...getCoverInputProps()} />
             {isCoverDragActive ? (
               <p className='font-bold text-gray-700'>Drop</p>
             ) : (
