@@ -23,6 +23,10 @@ type postDataType = {
   upVotes: number;
 };
 
+import { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { resolveObjectURL } from 'buffer';
+
 const Home = () => {
   const [postsData, setPostsData] = useState<postDataType[]>([]);
   const [page, setPage] = useState<number>(0);

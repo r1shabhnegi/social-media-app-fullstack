@@ -17,7 +17,7 @@ const ProfileComments = () => {
   useEffect(() => {
     async function fetch() {
       if (pathname === `/profile/${username}/comments`) {
-        fetchComments(username);
+        fetchComments({});
       }
     }
     fetch();

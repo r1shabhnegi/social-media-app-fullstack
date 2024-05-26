@@ -25,7 +25,7 @@ const ProfileLayout = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { username } = useParams();
-  const { data: userData } = useGetUserDataQuery(username);
+  const { data: userData } = useGetUserDataQuery({});
   const [submitEditUser, { isLoading: loadingEditUser }] =
     useEditUserMutation();
   const { register, handleSubmit, reset } = useForm<EditProfileTypes>();

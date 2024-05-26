@@ -68,9 +68,9 @@ const createCommunity = tryCatch(async (req: Request, res: Response) => {
 // FIND_COMMUNITIES
 
 const findCommunities = tryCatch(async (req: Request, res: Response) => {
-  const pageCount = +req.params.pageCount;
+  const { page } = req.params;
   const pageSize = 9;
-  const skipItems = pageCount * 9;
+  const skipItems = +page * 9;
   const foundCommunities = await Community.find()
     .skip(skipItems)
     .limit(pageSize)
@@ -115,9 +115,9 @@ const findCommunities = tryCatch(async (req: Request, res: Response) => {
 });
 
 const getCommunity = tryCatch(async (req: Request, res: Response) => {
-  const { name } = req.params;
+  const { comId } = req.params;
 
-  const foundCommunity = await Community.findOne({ name });
+  const foundCommunity = await Community.findOne({ name: comId });
 
   if (!foundCommunity)
     throw new ApiError('Community not found!', COM_NOT_FOUND, 404);

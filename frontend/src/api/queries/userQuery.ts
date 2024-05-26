@@ -3,19 +3,19 @@ import { apiClient } from '../apiClient';
 const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
     getUserData: builder.query({
-      query: (username) => `/api/user/${username}`,
+      query: () => `/api/user`,
     }),
 
     getUserPosts: builder.query({
-      query: (username) => `/api/user/${username}/posts`,
+      query: () => `/api/user/posts`,
     }),
 
     getUserSaved: builder.query({
-      query: (username) => `/api/user/${username}/saved`,
+      query: () => `/api/user/saved`,
     }),
 
     getUserComments: builder.query({
-      query: (username) => `/api/user/${username}/comments`,
+      query: () => `/api/user/comments`,
     }),
 
     editUser: builder.mutation({

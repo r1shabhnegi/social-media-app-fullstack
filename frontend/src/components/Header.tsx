@@ -17,6 +17,32 @@ import { setLogout } from '@/global/authSlice';
 import { showToast } from '@/global/toastSlice';
 import CommonLoader from './CommonLoader';
 
+import {
+  Cloud,
+  CreditCard,
+  Github,
+  Keyboard,
+  LifeBuoy,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Plus,
+  PlusCircle,
+  Settings,
+  User,
+  UserPlus,
+  Users,
+} from 'lucide-react';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from './ui/button';
+
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -91,50 +117,36 @@ const Header = () => {
               </span>
             </Link>
 
-            <span className='relative flex gap-8 rounded cursor-pointer dropdown dropdown-end'>
-              <button
-                tabIndex={0}
-                role='button'
-                className={`flex items-center relative justify-center  rounded-full size-11 `}>
-                <span className='rounded-full'>
+            {/* drop down */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant='ghost'
+                  className='border-0 hover:bg-transparent ring-0 focus:ring-0'>
                   <Avatar className='size-8 sm:size-9'>
                     <AvatarImage src='https://github.com/r1shabhnegi.png' />
-                    <AvatarFallback>RN</AvatarFallback>
+                    <AvatarFallback>{'Rn'}</AvatarFallback>
                   </Avatar>
-                </span>
-              </button>
-
-              <ul
-                tabIndex={0}
-                className='dropdown-content z-[1] menu p-2 mt-6 shadow bg-base-100 rounded-box w-52'>
-                <li className='flex items-center gap-2 py-3 cursor-pointer'>
-                  <span
-                    className='flex flex-col rounded-full group'
-                    onClick={() => navigate(`/profile/${username}/posts`)}>
-                    <Avatar className='size-8 sm:size-9'>
-                      <AvatarImage src='https://github.com/r1shabhnegi.png' />
-                      <AvatarFallback>RN</AvatarFallback>
-                    </Avatar>
-                    <p className='text-sm text-gray-400 group-hover:underline'>
-                      u/{username}
-                    </p>
-                  </span>
-                  <button
-                    className='px-5 py-2 text-base font-semibold text-gray-300 bg-gray-700 rounded-lg'
-                    onClick={handleLogout}
-                    disabled={loadingLogoutBtn}>
-                    {loadingLogoutBtn ? (
-                      <CommonLoader
-                        isLoading={loadingLogoutBtn}
-                        size={25}
-                      />
-                    ) : (
-                      'Logout'
-                    )}
-                  </button>
-                </li>
-              </ul>
-            </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className='border-0 ring-0 focus:ring-0 w-56 mt-5 text-gray-200 bg-[#213036] rounded-2xl'
+                align='end'>
+                <DropdownMenuItem
+                  className='cursor-pointer rounded-xl'
+                  onClick={() => navigate(`/profile/${username}/posts`)}>
+                  <User className='w-4 h-4 mr-2' />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className='bg-gray-600' />
+                <DropdownMenuItem
+                  className='cursor-pointer rounded-xl hover:text-red-600'
+                  onClick={handleLogout}>
+                  <LogOut className='w-4 h-4 mr-2' />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </>
         ) : (
           <span className='flex px-2 py-1 ml-8 font-bold tracking-tight text-center text-[#f2f2f1] rounded-full text-md md:text-lg lg:text-xl bg-gradient-to-r from-cyan-500 to-blue-700 whitespace-nowrap'>

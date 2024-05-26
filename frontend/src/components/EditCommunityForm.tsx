@@ -1,5 +1,5 @@
 import { useEditCommunityMutation } from '@/api/queries/communityQuery';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,19 +7,14 @@ import { AppDispatch, RootState } from '@/global/_store';
 import { showToast } from '@/global/toastSlice';
 import CommonLoader from '@/components/CommonLoader';
 import imageCompression from 'browser-image-compression';
+import { EditCommunityFormProps } from '@/lib/types';
+import { useDropzone } from 'react-dropzone';
 
 type CommunityEditTypes = {
   name: string;
   description: string;
   avatarImg: FileList;
   coverImg: FileList;
-  rules: string;
-};
-
-type EditCommunityFormProps = {
-  cancel: () => void;
-  name: string;
-  description: string;
   rules: string;
 };
 
@@ -34,10 +29,27 @@ const EditCommunityForm = ({
   const [editCommunity, { isLoading }] = useEditCommunityMutation();
 
   const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
+  // drop-zone
+
+  const [avatar, setAvatar] = useState<{ File: object; preview: string }>();
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setAvatar({
+      File: acceptedFiles[0],
+      preview: URL.createObjectURL(acceptedFiles[0]),
+    });
+  }, []);
+  // console.log(file);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+  });
 
   useEffect(() => {
     reset({ name: communityName, description, rules });
   }, [communityName, description, reset, rules]);
+
+  // end
 
   const onSubmit = handleSubmit(async (data) => {
     const options = {
@@ -82,13 +94,13 @@ const EditCommunityForm = ({
 
   return (
     <form
-      className='bg-[#0f1a1c] flex flex-col gap-5'
+      className='bg-[#0f1a1c] flex flex-col gap-3 z-[200]'
       onSubmit={onSubmit}>
-      <span className='flex gap-5'>
+      <span className='flex gap-3'>
         <label className='text-[#67787e] text-sm flex-1'>
           &nbsp;&nbsp;Name
           <input
-            className='flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 w-full rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
+            className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 w-full rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
             type='text'
             {...register('name')}
           />
@@ -96,62 +108,56 @@ const EditCommunityForm = ({
         <label className='flex-1 text-[#67787e] text-sm'>
           &nbsp;&nbsp;Rules
           <input
-            className='flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 w-full rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
+            className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 w-full  rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
             type='text'
             {...register('rules')}
           />
         </label>
       </span>
 
-      <label className='flex flex-1 flex-col text-[#67787e] text-sm'>
+      <label className='flex flex-col text-[#67787e] text-sm'>
         &nbsp;&nbsp; Description
         <textarea
-          // rows={20}
-          className='flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] min-h-20 w-full rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
+          rows={5}
+          className='overflow-hidden flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] min-h-20 w-full rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
           {...register('description')}
         />
       </label>
 
-      <span className='flex gap-5'>
-        {/* avatarImg */}
-        <label className='flex flex-1 flex-col justify-center items-center text-[#67787e] text-sm '>
-          Avatar Image
-          {/* {avatarUrl ? (
-            <img
-              src={previewAvatar}
-              alt='Avatar Image'
-              className='object-cover mt-1 size-36 outline outline-1 outline-white focus:border-white focus:border-2 rounded-3xl'
-            />
+      {/* avatarImg */}
+      <label className='flex flex-col text-[#67787e] text-sm'>
+        Avatar Image
+        <div {...getRootProps({ className: 'h-20 w-full bg-red-200' })}>
+          {/* <input {...getInputProps()} /> */}
+          {isDragActive ? (
+            <p>Drop the files here ...</p>
           ) : (
-            <RiImage2Fill className='mt-1 w-44 h-36 outline outline-1 outline-white focus:border-white focus:border-2 rounded-3xl' />
-          )} */}
-          <Input
-            className='flex-1 mt-1 text-[#f2f2f1] p-4 bg-[#1a282d] w-full rounded-3xl  outline-none  '
-            accept='image/*'
-            type='file'
-            {...register('avatarImg')}
-          />
-        </label>
-        {/* coverImg */}
-        <label className='flex flex-1 flex-col justify-center items-center text-[#67787e] text-sm'>
-          Cover Image
-          {/* {avatarUrl ? (
-            <img
-              src={previewCover}
-              alt='Cover Image'
-              className='object-cover mt-1 w-44 h-36 outline outline-1 outline-white focus:border-white focus:border-2 rounded-3xl'
-            />
-          ) : (
-            <BsCardImage className='mt-1 w-44 h-36 outline outline-1 outline-white focus:border-white focus:border-2 rounded-3xl' />
-          )} */}
-          <Input
-            type='file'
-            className='flex-1 mt-1 text-[#f2f2f1] p-4 bg-[#1a282d] w-full rounded-3xl  outline-none  '
-            accept='image/*'
-            {...register('coverImg')}
-          />
-        </label>
-      </span>
+            <div className='w-full h-20'>
+              {avatar?.preview ? (
+                <img
+                  src={avatar?.preview}
+                  alt=''
+                  className='size-10'
+                />
+              ) : (
+                <p className=''>Click to select Avatar / Drop Avatar</p>
+              )}
+            </div>
+          )}
+        </div>
+      </label>
+
+      {/* coverImg */}
+      <label className='flex flex-col text-[#67787e] text-sm'>
+        Cover Image
+        <Input
+          type='file'
+          className='flex-1 mt-1 text-[#f2f2f1] p-4 bg-[#1a282d] w-full rounded-3xl  outline-none  '
+          accept='image/*'
+          {...register('coverImg')}
+        />
+      </label>
+
       <div className='flex justify-end gap-5 mt-3'>
         {isLoading ? (
           <CommonLoader isLoading={isLoading} />

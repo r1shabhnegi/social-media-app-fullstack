@@ -23,6 +23,14 @@ import EditCommunityForm from '@/components/EditCommunityForm';
 import CommunityPosts from '@/components/CommunityPosts';
 import CommunityRightSideBar from '@/components/CommunityRightSideBar';
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+
 const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
 
@@ -134,13 +142,36 @@ const CommunityPage = () => {
             {isNotJoined ? 'Leave' : 'Join'}
           </button>
 
-          <div className='dropdown dropdown-end'>
+          {/* Drop down */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant='ghost'
+                className={`${
+                  !isMod && 'hidden'
+                } flex items-center hover:bg-transparent ring-0 focus:ring-0 hover:text-white justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100`}>
+                <RxDotsHorizontal className=' hover:text-white' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className='border-0 ring-0 focus:ring-0 w-56 mt-5 text-gray-200 bg-[#213036] rounded-2xl'
+              align='end'>
+              <DropdownMenuItem
+                className='cursor-pointer rounded-xl'
+                onClick={handleDeleteCommunity}>
+                <MdOutlineDeleteOutline className='mr-2 size-6' />
+                <span>Delete Community</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* <div className='dropdown dropdown-end'>
             <button
               tabIndex={0}
               role='button'
               className={`${
                 !isMod && 'hidden'
-              } flex items-center relative justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100`}>
+              } flex items-center border-0 hover:bg-transparent ring-0 focus:ring-0 relative justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100`}>
               <RxDotsHorizontal className='size-6' />
             </button>
             <ul
@@ -153,17 +184,17 @@ const CommunityPage = () => {
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </span>
         {editModal && (
           <div className='fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50'>
-            <div className='bg-[#0f1a1c]  p-6 rounded-3xl'>
+            <div className='bg-[#0f1a1c] p-6 rounded-3xl'>
               <div className='flex justify-between'>
                 <h1 className='px-1 mb-8 text-xl font-semibold text-center '>
                   Edit Community
                 </h1>
                 <span
-                  className=' top-10 right-10'
+                  className='cursor-pointer top-10 right-10'
                   onClick={() => setEditModal(!editModal)}>
                   <MdOutlineCancel size={25} />
                 </span>

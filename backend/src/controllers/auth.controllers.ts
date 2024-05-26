@@ -113,8 +113,6 @@ const refreshToken = tryCatch(async (req: Request, res: Response) => {
 
   const foundUser = await User.findOne({ refreshToken });
 
-  console.log(foundUser);
-
   const decodedToken = jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET as string

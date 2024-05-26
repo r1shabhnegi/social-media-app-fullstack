@@ -113,8 +113,8 @@ const getDetailsPost = tryCatch(async (req: Request, res: Response) => {
 });
 
 const getPostStats = tryCatch(async (req: Request, res: Response) => {
-  const { postId, userId } = req.params;
-
+  const { postId } = req.params;
+  const userId = req.userId;
   const foundVotes = await Post.findById(postId);
 
   let totalScore;
@@ -321,9 +321,9 @@ const deletePost = tryCatch(async (req: Request, res: Response) => {
 
 const postDetailsCommunityInfo = tryCatch(
   async (req: Request, res: Response) => {
-    const { comId } = req.params;
+    const { communityId } = req.params;
     // console.log(comId);
-    const communityInfo = await Community.findById(comId).select(
+    const communityInfo = await Community.findById(communityId).select(
       'authorName avatar description name rules'
     );
 

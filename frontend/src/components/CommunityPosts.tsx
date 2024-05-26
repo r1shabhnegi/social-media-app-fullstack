@@ -72,27 +72,37 @@ const CommunityPosts = ({
 
   const fetchMorePostsData = async () => {
     setPage((prev) => prev + 1);
+
     if (postsData.length < numberOfPosts) {
       await fetchPostsData().unwrap();
     } else {
       setHasMore(false);
     }
   };
+
   return (
-    <div className='flex-1'>
-      <InfiniteScroll
-        dataLength={postsData.length}
-        next={fetchMorePostsData}
-        hasMore={hasMore}
-        loader={<CommonLoader />}>
-        {postsData?.map((postData: postDataType) => (
-          <PostCard
-            postData={postData}
-            key={`${postData._id}${Math.random()}`}
-          />
-        ))}
-      </InfiniteScroll>
-    </div>
+    <>
+      {postsData?.length == 0 || numberOfPosts === 0 ? (
+        <h1 className='flex-1 mx-4 text-xl font-bold text-gray-500'>
+          No Posts
+        </h1>
+      ) : (
+        <div className='flex-1'>
+          <InfiniteScroll
+            dataLength={postsData.length}
+            next={fetchMorePostsData}
+            hasMore={hasMore}
+            loader={<CommonLoader />}>
+            {postsData?.map((postData: postDataType) => (
+              <PostCard
+                postData={postData}
+                key={`${postData._id}${Math.random()}`}
+              />
+            ))}
+          </InfiniteScroll>
+        </div>
+      )}
+    </>
   );
 };
 export default CommunityPosts;

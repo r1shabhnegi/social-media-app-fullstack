@@ -4,3 +4,10 @@ export type SignupType = {
   email: string;
   password: string;
 };
+
+export type EditCommunityFormProps = {
+  cancel: () => void;
+  name: string;
+  description: string;
+  rules: string;
+};

@@ -69,7 +69,7 @@ const FindCommunities = () => {
                           </AvatarFallback>
                         </Avatar>
                         <span>
-                          <span className='flex items-center justify-between pr-4'>
+                          <span className='flex items-center justify-start gap-1 pr-4'>
                             <h2 className='mr-1'>{name}</h2>
                             <p
                               className={`${

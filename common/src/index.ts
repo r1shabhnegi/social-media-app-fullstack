@@ -36,4 +36,23 @@ export const signupInput = z.object({
 
 export type SignupType = z.infer<typeof signupInput>;
 
+// TODO: From here
+
 // create community
+
+export const createCommunityInput = z.object({
+  communityName: z.string(),
+  description: z.string(),
+});
+
+export type CreateCommunityType = z.infer<typeof createCommunityInput>;
+
+export const editCommunityInput = z.object({
+  name: z.string(),
+  rules: z.array(z.string()),
+  description: z.string(),
+  avatarImg: z.instanceof(File).or(z.instanceof(Blob)),
+  coverImg: z.instanceof(File).or(z.instanceof(Blob)),
+});
+
+export type EditCommunityType = z.infer<typeof editCommunityInput>;

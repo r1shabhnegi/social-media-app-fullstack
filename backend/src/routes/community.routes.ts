@@ -25,12 +25,19 @@ router.post(
 );
 
 router.post('/create', createCommunity);
-router.get('/findCommunities/:pageCount', findCommunities);
-router.get('/getCommunity/:name', getCommunity);
+
+router.get('/findCommunities/:page', findCommunities);
+
+router.get('/getCommunity/:comId', getCommunity);
+
 router.post('/joinCommunity', joinCommunity);
+
 router.post('/leaveCommunity', leaveCommunity);
+
 router.get('/getUserCommunitiesList', getCommunities);
+
 router.get('/getUserModCommunities', getModCommunities);
+
 router.post('/deleteCommunity', deleteCommunity);
 
 export default router;

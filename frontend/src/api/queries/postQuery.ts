@@ -14,7 +14,8 @@ const apiRequests = apiClient.injectEndpoints({
     }),
 
     getAllCommunityPosts: builder.query({
-      query: ({ communityId, page }) => `/api/post/${communityId}/${page}`,
+      query: ({ communityId, page }) =>
+        `/api/post/communityPosts/${communityId}/${page}`,
       providesTags: ['communityPosts'],
     }),
 
@@ -26,7 +27,7 @@ const apiRequests = apiClient.injectEndpoints({
     getPostDetails: builder.query({ query: (id) => `/api/post/detail/${id}` }),
 
     getPostStats: builder.query({
-      query: ({ postId, userId }) => `/api/post/postStats/${postId}/${userId}`,
+      query: ({ postId }) => `/api/post/postStats/${postId}`,
       providesTags: ['postStats'],
     }),
 
@@ -75,7 +76,7 @@ const apiRequests = apiClient.injectEndpoints({
     }),
 
     communityNumberOfPosts: builder.query({
-      query: (communityId) => `/api/post/communityNumberOfPosts/${communityId}`,
+      query: (communityId) => `/api/post/numberOfPosts/${communityId}`,
     }),
   }),
 });

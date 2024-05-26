@@ -7,7 +7,7 @@ import { FaRegBookmark, FaRegCommentAlt } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiSolidUpvote } from 'react-icons/bi';
 import { BiSolidDownvote } from 'react-icons/bi';
-import { MdBookmarkBorder } from 'react-icons/md';
+import { MdBookmarkBorder, MdOutlineDeleteOutline } from 'react-icons/md';
 import { MdOutlineBookmark } from 'react-icons/md';
 import { BsThreeDots } from 'react-icons/bs';
 import { MdEdit } from 'react-icons/md';
@@ -23,6 +23,15 @@ import {
 import { showToast } from '@/global/toastSlice';
 import { MdDelete } from 'react-icons/md';
 import { useEffect } from 'react';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from './ui/button';
 
 type postDataType = {
   _id: string;
@@ -59,7 +68,6 @@ const PostCard = ({
         try {
           const res = await fetchPostStats({
             postId: postData?._id,
-            userId,
           }).unwrap();
 
           if (!res) throw new Error('Error fetching post data');
@@ -69,7 +77,7 @@ const PostCard = ({
       };
       fetchStats();
     }
-  }, [fetchPostStats, postData, userId]);
+  }, [fetchPostStats, postData]);
 
   const [upVote, { isLoading: loadingUpVote }] = useUpVoteMutation();
   const [downVote, { isLoading: loadingDownVote }] = useDownVoteMutation();
@@ -155,32 +163,27 @@ const PostCard = ({
           </div>
           <div>
             {isMod ? (
-              <div className='dropdown dropdown-end'>
-                <button
-                  tabIndex={0}
-                  role='button'
-                  className='p-2 z-0 hover:bg-[#2d2f2f] rounded-full '>
-                  <BsThreeDots className='size-6' />
-                </button>
-                <ul
-                  tabIndex={0}
-                  className='mt-5 shadow dropdown-content menu bg-base-100 rounded-box w-44'>
-                  {/* <li>
-                    <Link to='/'>
-                      <a className='flex items-center justify-start gap-3'>
-                        <MdModeEditOutline className='size-6' />
-                        <p className='text-base'>Edit Post</p>
-                      </a>
-                    </Link>
-                  </li> */}
-                  <li onClick={deletePost}>
-                    <a className='flex items-center justify-start gap-3'>
-                      <MdDelete className=' size-6' />
-                      <p className='text-base'>Delete Post</p>
-                    </a>
-                  </li>
-                </ul>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant='ghost'
+                    className={`${
+                      !isMod && 'hidden'
+                    } flex items-center hover:bg-transparent ring-0 focus:ring-0 rounded-full hover:text-gray-500`}>
+                    <BsThreeDots className='size-6' />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className='border-0 ring-0 focus:ring-0 w-36 mt-5 text-gray-200 bg-[#213036] rounded-2xl'
+                  align='end'>
+                  <DropdownMenuItem
+                    className='cursor-pointer rounded-xl'
+                    onClick={deletePost}>
+                    <MdOutlineDeleteOutline className='mr-1 size-6' />
+                    <span>Delete post</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : null}
           </div>
         </div>
