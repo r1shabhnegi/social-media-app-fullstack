@@ -9,12 +9,10 @@ import CommonLoader from '@/components/CommonLoader';
 import imageCompression from 'browser-image-compression';
 import { EditCommunityFormProps } from '@/lib/types';
 import { useDropzone } from 'react-dropzone';
-
+import { MdAddPhotoAlternate } from 'react-icons/md';
 type CommunityEditTypes = {
   name: string;
   description: string;
-  avatarImg: FileList;
-  coverImg: FileList;
   rules: string;
 };
 
@@ -32,18 +30,33 @@ const EditCommunityForm = ({
   // drop-zone
 
   const [avatar, setAvatar] = useState<{ File: object; preview: string }>();
+  const [cover, setCover] = useState<{ File: object; preview: string }>();
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDropAvatar = useCallback((acceptedFiles: File[]) => {
     setAvatar({
       File: acceptedFiles[0],
       preview: URL.createObjectURL(acceptedFiles[0]),
     });
   }, []);
+  const onDropCover = useCallback((acceptedFiles: File[]) => {
+    setCover({
+      File: acceptedFiles[0],
+      preview: URL.createObjectURL(acceptedFiles[0]),
+    });
+  }, []);
+
   // console.log(file);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-  });
+  const { getRootProps: getAvatarRootProps, isDragActive: isAvatarDragActive } =
+    useDropzone({
+      onDrop: onDropAvatar,
+      maxSize: 1024 * 4000,
+    });
+  const { getRootProps: getCoverRootProps, isDragActive: isCoverDragActive } =
+    useDropzone({
+      onDrop: onDropCover,
+      maxSize: 1024 * 4000,
+    });
 
   useEffect(() => {
     reset({ name: communityName, description, rules });
@@ -58,8 +71,8 @@ const EditCommunityForm = ({
       useWebWorker: true,
     };
     try {
-      const avatarImage = await imageCompression(data.avatarImg[0], options);
-      const coverImage = await imageCompression(data.coverImg[0], options);
+      const avatarImage = await imageCompression(avatar?.File, options);
+      const coverImage = await imageCompression(cover?.File, options);
 
       const formData = new FormData();
       formData.append('communityName', communityName);
@@ -94,69 +107,92 @@ const EditCommunityForm = ({
 
   return (
     <form
-      className='bg-[#0f1a1c] flex flex-col gap-3 z-[200]'
+      className='bg-[#0f1a1c] w-[55rem] flex flex-col gap-5 z-[200]'
       onSubmit={onSubmit}>
-      <span className='flex gap-3'>
-        <label className='text-[#67787e] text-sm flex-1'>
-          &nbsp;&nbsp;Name
-          <input
-            className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 w-full rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
-            type='text'
-            {...register('name')}
-          />
-        </label>
-        <label className='flex-1 text-[#67787e] text-sm'>
-          &nbsp;&nbsp;Rules
-          <input
-            className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 w-full  rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
-            type='text'
-            {...register('rules')}
-          />
-        </label>
-      </span>
-
-      <label className='flex flex-col text-[#67787e] text-sm'>
-        &nbsp;&nbsp; Description
-        <textarea
-          rows={5}
-          className='overflow-hidden flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] min-h-20 w-full rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
-          {...register('description')}
-        />
-      </label>
-
-      {/* avatarImg */}
-      <label className='flex flex-col text-[#67787e] text-sm'>
-        Avatar Image
-        <div {...getRootProps({ className: 'h-20 w-full bg-red-200' })}>
-          {/* <input {...getInputProps()} /> */}
-          {isDragActive ? (
-            <p>Drop the files here ...</p>
-          ) : (
-            <div className='w-full h-20'>
-              {avatar?.preview ? (
-                <img
-                  src={avatar?.preview}
-                  alt=''
-                  className='size-10'
-                />
-              ) : (
-                <p className=''>Click to select Avatar / Drop Avatar</p>
-              )}
-            </div>
-          )}
+      <div className='flex gap-5'>
+        <div className='flex flex-col w-[18rem] gap-3'>
+          <label className='flex flex-col text-[#67787e] text-sm'>
+            &nbsp;&nbsp;Name
+            <input
+              className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
+              type='text'
+              {...register('name')}
+            />
+          </label>
+          <label className='flex flex-col text-[#67787e] text-sm'>
+            &nbsp;&nbsp;Rules
+            <input
+              className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16  rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
+              type='text'
+              {...register('rules')}
+            />
+          </label>
         </div>
-      </label>
+        <label className='flex flex-1 flex-col text-[#67787e] text-sm'>
+          &nbsp;&nbsp; Description
+          <textarea
+            rows={5}
+            className='overflow-hidden flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] min-h-20 rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
+            {...register('description')}
+          />
+        </label>
+      </div>
 
-      {/* coverImg */}
-      <label className='flex flex-col text-[#67787e] text-sm'>
-        Cover Image
-        <Input
-          type='file'
-          className='flex-1 mt-1 text-[#f2f2f1] p-4 bg-[#1a282d] w-full rounded-3xl  outline-none  '
-          accept='image/*'
-          {...register('coverImg')}
-        />
-      </label>
+      <div className='flex gap-5'>
+        {/* avatarImg */}
+        <label className='flex flex-col text-[#67787e] text-sm'>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avatar Image
+          <div
+            {...getAvatarRootProps({
+              className: `rounded-3xl flex mt-1 flex justify-center items-center size-32 ${
+                !avatar?.preview && 'border'
+              }`,
+            })}>
+            {isAvatarDragActive ? (
+              <p className='font-bold text-gray-700'>Drop</p>
+            ) : (
+              <div className='flex items-center justify-center'>
+                {avatar?.preview ? (
+                  <img
+                    src={avatar?.preview}
+                    alt='avatar img'
+                    className='object-cover object-center rounded-3xl size-32'
+                  />
+                ) : (
+                  <MdAddPhotoAlternate className='size-16' />
+                )}
+              </div>
+            )}
+          </div>
+        </label>
+
+        {/* coverImg */}
+        <label className='flex flex-1 flex-col text-[#67787e] text-sm'>
+          &nbsp;&nbsp;Cover Image
+          <div
+            {...getCoverRootProps({
+              className: `rounded-3xl h-32 flex mt-1 flex justify-center items-center h-full flex-1 ${
+                !cover?.preview && 'border'
+              }`,
+            })}>
+            {isCoverDragActive ? (
+              <p className='font-bold text-gray-700'>Drop</p>
+            ) : (
+              <div className='flex items-center justify-center w-full h-32'>
+                {cover?.preview ? (
+                  <img
+                    src={cover?.preview}
+                    alt='avatar img'
+                    className='object-cover object-center w-full h-32 rounded-3xl'
+                  />
+                ) : (
+                  <MdAddPhotoAlternate className='size-16' />
+                )}
+              </div>
+            )}
+          </div>
+        </label>
+      </div>
 
       <div className='flex justify-end gap-5 mt-3'>
         {isLoading ? (
