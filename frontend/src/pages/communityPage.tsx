@@ -14,6 +14,7 @@ import {
   useJoinCommunityMutation,
   useLeaveCommunityMutation,
 } from '@/api/queries/communityQuery';
+import { TbListDetails } from 'react-icons/tb';
 import { MdEditNote } from 'react-icons/md';
 import { useState } from 'react';
 import { showToast } from '@/global/toastSlice';
@@ -33,6 +34,7 @@ import { Button } from '@/components/ui/button';
 
 const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
+  const [detailModal, setDetailModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -103,31 +105,40 @@ const CommunityPage = () => {
         )}
       </div>
 
-      <div className='flex items-end justify-between h-24 px-3 -mt-12'>
+      <div className='flex flex-col items-start justify-between h-24 gap-5 px-3 mx-1 -mt-6 md:-mt-12 md:mx-0 md:items-end md:flex-row'>
         <span className='flex items-end gap-4'>
-          <Avatar className='size-[5.4rem] border-4 border-[#0b1416]'>
+          <Avatar className='size-[4rem] sm:size-[5.4rem] border-4 border-[#0b1416]'>
             <AvatarImage
               className='object-cover'
               src={communityData?.avatarImg}
             />
             <AvatarFallback className='bg-gray-700'>RN</AvatarFallback>
           </Avatar>
-          <h1 className='text-4xl font-bold'>r/{communityName}</h1>
+          <h1 className='text-2xl font-bold sm:text-3xl md:text-3xl lg:text-4xl'>
+            r/{communityName}
+          </h1>
         </span>
 
-        <span className='flex gap-2'>
+        <span className='flex gap-4'>
           <button
-            className='flex items-center justify-between gap-1 px-3 py-2 font-bold border border-gray-400 rounded-full hover:border-gray-100'
+            className='flex items-center justify-between gap-1 text-sm font-bold border-gray-400 rounded-full sm:px-3 sm:py-2 sm:border lg:text-base hover:border-gray-100'
             onClick={() => navigate('/submit', { state: { communityName } })}>
-            <IoAdd className='size-7 ' />
+            <IoAdd className='size-5 md:size-7 ' />
             Create a post
+          </button>
+
+          <button
+            className='flex items-center justify-between gap-2 text-sm font-bold border-gray-400 rounded-full sm:border sm:px-3 sm:py-2 lg:text-base lg:hidden hover:border-gray-100'
+            onClick={() => setDetailModal(!detailModal)}>
+            <TbListDetails className='size-4 md:size-5' />
+            details
           </button>
 
           {isMod && (
             <button
-              className='flex items-center justify-between gap-1 px-3 py-2 font-bold border border-gray-400 rounded-full hover:border-gray-100'
+              className='flex items-center justify-between gap-1 text-sm font-bold border-gray-400 rounded-full sm:px-3 sm:py-2 sm:border lg:text-base hover:border-gray-100'
               onClick={() => setEditModal(!editModal)}>
-              <MdEditNote className='size-7 ' />
+              <MdEditNote className='size-5 md:size-7 ' />
               Edit
             </button>
           )}
@@ -137,92 +148,103 @@ const CommunityPage = () => {
               isNotJoined
                 ? 'bg-[#898989] hover:bg-[#626262]'
                 : 'bg-[#0045ac] hover:bg-[#0079d3]'
-            }  rounded-full font-bold py-2 px-3`}
+            }  rounded-full font-bold py-1 px-2 sm:py-2 sm:px-3`}
             onClick={handleJoinCommunity}>
             {isNotJoined ? 'Leave' : 'Join'}
           </button>
 
           {/* Drop down */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant='ghost'
-                className={`${
-                  !isMod && 'hidden'
-                } flex items-center hover:bg-transparent ring-0 focus:ring-0 hover:text-white justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100`}>
-                <RxDotsHorizontal className=' hover:text-white' />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className='border-0 ring-0 focus:ring-0 w-56 mt-5 text-gray-200 bg-[#213036] rounded-2xl'
-              align='end'>
-              <DropdownMenuItem
-                className='cursor-pointer rounded-xl'
-                onClick={handleDeleteCommunity}>
-                <MdOutlineDeleteOutline className='mr-2 size-6' />
-                <span>Delete Community</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* <div className='dropdown dropdown-end'>
-            <button
-              tabIndex={0}
-              role='button'
-              className={`${
-                !isMod && 'hidden'
-              } flex items-center border-0 hover:bg-transparent ring-0 focus:ring-0 relative justify-center border border-gray-400 rounded-full size-11 hover:border-gray-100`}>
-              <RxDotsHorizontal className='size-6' />
-            </button>
-            <ul
-              tabIndex={0}
-              className='dropdown-content z-[1] menu p-2 mt-5 shadow bg-base-100 rounded-box w-52'>
-              <li>
-                <a onClick={handleDeleteCommunity}>
-                  <MdOutlineDeleteOutline className='size-6' />
-                  <p>Delete Community</p>
-                </a>
-              </li>
-            </ul>
-          </div> */}
+          {isMod && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant='ghost'
+                  className={`${
+                    !isMod && 'hidden'
+                  } flex items-center hover:bg-transparent ring-0 focus:ring-0 hover:text-white justify-center sm:border border-gray-400 rounded-full sm:size-11 hover:border-gray-100`}>
+                  <RxDotsHorizontal className=' hover:text-white size-5' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className='border-0 ring-0 focus:ring-0 w-56 mt-5 text-gray-200 bg-[#213036] rounded-2xl'
+                align='end'>
+                <DropdownMenuItem
+                  className='cursor-pointer rounded-xl'
+                  onClick={handleDeleteCommunity}>
+                  <MdOutlineDeleteOutline className='mr-2 size-6' />
+                  <span>Delete Community</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </span>
-        {editModal && (
-          <div className='fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50'>
-            <div className='bg-[#0f1a1c] p-6 rounded-3xl'>
-              <div className='flex justify-between'>
-                <h1 className='px-1 mb-8 text-xl font-semibold text-center '>
-                  Edit Community
-                </h1>
-                <span
-                  className='cursor-pointer top-10 right-10'
-                  onClick={() => setEditModal(!editModal)}>
-                  <MdOutlineCancel size={25} />
-                </span>
-              </div>
-              <EditCommunityForm
-                cancel={() => setEditModal(!editModal)}
-                name={communityData?.name}
-                description={communityData?.description}
-                rules={communityData?.rules}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
-      <div className='flex gap-20 mt-10'>
+      <div className='flex mt-20 md:mt-10 xl:gap-20'>
         <CommunityPosts
           communityId={communityData?._id}
           communityName={communityName}
         />
-        <CommunityRightSideBar
-          authorName={communityData?.authorName}
-          avatar={communityData?.avatar}
-          description={communityData?.description}
-          name={communityData?.name}
-          rules={communityData?.rules}
-        />
+        <div className='hidden mt-5 mr-4 lg:block xl:mt-0 xl:w-80 lg:w-72'>
+          <CommunityRightSideBar
+            authorName={communityData?.authorName}
+            avatar={communityData?.avatar}
+            description={communityData?.description}
+            name={communityData?.name}
+            rules={communityData?.rules}
+          />
+        </div>
       </div>
+      {editModal && (
+        <div className='fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='bg-[#0f1a1c] mx-10 p-6 rounded-3xl max-w-[60rem] w-full'>
+            <div className='flex justify-between'>
+              <h1 className='px-1 mb-8 text-xl font-semibold text-center md:text-3xl '>
+                Edit Community
+              </h1>
+              <span
+                className='cursor-pointer top-10 right-10'
+                onClick={() => setEditModal(!editModal)}>
+                <MdOutlineCancel size={25} />
+              </span>
+            </div>
+            <EditCommunityForm
+              cancel={() => setEditModal(!editModal)}
+              name={communityData?.name}
+              description={communityData?.description}
+              rules={communityData?.rules}
+            />
+          </div>
+        </div>
+      )}
+      {detailModal && (
+        <div className='fixed top-0 left-0 flex items-center justify-center w-full h-screen bg-black bg-opacity-50'>
+          <div className='mx-3 w-72 sm:w-80 md:w-96 p-5 rounded-2xl bg-[#162226]'>
+            <span className='flex items-end justify-between mb-3'>
+              <h1 className='font-semibold text-md'>Create a community</h1>
+              <MdOutlineCancel
+                className='cursor-pointer size-5 sm:size-7'
+                onClick={() => setDetailModal(!detailModal)}
+              />
+            </span>
+            <CommunityRightSideBar
+              authorName={communityData?.authorName}
+              avatar={communityData?.avatar}
+              description={communityData?.description}
+              name={communityData?.name}
+              rules={communityData?.rules}
+            />
+            <div className='flex justify-end gap-5 mt-3'>
+              <button
+                className='px-5 text-center w-full py-3 bg-[#223237] rounded-2xl'
+                type='button'
+                onClick={() => setDetailModal(!detailModal)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

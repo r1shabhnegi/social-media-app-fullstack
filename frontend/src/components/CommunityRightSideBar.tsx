@@ -15,10 +15,12 @@ const CommunityRightSideBar = ({
   rules: string[];
 }) => {
   return (
-    <div className='bg-[#162226] rounded-lg w-80 flex flex-col gap-2 p-3 h-min'>
+    <div className='bg-[#162226] w-full rounded-lg lg:flex flex-col gap-2 p-3 h-min'>
       <h1 className='text-sm font-semibold text-gray-100 '>Description</h1>
       <div className='p-3 bg-[#131a1d] rounded-lg'>
-        <p className='text-sm text-gray-300'>{description}</p>
+        <p className='text-sm text-gray-300'>
+          {description ? description : 'No description added'}
+        </p>
       </div>
 
       <h1 className='text-sm font-semibold text-gray-100 '>Moderator</h1>

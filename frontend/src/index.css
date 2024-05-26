@@ -6,6 +6,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  background-color: rgb(25, 25, 37);
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:active {
   -webkit-background-clip: text;

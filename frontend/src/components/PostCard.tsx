@@ -127,7 +127,7 @@ const PostCard = ({
     <div
       className={`overflow-auto  ${
         !fromPostDetail ? 'border-t-2 border-gray-700' : ''
-      } bg-re-400 w-[40rem]`}>
+      } bg-re-400 w-full max-w-[40rem]`}>
       <div
         className={`${
           !fromPostDetail ? 'hover:bg-[#131d20] my-4' : ''

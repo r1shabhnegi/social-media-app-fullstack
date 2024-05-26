@@ -77,7 +77,7 @@ const Header = () => {
               </span>
             </SheetTrigger>
             <SheetContent
-              className='bg-[#0b1416] text-[#f2f2f1]'
+              className='bg-[#0b1416] border-0 w-auto text-[#f2f2f1]'
               side='left'>
               <LeftSideBar />
             </SheetContent>

@@ -89,6 +89,7 @@ const CommunityPosts = ({
       ) : (
         <div className='flex-1'>
           <InfiniteScroll
+            className='flex flex-col items-center'
             dataLength={postsData.length}
             next={fetchMorePostsData}
             hasMore={hasMore}

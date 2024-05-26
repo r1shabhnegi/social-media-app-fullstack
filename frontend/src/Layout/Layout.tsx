@@ -20,8 +20,10 @@ const Layout = () => {
   return (
     <main className=' flex flex-col min-h-screen bg-[#0b1416] text-white'>
       <Header />
-      <LeftSideBar />
-      <div className='ml-[17rem]'>
+      <div className='hidden lg:inline'>
+        <LeftSideBar />
+      </div>
+      <div className='lg:ml-[17rem]'>
         <Outlet />
       </div>
     </main>

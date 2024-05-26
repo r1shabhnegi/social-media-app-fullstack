@@ -26,7 +26,12 @@ const EditCommunityForm = ({
 
   const [editCommunity, { isLoading }] = useEditCommunityMutation();
 
-  const { register, handleSubmit, reset } = useForm<CommunityEditTypes>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CommunityEditTypes>();
   // drop-zone
 
   const [avatar, setAvatar] = useState<{ File: object; preview: string }>();
@@ -107,25 +112,35 @@ const EditCommunityForm = ({
 
   return (
     <form
-      className='bg-[#0f1a1c] w-[55rem] flex flex-col gap-5 z-[200]'
+      className='bg-[#0f1a1c] flex flex-col gap-5 z-[200]'
       onSubmit={onSubmit}>
-      <div className='flex gap-5'>
-        <div className='flex flex-col w-[18rem] gap-3'>
-          <label className='flex flex-col text-[#67787e] text-sm'>
+      <div className='flex flex-col gap-5 md:flex-row'>
+        <div className='flex flex-col w-full gap-3 md:w-1/3 sm:flex-row md:flex-col'>
+          <label className='flex flex-1 flex-col text-[#67787e] text-sm'>
             &nbsp;&nbsp;Name
             <input
               className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
               type='text'
               {...register('name')}
             />
+            {errors?.name && (
+              <p className='text-xs font-semibold text-red-500'>
+                &nbsp;&nbsp;{errors?.name.message}
+              </p>
+            )}
           </label>
-          <label className='flex flex-col text-[#67787e] text-sm'>
+          <label className='flex flex-1 flex-col text-[#67787e] text-sm'>
             &nbsp;&nbsp;Rules
             <input
               className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16  rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
               type='text'
               {...register('rules')}
             />
+            {errors?.rules && (
+              <p className='text-xs font-semibold text-red-500'>
+                &nbsp;&nbsp;{errors?.rules.message}
+              </p>
+            )}
           </label>
         </div>
         <label className='flex flex-1 flex-col text-[#67787e] text-sm'>
@@ -133,8 +148,19 @@ const EditCommunityForm = ({
           <textarea
             rows={5}
             className='overflow-hidden flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] min-h-20 rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
-            {...register('description')}
+            {...register('description', {
+              validate: (val) => {
+                if (val && val.length > 500) {
+                  return 'Description must have less then 500 letters';
+                }
+              },
+            })}
           />
+          {errors?.description && (
+            <p className='text-xs font-semibold text-red-500'>
+              &nbsp;&nbsp;{errors?.description.message}
+            </p>
+          )}
         </label>
       </div>
 
