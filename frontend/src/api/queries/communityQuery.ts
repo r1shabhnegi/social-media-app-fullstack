@@ -55,7 +55,7 @@ const apiRequests = apiClient.injectEndpoints({
     editCommunity: builder.mutation({
       query: (data) => ({
         url: '/api/community/editCommunity',
-        method: 'POST',
+        method: 'PATCH',
         body: data,
       }),
       invalidatesTags: [

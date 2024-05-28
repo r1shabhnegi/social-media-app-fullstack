@@ -8,11 +8,13 @@ const apiRequests = apiClient.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['postDetail', 'comments'],
     }),
 
     getComments: builder.query({
       query: ({ postId, commentPage }) =>
         `/api/comment/getComments/${postId}/${commentPage}`,
+      providesTags: ['comments'],
     }),
   }),
 });

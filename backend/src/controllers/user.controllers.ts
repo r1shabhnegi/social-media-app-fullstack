@@ -11,6 +11,7 @@ import { tryCatch } from '../utility/tryCatch';
 import { Post } from '../models/post.model';
 import { Comment } from '../models/comment.model';
 import { signupInput } from '@rishabhnegi/circlesss-common';
+import { uploadOnCloudinary } from '../utility/cloudinary';
 
 export const signUp = tryCatch(async (req: Request, res: Response) => {
   const parsedInput = signupInput.safeParse(req.body);
@@ -54,7 +55,7 @@ export const getUserData = tryCatch(async (req: Request, res: Response) => {
   const { username } = req.params;
 
   const userData = await User.findOne({ username }).select(
-    '_id createdAt email name username'
+    '_id createdAt bio email name username avatar'
   );
   if (!userData) throw new ApiError('Error', 3000, 3000);
   res.status(200).send(userData);
@@ -105,5 +106,33 @@ export const getUserProfileComments = tryCatch(
 );
 
 export const editUser = tryCatch(async (req: Request, res: Response) => {
-  console.log(req.body);
+  const { name, description } = req.body;
+
+  const userId = req.userId;
+  const foundUser = await User.findById(userId);
+
+  console.log('foundUser', foundUser);
+  if (!foundUser) {
+    throw new Error('User not found');
+  }
+
+  const avatarFile = req.files as {
+    [fieldName: string]: Express.Multer.File[];
+  };
+
+  const avatarPath = avatarFile.avatar[0].path;
+
+  if (avatarPath) {
+    const url = await uploadOnCloudinary(avatarPath);
+
+    console.log('url', url);
+    if (!url) throw new Error('Error uploading file');
+    foundUser.avatar = url;
+  }
+
+  foundUser.name = name;
+  foundUser.bio = description;
+
+  await foundUser.save();
+  res.status(200).json({ message: 'Edit successful!' });
 });

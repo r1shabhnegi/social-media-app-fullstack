@@ -4,6 +4,7 @@ const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
     getUserData: builder.query({
       query: (username) => `/api/user/get/${username}`,
+      providesTags: ['userProfile'],
     }),
 
     getUserPosts: builder.query({
@@ -21,9 +22,10 @@ const apiRequests = apiClient.injectEndpoints({
     editUser: builder.mutation({
       query: (data) => ({
         url: '/api/user/editUser',
-        method: 'POST',
+        method: 'PATCH',
         body: data,
       }),
+      invalidatesTags: ['userProfile'],
     }),
   }),
 });

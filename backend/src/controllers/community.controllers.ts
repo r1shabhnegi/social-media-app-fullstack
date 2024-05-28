@@ -223,24 +223,6 @@ interface uploadFile {
   // add other properties as needed
 }
 
-declare global {
-  namespace Express {
-    interface Request {
-      files?: {
-        coverImg?: {
-          path: string;
-        }[];
-        avatarImg?: {
-          path: string;
-        }[];
-        image?: {
-          path: string;
-        }[];
-      };
-    }
-  }
-}
-
 const editCommunity = tryCatch(async (req: Request, res: Response) => {
   const { name: newName, description, rules, communityName } = req.body;
 
@@ -252,27 +234,19 @@ const editCommunity = tryCatch(async (req: Request, res: Response) => {
     throw new ApiError('User not allowed to edit community', 909, 403);
   }
 
-  const avatarImgPath = (
-    req as Request & { files?: { coverImg?: { path: string }[] } }
-  ).files?.avatarImg?.[0]?.path;
-
-  const coverImgPath = (
-    req as Request & { files?: { coverImg?: { path: string }[] } }
-  ).files?.coverImg?.[0]?.path;
-
-  const uploadImageToCloudinary = async (imgPath: string) => {
-    const response = await uploadOnCloudinary(imgPath);
-    if (!response) throw new ApiError('Error Uploading Image', 908, 403);
-    return response?.url;
-  };
+  const imgFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
+  const avatarImgPath = imgFiles.avatarImg[0].path;
+  const coverImgPath = imgFiles.coverImg[0].path;
 
   if (avatarImgPath) {
-    const url = await uploadImageToCloudinary(avatarImgPath);
+    const url = await uploadOnCloudinary(avatarImgPath);
+    if (!url) throw new ApiError('Error Uploading Image', 908, 403);
     foundCommunity.avatarImg = url;
   }
 
   if (coverImgPath) {
-    const url = await uploadImageToCloudinary(coverImgPath);
+    const url = await uploadOnCloudinary(coverImgPath);
+    if (!url) throw new ApiError('Error Uploading Image', 908, 403);
     foundCommunity.coverImg = url;
   }
 

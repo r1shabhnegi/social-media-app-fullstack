@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { upload } from '../middlewares/multer.middleware';
 
 import {
   getCommunity,
@@ -11,11 +12,26 @@ import {
   getModCommunities,
   deleteCommunity,
 } from '../controllers/community.controllers';
-import { upload } from '../middlewares/multer.middleware';
 
 const router = Router();
 
-router.post(
+router.get('/findCommunities/:page', findCommunities);
+
+router.get('/getCommunity/:comId', getCommunity);
+
+router.get('/getUserCommunitiesList', getCommunities);
+
+router.get('/getUserModCommunities', getModCommunities);
+
+router.post('/create', createCommunity);
+
+router.post('/joinCommunity', joinCommunity);
+
+router.post('/leaveCommunity', leaveCommunity);
+
+router.post('/deleteCommunity', deleteCommunity);
+
+router.patch(
   '/editCommunity',
   upload.fields([
     { name: 'avatarImg', maxCount: 1 },
@@ -23,21 +39,4 @@ router.post(
   ]),
   editCommunity
 );
-
-router.post('/create', createCommunity);
-
-router.get('/findCommunities/:page', findCommunities);
-
-router.get('/getCommunity/:comId', getCommunity);
-
-router.post('/joinCommunity', joinCommunity);
-
-router.post('/leaveCommunity', leaveCommunity);
-
-router.get('/getUserCommunitiesList', getCommunities);
-
-router.get('/getUserModCommunities', getModCommunities);
-
-router.post('/deleteCommunity', deleteCommunity);
-
 export default router;

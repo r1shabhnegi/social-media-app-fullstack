@@ -53,5 +53,8 @@ export const apiClient = createApi({
     'findBestCommunities',
     'getHomePosts',
     'postStats',
+    'postDetail',
+    'comments',
+    'userProfile',
   ],
 });

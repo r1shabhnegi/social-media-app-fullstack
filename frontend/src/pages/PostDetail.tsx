@@ -99,7 +99,7 @@ const PostDetail = () => {
     console.log(res);
     if (res) {
       reset();
-      navigate(0);
+      // navigate(0);
       dispatch(showToast({ message: 'Comment created', type: 'SUCCESS' }));
     }
   });

@@ -50,19 +50,13 @@ const createPost = tryCatch(async (req: Request, res: Response) => {
   if (author?.avatar) {
     newPost.authorAvatar = author.avatar;
   }
-  const imagePath = (
-    req as Request & { files?: { coverImg?: { path: string }[] } }
-  ).files?.image?.[0]?.path;
+  const imageFile = req.files as { [fieldName: string]: Express.Multer.File[] };
 
-  const uploadImageToCloudinary = async (imgPath: string) => {
-    const response = await uploadOnCloudinary(imgPath);
-    if (!response) throw new ApiError('Error Uploading Image', 908, 403);
-    return response?.url;
-  };
-
+  const imagePath = imageFile.image[0].path;
   if (imagePath) {
-    const imageUrl = await uploadImageToCloudinary(imagePath);
-    newPost.image = imageUrl;
+    const url = await uploadOnCloudinary(imagePath);
+    if (!url) throw new ApiError('Error Uploading Image', 908, 403);
+    newPost.image = url;
   }
 
   await newPost.save();
@@ -75,7 +69,6 @@ const createPost = tryCatch(async (req: Request, res: Response) => {
 
 const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
   const { page, communityId } = req.params;
-  // const { communityId } = req.body;
   const skipPosts = +page * 5;
   const pageItems = 5;
   const foundPosts = await Post.find({

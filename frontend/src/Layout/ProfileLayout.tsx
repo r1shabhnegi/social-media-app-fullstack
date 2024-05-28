@@ -15,6 +15,7 @@ import { showToast } from '@/global/toastSlice';
 import { FaEdit } from 'react-icons/fa';
 import { FaRegEdit } from 'react-icons/fa';
 import { useDropzone } from 'react-dropzone';
+import CommonLoader from '@/components/CommonLoader';
 
 type EditProfileTypes = {
   name: string;
@@ -33,8 +34,8 @@ const ProfileLayout = () => {
   const { register, handleSubmit, reset } = useForm<EditProfileTypes>();
 
   useEffect(() => {
-    reset({ name: userData?.name, description: userData?.description });
-  }, [reset, userData?.description, userData?.name]);
+    reset({ name: userData?.name, description: userData?.bio });
+  }, [reset, userData?.bio, userData?.name]);
 
   const [avatar, setAvatar] = useState<{ File: object; preview: string }>();
 
@@ -61,6 +62,7 @@ const ProfileLayout = () => {
 
     try {
       const avatarImg = await imageCompression(avatar?.File, options);
+
       console.log(avatarImg);
 
       const formData = new FormData();
@@ -68,25 +70,32 @@ const ProfileLayout = () => {
       formData.append('description', data?.description);
       formData.append('avatar', avatarImg);
 
-      console.log(formData.entries());
+      for (const [key, value] of formData) {
+        console.log(key, value);
+      }
+
       const res = await submitEditUser(formData).unwrap();
+
       if (res) {
+        setOpenEditProfile(!openEditProfile);
         dispatch(
           showToast({ message: 'Edit User Successful!', type: 'SUCCESS' })
         );
       }
-    } catch {
+    } catch (err) {
       dispatch(showToast({ message: 'Edit Failed', type: 'ERROR' }));
     }
   });
-
   return (
     <div className='flex py-8 max-w-[65rem] mx-auto '>
       <div className='flex flex-col items-center flex-1 gap-8 w-full max-w-[40rem] mx-auto lg:ml-3 '>
         <div className='flex items-center justify-between w-full px-2'>
           <div className='flex items-center gap-5'>
             <Avatar className='size-[3.5rem] sm:size-[4.5rem]'>
-              <AvatarImage src={userData?.avatar} />
+              <AvatarImage
+                className='object-cover'
+                src={userData?.avatar}
+              />
               <AvatarFallback className='bg-[#3D494E]'>
                 {userData?.name?.slice(0, 2)}
               </AvatarFallback>
@@ -98,12 +107,19 @@ const ProfileLayout = () => {
               <p className='-mt-1 text-sm font-semibold text-gray-400'>
                 u/{userData?.username}
               </p>
+
+              {userData?.bio ? (
+                <p className='text-sm font-semibold text-gray-400 text-wrap lg:hidden'>
+                  <span className='text-gray-300'>Bio-</span>
+                  {userData?.bio}
+                </p>
+              ) : null}
             </div>
           </div>
           <div
             className='cursor-pointer lg:hidden'
             onClick={() => setOpenEditProfile(!openEditProfile)}>
-            <FaRegEdit className='size-8' />
+            <FaRegEdit className='text-gray-400 size-8' />
           </div>
         </div>
 
@@ -206,19 +222,25 @@ const ProfileLayout = () => {
               </div>
             </label>
             <div className='flex justify-end gap-5 mt-3'>
-              <button
-                disabled={loadingEditUser}
-                className='px-5 py-3 bg-[#223237] rounded-2xl'
-                type='button'
-                onClick={() => setOpenEditProfile(!openEditProfile)}>
-                Cancel
-              </button>
-              <button
-                disabled={loadingEditUser}
-                type='submit'
-                className='px-5 py-3 bg-[#0045ac] hover:bg-[#0079d3] rounded-2xl'>
-                Submit
-              </button>
+              {loadingEditUser ? (
+                <CommonLoader />
+              ) : (
+                <>
+                  <button
+                    disabled={loadingEditUser}
+                    className='px-5 py-3 bg-[#223237] rounded-2xl'
+                    type='button'
+                    onClick={() => setOpenEditProfile(!openEditProfile)}>
+                    Cancel
+                  </button>
+                  <button
+                    disabled={loadingEditUser}
+                    type='submit'
+                    className='px-5 py-3 bg-[#0045ac] hover:bg-[#0079d3] rounded-2xl'>
+                    Submit
+                  </button>
+                </>
+              )}
             </div>
           </form>
         </div>

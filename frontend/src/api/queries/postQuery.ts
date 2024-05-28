@@ -69,6 +69,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     postDetails: builder.query({
       query: (postId) => `/api/post/postDetails/${postId}`,
+      providesTags: ['postDetail'],
     }),
 
     postDetailsCommunityInfo: builder.query({

@@ -122,7 +122,7 @@ const PostCard = ({
   };
 
   const isMod = postData?.authorId === userId;
-
+  console.log(postsStats?.isUpvoted);
   return (
     <div
       className={`overflow-auto  ${
