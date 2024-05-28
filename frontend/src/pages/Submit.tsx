@@ -4,11 +4,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { AppDispatch, RootState } from '@/global/_store';
 import { showToast } from '@/global/toastSlice';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import imageCompression from 'browser-image-compression';
+import { useDropzone } from 'react-dropzone';
+import { MdAddPhotoAlternate } from 'react-icons/md';
 
 const Submit = () => {
   const [selectOption, setSelectOption] = useState<string>('');
@@ -39,6 +41,19 @@ const Submit = () => {
 
   const [createPost, { isLoading }] = useCreatePostMutation();
 
+  const [image, setImage] = useState<{ File: object; preview: string }>();
+
+  const onDropAvatar = useCallback((acceptedFiles: File[]) => {
+    setImage({
+      File: acceptedFiles[0],
+      preview: URL.createObjectURL(acceptedFiles[0]),
+    });
+  }, []);
+  const { getRootProps, isDragActive, getInputProps } = useDropzone({
+    onDrop: onDropAvatar,
+    maxSize: 1024 * 4000,
+  });
+
   const onSubmit = handleSubmit(async (data) => {
     if (selectOption !== 'Choose a community') {
       const options = {
@@ -47,7 +62,7 @@ const Submit = () => {
       };
 
       try {
-        const postImage = await imageCompression(data.image[0], options);
+        const postImage = await imageCompression(image?.File, options);
 
         const formData = new FormData();
         formData.append('title', data.title);
@@ -140,14 +155,31 @@ const Submit = () => {
                 placeholder='Text...'
               />
             </label>
-            <label className='pb-3 text-sm font-semibold '>
-              Add Photo
-              <Input
-                {...register('image')}
-                accept='image/*'
-                type='file'
-                className='border-[.1rem] text-[#f2f2f1] border-gray-700 bg-[#1A1A1B]'
-              />
+            <label className='flex flex-col text-[#67787e] text-sm'>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avatar Image
+              <div
+                {...getRootProps({
+                  className: `rounded-3xl flex mt-1 flex bg-[#1A1A1B] justify-center items-center size-32 ${
+                    !image?.preview && 'border border-gray-700'
+                  }`,
+                })}>
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <p className='font-bold text-gray-700'>Drop</p>
+                ) : (
+                  <div className='flex items-center justify-center'>
+                    {image?.preview ? (
+                      <img
+                        src={image?.preview}
+                        alt='avatar img'
+                        className='object-cover object-center rounded-3xl size-32'
+                      />
+                    ) : (
+                      <MdAddPhotoAlternate className='size-16' />
+                    )}
+                  </div>
+                )}
+              </div>
             </label>
 
             <div className='flex justify-end gap-5 mt-3'>

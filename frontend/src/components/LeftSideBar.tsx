@@ -59,8 +59,8 @@ const LeftSideBar = () => {
     ));
 
   return (
-    <div className='fixed h-[44.3rem] overflow-auto w-[17rem] bg-[#0b1416]  sm:top-14 top-12 border-gray-600 border-r-[0.1rem]  '>
-      <span className='flex flex-col gap-1 p-4 pb-10'>
+    <div className='fixed h-[44.3rem] overflow-auto w-[14rem] -ml-2 pr-4 sm:p-6 sm:w-[17rem] bg-[#0b1416] sm:top-14 top-12 border-gray-600 border-r-[0.1rem]  '>
+      <span className='flex flex-col gap-1 pb-10'>
         <Link to='/'>
           <span
             className={`${

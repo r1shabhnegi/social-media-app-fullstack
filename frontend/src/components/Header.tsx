@@ -62,7 +62,7 @@ const Header = () => {
               </span>
             </SheetTrigger>
             <SheetContent
-              className='bg-[#0b1416] border-0 w-auto text-[#f2f2f1]'
+              className='w-56 bg-[#0b1416] border-0  text-[#f2f2f1]'
               side='left'>
               <LeftSideBar />
             </SheetContent>
@@ -77,19 +77,19 @@ const Header = () => {
           </Link>
         </span>
       </span>
-      <span className='hidden bg-[#1a282d] rounded-full w-full mx-5 sm:flex max-w-[35rem] h-10  items-center'>
+      {/* <span className='hidden bg-[#1a282d] rounded-full w-full mx-5 sm:flex max-w-[35rem] h-10  items-center'>
         <CiSearch className='ml-3 mr-1 text-[#f2f2f1] size-6' />
         <input
           type='text'
           placeholder='Search...'
           className='w-full p-1 text-sm mr-2 outline-none text-[#f2f2f1] bg-[#1a282d]'
         />
-      </span>
+      </span> */}
 
       <span className='flex items-center gap-2 md:gap-4'>
-        <span className='flex items-center p-1 text-[#f2f2f1] rounded sm:hidden'>
+        {/* <span className='flex items-center p-1 text-[#f2f2f1] rounded sm:hidden'>
           <CiSearch className='size-7' />
-        </span>
+        </span> */}
         {isLoggedIn ? (
           <>
             {/* <span className='cursor-pointer text-[#f2f2f1]'>
@@ -115,7 +115,7 @@ const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className='border-0 ring-0 focus:ring-0 w-56 mt-5 text-gray-200 bg-[#213036] rounded-2xl'
+                className='border-0 ring-0 focus:ring-0 w-48 lg:w-56 mt-5 text-gray-200 bg-[#213036] rounded-2xl'
                 align='end'>
                 <DropdownMenuItem
                   className='cursor-pointer rounded-xl'
