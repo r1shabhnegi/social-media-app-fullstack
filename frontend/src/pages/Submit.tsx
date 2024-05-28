@@ -80,7 +80,7 @@ const Submit = () => {
 
   return (
     <div className=' bg-[#030303] py-8 text-[#f2f2f1] flex items-start justify-center'>
-      <div className='w-[45rem] mr-5 '>
+      <div className='w-[45rem] mr-2 lg:mr-5  ml-2'>
         <h1 className='px-1 font-semibold py-3 border-b-[.1rem] border-gray-700'>
           Create a post
         </h1>
@@ -173,7 +173,7 @@ const Submit = () => {
           </form>
         </div>
       </div>
-      <span className='bg-[#1A1A1B] rounded-lg p-4 mt-9 my-5'>
+      <span className='bg-[#1A1A1B] hidden lg:block  rounded-lg p-4 mt-9 my-5  mr-2'>
         <h1 className='text-lg font-semibold border-b-[0.1rem] border-gray-700 py-2 text-[#D7DADC]'>
           Posting to Reddit
         </h1>

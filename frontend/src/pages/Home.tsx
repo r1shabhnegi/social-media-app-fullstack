@@ -1,12 +1,14 @@
 import { useGetAllPostsQuery } from '@/api/queries/postQuery';
 import CommonLoader from '@/components/CommonLoader';
+import CreateCommunity from '@/components/CreateCommunity';
 import PageLoader from '@/components/PageLoader';
 import PostCard from '@/components/PostCard';
 import { RootState } from '@/global/_store';
 import { useEffect, useState } from 'react';
+import { IoAdd } from 'react-icons/io5';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 type postDataType = {
   _id: string;
@@ -24,6 +26,8 @@ type postDataType = {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [openCreateCom, setOpenCreateCom] = useState<boolean>(false);
   const [postsData, setPostsData] = useState<postDataType[]>([]);
   const [page, setPage] = useState<number>(0);
   const { numberOfPosts } = useSelector((state: RootState) => state.posts);
@@ -82,9 +86,23 @@ const Home = () => {
 
         {/* <CommonLoader isLoading={postsLoading} /> */}
       </div>
-      <div className='sticky hidden mr-3 bg-gray-600 rounded-lg md:block top-20 h-min md:w-60 lg:w-72 xl:w-80'>
-        sidebar
+      <div className='sticky hidden lg:flex gap-4 flex-col mr-3 p-4 bg-[#162226] rounded-lg md:block top-20 h-min md:w-60 lg:w-72 xl:w-80'>
+        <span
+          className='bg-[#131A1D] flex cursor-pointer rounded-lg hover:bg-[#1a282d] py-4 items-center gap-4 text-sm px-5'
+          onClick={() => setOpenCreateCom(!openCreateCom)}>
+          <IoAdd className='size-6' />
+          <p>Create a community</p>
+        </span>
+        <span
+          className='bg-[#131A1D] flex cursor-pointer rounded-lg hover:bg-[#1a282d] py-4 items-center gap-4 text-sm px-5'
+          onClick={() => navigate('/submit')}>
+          <IoAdd className='size-6' />
+          <p>Create a Post</p>
+        </span>
       </div>
+      {openCreateCom && (
+        <CreateCommunity cancelBtn={() => setOpenCreateCom(!openCreateCom)} />
+      )}
     </div>
   );
 };

@@ -64,7 +64,6 @@ export const getUserData = tryCatch(async (req: Request, res: Response) => {
 export const getUserProfilePosts = tryCatch(
   async (req: Request, res: Response) => {
     const { username } = req.params;
-    console.log(username);
     const userPosts = await Post.find({ authorName: username }).sort({
       createdAt: -1,
     });
@@ -111,7 +110,6 @@ export const editUser = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
   const foundUser = await User.findById(userId);
 
-  console.log('foundUser', foundUser);
   if (!foundUser) {
     throw new Error('User not found');
   }
@@ -125,7 +123,6 @@ export const editUser = tryCatch(async (req: Request, res: Response) => {
   if (avatarPath) {
     const url = await uploadOnCloudinary(avatarPath);
 
-    console.log('url', url);
     if (!url) throw new Error('Error uploading file');
     foundUser.avatar = url;
   }
