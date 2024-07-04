@@ -4,7 +4,6 @@ import {
 } from '@/api/queries/commentQuery';
 import {
   useLazyPostDetailsCommunityInfoQuery,
-  usePostDetailsCommunityInfoQuery,
   usePostDetailsQuery,
 } from '@/api/queries/postQuery';
 import CommunityRightSideBar from '@/components/CommunityRightSideBar';
@@ -52,7 +51,7 @@ const PostDetail = () => {
   useEffect(() => {
     if (postData && isSuccess) {
       const fetch = async () => {
-        const res = await CommunityInfoFetch(postData?.communityId).unwrap();
+         await CommunityInfoFetch(postData?.communityId).unwrap();
       };
       fetch();
     }
@@ -76,15 +75,13 @@ const PostDetail = () => {
       setCommentPage((prev) => prev + 1);
     }
   };
-  console.log(commentPage);
   useEffect(() => {
     window.addEventListener('scroll', handleCommentPagination);
 
     return () => window.removeEventListener('scroll', handleCommentPagination);
   });
 
-  console.log(comments);
-  const [createComment, { isLoading: creatingComment }] =
+  const [createComment] =
     useCreateCommentMutation();
 
   const submitComment = handleSubmit(async (data) => {

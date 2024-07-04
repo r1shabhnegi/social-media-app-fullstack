@@ -1,19 +1,19 @@
-import { useCreatePostMutation } from '@/api/queries/postQuery';
-import CommonLoader from '@/components/CommonLoader';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { AppDispatch, RootState } from '@/global/_store';
-import { showToast } from '@/global/toastSlice';
-import { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import imageCompression from 'browser-image-compression';
-import { useDropzone } from 'react-dropzone';
-import { MdAddPhotoAlternate } from 'react-icons/md';
+import { useCreatePostMutation } from "@/api/queries/postQuery";
+import CommonLoader from "@/components/CommonLoader";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { AppDispatch, RootState } from "@/global/_store";
+import { showToast } from "@/global/toastSlice";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import imageCompression from "browser-image-compression";
+import { useDropzone } from "react-dropzone";
+import { MdAddPhotoAlternate } from "react-icons/md";
 
 const Submit = () => {
-  const [selectOption, setSelectOption] = useState<string>('');
+  const [selectOption, setSelectOption] = useState<string>("");
   const [disableSelect, setDisableSelect] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -36,7 +36,7 @@ const Submit = () => {
   }, [disableSelect, state]);
 
   useEffect(() => {
-    if (state === null) setSelectOption('Choose a community');
+    if (state === null) setSelectOption("Choose a community");
   }, [state]);
 
   const [createPost, { isLoading }] = useCreatePostMutation();
@@ -55,27 +55,29 @@ const Submit = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    if (selectOption !== 'Choose a community') {
+    if (selectOption !== "Choose a community") {
       const options = {
-        maxSizeMB: 1,
+        maxSizeMB: 0.5,
         maxWidthOrHeight: 1920,
       };
 
       try {
-        const postImage = await imageCompression(image?.File, options);
+        const postImage =
+          image?.File instanceof File &&
+          (await imageCompression(image?.File, options));
 
         const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('content', data.content);
-        formData.append('communityName', selectOption);
-        formData.append('image', postImage);
+        formData.append("title", data.title);
+        formData.append("content", data.content);
+        formData.append("communityName", selectOption);
+        postImage && formData.append("image", postImage);
 
         const res = await createPost(formData).unwrap();
         if (res) {
           dispatch(
             showToast({
-              message: 'Post Created Successfully!',
-              type: 'SUCCESS',
+              message: "Post Created Successfully!",
+              type: "SUCCESS",
             })
           );
         }
@@ -83,13 +85,13 @@ const Submit = () => {
       } catch (error) {
         dispatch(
           showToast({
-            message: 'Error posting!',
-            type: 'ERROR',
+            message: "Error posting!",
+            type: "ERROR",
           })
         );
       }
     } else {
-      dispatch(showToast({ message: 'Select Community', type: 'ERROR' }));
+      dispatch(showToast({ message: "Select Community", type: "ERROR" }));
     }
   });
 
@@ -141,7 +143,7 @@ const Submit = () => {
             <label className='pb-3 text-sm font-semibold'>
               Title
               <Input
-                {...register('title')}
+                {...register("title")}
                 className='border-[.1rem] border-gray-700 bg-[#1A1A1B]'
                 placeholder='Title'
               />
@@ -149,7 +151,7 @@ const Submit = () => {
             <label className='pb-3 text-sm font-semibold '>
               Description
               <Textarea
-                {...register('content')}
+                {...register("content")}
                 rows={8}
                 className='border-[.1rem] border-gray-700 bg-[#1A1A1B]'
                 placeholder='Text...'
@@ -160,7 +162,7 @@ const Submit = () => {
               <div
                 {...getRootProps({
                   className: `rounded-3xl flex mt-1 flex bg-[#1A1A1B] justify-center items-center size-32 ${
-                    !image?.preview && 'border border-gray-700'
+                    !image?.preview && "border border-gray-700"
                   }`,
                 })}>
                 <input {...getInputProps()} />

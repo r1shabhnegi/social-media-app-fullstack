@@ -3,15 +3,14 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/global/_store';
 import { BiDownvote, BiUpvote } from 'react-icons/bi';
-import { FaRegBookmark, FaRegCommentAlt } from 'react-icons/fa';
+import {  FaRegCommentAlt } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiSolidUpvote } from 'react-icons/bi';
 import { BiSolidDownvote } from 'react-icons/bi';
 import { MdBookmarkBorder, MdOutlineDeleteOutline } from 'react-icons/md';
 import { MdOutlineBookmark } from 'react-icons/md';
 import { BsThreeDots } from 'react-icons/bs';
-import { MdEdit } from 'react-icons/md';
-import { MdModeEditOutline } from 'react-icons/md';
+
 import {
   useDeletePostMutation,
   useDownVoteMutation,
@@ -21,14 +20,12 @@ import {
   useUpVoteMutation,
 } from '@/api/queries/postQuery';
 import { showToast } from '@/global/toastSlice';
-import { MdDelete } from 'react-icons/md';
 import { useEffect } from 'react';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from './ui/button';
@@ -59,7 +56,7 @@ const PostCard = ({
   const navigate = useNavigate();
   const createAt = multiFormatDateString(postData?.createdAt);
   const { userId } = useSelector((state: RootState) => state.auth);
-  const [fetchPostStats, { data: postsStats, isLoading: loadingStats }] =
+  const [fetchPostStats, { data: postsStats}] =
     useLazyGetPostStatsQuery();
 
   useEffect(() => {

@@ -1,21 +1,20 @@
 import {
   useEditUserMutation,
   useGetUserDataQuery,
-} from '@/api/queries/userQuery';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { MdAddPhotoAlternate, MdOutlineCancel } from 'react-icons/md';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
-import imageCompression from 'browser-image-compression';
-import { useDispatch } from 'react-redux';
-import { showToast } from '@/global/toastSlice';
-import { FaEdit } from 'react-icons/fa';
-import { FaRegEdit } from 'react-icons/fa';
-import { useDropzone } from 'react-dropzone';
-import CommonLoader from '@/components/CommonLoader';
+} from "@/api/queries/userQuery";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { MdAddPhotoAlternate, MdOutlineCancel } from "react-icons/md";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import imageCompression from "browser-image-compression";
+import { useDispatch } from "react-redux";
+import { showToast } from "@/global/toastSlice";
+import { FaRegEdit } from "react-icons/fa";
+import { useDropzone } from "react-dropzone";
+import CommonLoader from "@/components/CommonLoader";
 
 type EditProfileTypes = {
   name: string;
@@ -56,19 +55,21 @@ const ProfileLayout = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 0.5,
       maxWidthOrHeight: 1920,
     };
 
     try {
-      const avatarImg = await imageCompression(avatar?.File, options);
+      const avatarImg =
+        avatar?.File instanceof File &&
+        (await imageCompression(avatar?.File, options));
 
       console.log(avatarImg);
 
       const formData = new FormData();
-      formData.append('name', data?.name);
-      formData.append('description', data?.description);
-      formData.append('avatar', avatarImg);
+      formData.append("name", data?.name);
+      formData.append("description", data?.description);
+      avatarImg && formData.append("avatar", avatarImg);
 
       for (const [key, value] of formData) {
         console.log(key, value);
@@ -79,11 +80,11 @@ const ProfileLayout = () => {
       if (res) {
         setOpenEditProfile(!openEditProfile);
         dispatch(
-          showToast({ message: 'Edit User Successful!', type: 'SUCCESS' })
+          showToast({ message: "Edit User Successful!", type: "SUCCESS" })
         );
       }
     } catch (err) {
-      dispatch(showToast({ message: 'Edit Failed', type: 'ERROR' }));
+      dispatch(showToast({ message: "Edit Failed", type: "ERROR" }));
     }
   });
   return (
@@ -127,8 +128,8 @@ const ProfileLayout = () => {
           <p
             className={`${
               pathname === `/profile/${username}/posts`
-                ? 'bg-[#3D494E] underline '
-                : ''
+                ? "bg-[#3D494E] underline "
+                : ""
             } px-4 py-2 font-semibold text-gray-300  rounded-full cursor-pointer hover:underline`}
             onClick={() => navigate(`/profile/${username}/posts`)}>
             Posts
@@ -136,8 +137,8 @@ const ProfileLayout = () => {
           <p
             className={`${
               pathname === `/profile/${username}/comments`
-                ? 'bg-[#3D494E] underline '
-                : ''
+                ? "bg-[#3D494E] underline "
+                : ""
             } px-4 py-2 font-semibold text-gray-300  rounded-full cursor-pointer hover:underline`}
             onClick={() => navigate(`/profile/${username}/comments`)}>
             Comments
@@ -145,8 +146,8 @@ const ProfileLayout = () => {
           <p
             className={`${
               pathname === `/profile/${username}/saved`
-                ? 'bg-[#3D494E] underline '
-                : ''
+                ? "bg-[#3D494E] underline "
+                : ""
             } px-4 py-2 font-semibold text-gray-300  rounded-full cursor-pointer hover:underline`}
             onClick={() => navigate(`/profile/${username}/saved`)}>
             Saved
@@ -166,7 +167,7 @@ const ProfileLayout = () => {
           </button>
         </div>
         <p className='text-sm text-gray-400'>
-          {userData?.bio ? userData?.bio : 'Please Add Bio'}
+          {userData?.bio ? userData?.bio : "Please Add Bio"}
         </p>
       </div>
       {openEditProfile && (
@@ -184,14 +185,14 @@ const ProfileLayout = () => {
             <label className='flex flex-col text-[#67787e] text-sm'>
               &nbsp;&nbsp;Name
               <Input
-                {...register('name')}
+                {...register("name")}
                 className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none'
               />
             </label>
             <label className='flex flex-col text-[#67787e] text-sm'>
               &nbsp;&nbsp;Description
               <Textarea
-                {...register('description')}
+                {...register("description")}
                 className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none'
               />
             </label>
@@ -200,7 +201,7 @@ const ProfileLayout = () => {
               <div
                 {...getAvatarRootProps({
                   className: `rounded-3xl flex mt-1 flex bg-[#1A282D] justify-center items-center size-32 ${
-                    !avatar?.preview && 'border'
+                    !avatar?.preview && "border"
                   }`,
                 })}>
                 <input {...getAvatarInputProps()} />

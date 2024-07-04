@@ -1,15 +1,14 @@
-import { useEditCommunityMutation } from '@/api/queries/communityQuery';
-import { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Input } from '@/components/ui/input';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/global/_store';
-import { showToast } from '@/global/toastSlice';
-import CommonLoader from '@/components/CommonLoader';
-import imageCompression from 'browser-image-compression';
-import { EditCommunityFormProps } from '@/lib/types';
-import { useDropzone } from 'react-dropzone';
-import { MdAddPhotoAlternate } from 'react-icons/md';
+import { useEditCommunityMutation } from "@/api/queries/communityQuery";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/global/_store";
+import { showToast } from "@/global/toastSlice";
+import CommonLoader from "@/components/CommonLoader";
+import imageCompression from "browser-image-compression";
+import { EditCommunityFormProps } from "@/lib/types";
+import { useDropzone } from "react-dropzone";
+import { MdAddPhotoAlternate } from "react-icons/md";
 type CommunityEditTypes = {
   name: string;
   description: string;
@@ -77,40 +76,43 @@ const EditCommunityForm = ({
 
   const onSubmit = handleSubmit(async (data) => {
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 0.5,
       maxWidthOrHeight: 1920,
       useWebWorker: true,
     };
     try {
-      const avatarImage = await imageCompression(avatar?.File, options);
-      const coverImage = await imageCompression(cover?.File, options);
+      const avatarImage =
+        avatar?.File instanceof File &&
+        (await imageCompression(avatar?.File, options));
+      const coverImage =
+        cover?.File instanceof File &&
+        (await imageCompression(cover?.File, options));
 
       const formData = new FormData();
-      formData.append('communityName', communityName);
-      formData.append('description', data.description);
-      formData.append('name', data.name);
-      formData.append('rules', data.rules);
-
-      formData.append('avatarImg', avatarImage);
-      formData.append('coverImg', coverImage);
+      formData.append("communityName", communityName);
+      formData.append("description", data.description);
+      formData.append("name", data.name);
+      formData.append("rules", data.rules);
+      avatarImage && formData.append("avatarImg", avatarImage);
+      coverImage && formData.append("coverImg", coverImage);
       const res = await editCommunity(formData).unwrap();
 
       if (res) {
         dispatch(
           showToast({
-            message: 'Community Edited Successfully!',
-            type: 'SUCCESS',
+            message: "Community Edited Successfully!",
+            type: "SUCCESS",
           })
         );
         cancel();
       } else {
-        throw new Error('Error Editing Community!');
+        throw new Error("Error Editing Community!");
       }
     } catch (error) {
       dispatch(
         showToast({
-          message: 'Error Editing Community!',
-          type: 'ERROR',
+          message: "Error Editing Community!",
+          type: "ERROR",
         })
       );
     }
@@ -127,7 +129,7 @@ const EditCommunityForm = ({
             <input
               className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16 rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
               type='text'
-              {...register('name')}
+              {...register("name")}
             />
             {errors?.name && (
               <p className='text-xs font-semibold text-red-500'>
@@ -140,7 +142,7 @@ const EditCommunityForm = ({
             <input
               className='mt-1 text-[#f2f2f1] bg-[#1a282d] h-16  rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
               type='text'
-              {...register('rules')}
+              {...register("rules")}
             />
             {errors?.rules && (
               <p className='text-xs font-semibold text-red-500'>
@@ -154,10 +156,10 @@ const EditCommunityForm = ({
           <textarea
             rows={5}
             className='overflow-hidden flex-1 mt-1 text-[#f2f2f1] bg-[#1a282d] min-h-20 rounded-3xl p-4 outline outline-1 outline-white focus:border-white focus:border-2 '
-            {...register('description', {
+            {...register("description", {
               validate: (val) => {
                 if (val && val.length > 500) {
-                  return 'Description must have less then 500 letters';
+                  return "Description must have less then 500 letters";
                 }
               },
             })}
@@ -177,7 +179,7 @@ const EditCommunityForm = ({
           <div
             {...getAvatarRootProps({
               className: `rounded-3xl flex mt-1 flex bg-[#1A282D] justify-center items-center size-32 ${
-                !avatar?.preview && 'border'
+                !avatar?.preview && "border"
               }`,
             })}>
             <input {...getAvatarInputProps()} />
@@ -205,7 +207,7 @@ const EditCommunityForm = ({
           <div
             {...getCoverRootProps({
               className: `rounded-3xl h-32 flex mt-1 flex bg-[#1A282D] justify-center items-center h-full flex-1 ${
-                !cover?.preview && 'border'
+                !cover?.preview && "border"
               }`,
             })}>
             <input {...getCoverInputProps()} />

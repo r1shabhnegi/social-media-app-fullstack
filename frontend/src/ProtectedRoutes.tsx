@@ -1,9 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, Navigate } from 'react-router-dom';
-import { RootState } from './global/_store';
-import PageLoader from './components/PageLoader';
-import { setIsLoading } from './global/authSlice';
-import { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, Navigate } from "react-router-dom";
+import { RootState } from "./global/_store";
+import { setIsLoading } from "./global/authSlice";
+import { useEffect } from "react";
 
 const ProtectedRoutes = () => {
   const dispatch = useDispatch();

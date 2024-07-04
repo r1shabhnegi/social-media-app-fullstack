@@ -1,23 +1,21 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/global/_store';
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/global/_store";
 
-import LeftSideBar from './LeftSideBar';
+import LeftSideBar from "./LeftSideBar";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // Icons
-import { IoMenuSharp } from 'react-icons/io5';
-import { CiSearch } from 'react-icons/ci';
-import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
-import { IoAdd } from 'react-icons/io5';
-import { useLogoutMutation } from '@/api/queries/authQuery';
-import { setLogout } from '@/global/authSlice';
-import { showToast } from '@/global/toastSlice';
-import CommonLoader from './CommonLoader';
+import { IoMenuSharp } from "react-icons/io5";
 
-import { LogOut, User } from 'lucide-react';
+import { IoAdd } from "react-icons/io5";
+import { useLogoutMutation } from "@/api/queries/authQuery";
+import { setLogout } from "@/global/authSlice";
+import { showToast } from "@/global/toastSlice";
+
+import { LogOut, User } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -25,8 +23,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from './ui/button';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "./ui/button";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -34,20 +32,20 @@ const Header = () => {
   const { isLoggedIn, username, userId } = useSelector(
     (state: RootState) => state.auth
   );
-  const [logout, { isLoading: loadingLogoutBtn }] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     try {
       const loggedOut = await logout(userId).unwrap();
       if (loggedOut) {
-        navigate('/sign-in');
+        navigate("/sign-in");
         dispatch(setLogout());
         dispatch(
-          showToast({ message: 'Sign Out Successful!', type: 'SUCCESS' })
+          showToast({ message: "Sign Out Successful!", type: "SUCCESS" })
         );
       }
     } catch (error) {
-      dispatch(showToast({ message: 'Error Signing Out!', type: 'ERROR' }));
+      dispatch(showToast({ message: "Error Signing Out!", type: "ERROR" }));
     }
   };
 
@@ -110,7 +108,7 @@ const Header = () => {
                   className='border-0 hover:bg-transparent ring-0 focus:ring-0'>
                   <Avatar className='size-8 sm:size-9'>
                     <AvatarImage src='https://github.com/r1shabhnegi.png' />
-                    <AvatarFallback>{'Rn'}</AvatarFallback>
+                    <AvatarFallback>{"Rn"}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
