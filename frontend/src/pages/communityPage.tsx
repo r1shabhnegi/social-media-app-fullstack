@@ -1,38 +1,38 @@
-import { AppDispatch, RootState } from '@/global/_store';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import PageLoader from '@/components/PageLoader';
+import { AppDispatch, RootState } from "@/global/_store";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import PageLoader from "@/components/PageLoader";
 
-import { IoAdd } from 'react-icons/io5';
-import { RxDotsHorizontal } from 'react-icons/rx';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
-import { useNavigate } from 'react-router-dom';
-import { MdOutlineDeleteOutline } from 'react-icons/md';
+import { IoAdd } from "react-icons/io5";
+import { RxDotsHorizontal } from "react-icons/rx";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { useNavigate } from "react-router-dom";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 import {
   useGetCommunityQuery,
   useDeleteCommunityMutation,
   useJoinCommunityMutation,
   useLeaveCommunityMutation,
-} from '@/api/queries/communityQuery';
-import { TbListDetails } from 'react-icons/tb';
-import { MdEditNote } from 'react-icons/md';
-import { useState } from 'react';
-import { showToast } from '@/global/toastSlice';
-import { MdOutlineCancel } from 'react-icons/md';
+} from "@/api/queries/communityQuery";
+import { TbListDetails } from "react-icons/tb";
+import { MdEditNote } from "react-icons/md";
+import { useState } from "react";
+import { showToast } from "@/global/toastSlice";
+import { MdOutlineCancel } from "react-icons/md";
 
-import EditCommunityForm from '@/components/EditCommunityForm';
-import CommunityPosts from '@/components/CommunityPosts';
-import CommunityRightSideBar from '@/components/CommunityRightSideBar';
+import EditCommunityForm from "@/components/EditCommunityForm";
+import CommunityPosts from "@/components/CommunityPosts";
+import CommunityRightSideBar from "@/components/CommunityRightSideBar";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
-const CommunityPage = () => {
+export const CommunityPage = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
   const [detailModal, setDetailModal] = useState<boolean>(false);
 
@@ -73,18 +73,18 @@ const CommunityPage = () => {
     try {
       const res = await deleteCommunity({ communityName }).unwrap();
       if (res) {
-        navigate('/');
+        navigate("/");
         dispatch(
           showToast({
-            message: 'Community Deleted Successfully!',
-            type: 'SUCCESS',
+            message: "Community Deleted Successfully!",
+            type: "SUCCESS",
           })
         );
       }
     } catch (error) {
       showToast({
-        message: 'Failed Deleting Community!',
-        type: 'ERROR',
+        message: "Failed Deleting Community!",
+        type: "ERROR",
       });
     }
   };
@@ -122,7 +122,7 @@ const CommunityPage = () => {
         <span className='flex gap-4'>
           <button
             className='flex items-center justify-between gap-1 text-sm font-bold border-gray-400 rounded-full sm:px-3 sm:py-2 sm:border lg:text-base hover:border-gray-100'
-            onClick={() => navigate('/submit', { state: { communityName } })}>
+            onClick={() => navigate("/submit", { state: { communityName } })}>
             <IoAdd className='size-5 md:size-7 ' />
             Create a post
           </button>
@@ -144,13 +144,13 @@ const CommunityPage = () => {
           )}
 
           <button
-            className={`${isMod && 'hidden'} ${
+            className={`${isMod && "hidden"} ${
               isNotJoined
-                ? 'bg-[#898989] hover:bg-[#626262]'
-                : 'bg-[#0045ac] hover:bg-[#0079d3]'
+                ? "bg-[#898989] hover:bg-[#626262]"
+                : "bg-[#0045ac] hover:bg-[#0079d3]"
             }  rounded-full font-bold py-1 px-2 sm:py-2 sm:px-3`}
             onClick={handleJoinCommunity}>
-            {isNotJoined ? 'Leave' : 'Join'}
+            {isNotJoined ? "Leave" : "Join"}
           </button>
 
           {/* Drop down */}
@@ -160,7 +160,7 @@ const CommunityPage = () => {
                 <Button
                   variant='ghost'
                   className={`${
-                    !isMod && 'hidden'
+                    !isMod && "hidden"
                   } flex items-center hover:bg-transparent ring-0 focus:ring-0 hover:text-white justify-center sm:border border-gray-400 rounded-full sm:size-11 hover:border-gray-100`}>
                   <RxDotsHorizontal className=' hover:text-white size-5' />
                 </Button>
@@ -248,4 +248,4 @@ const CommunityPage = () => {
     </div>
   );
 };
-export default CommunityPage;
+// export default CommunityPage;
