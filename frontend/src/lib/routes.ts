@@ -1,10 +1,10 @@
 import React, { ReactElement } from "react";
-import SignIn from "../pages/SignIn";
-import Home from "../pages/Home";
-import SignUp from "../pages/SignUp";
-import Submit from "../pages/Submit";
-import FindCommunities from "../pages/FindCommunities";
-import communityPage from "../pages/CommunityPage";
+import SignIn from "@/pages/SignIn";
+import Home from "@/pages/Home";
+import SignUp from "@/pages/SignUp";
+import Submit from "@/pages/Submit";
+import FindCommunities from "@/pages/FindCommunities";
+import communityPage from "@/pages/CommunityPage";
 import PostDetail from "@/pages/PostDetail";
 import ProfilePosts from "@/pages/ProfilePosts";
 import ProfileComments from "@/pages/ProfileComments";
