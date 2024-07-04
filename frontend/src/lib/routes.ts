@@ -8,7 +8,8 @@ import PostDetail from "@/pages/PostDetail";
 import ProfilePosts from "@/pages/ProfilePosts";
 import ProfileComments from "@/pages/ProfileComments";
 import ProfileSaved from "@/pages/ProfileSaved";
-import { CommunityPage } from "@/pages/CommunityPage";
+// import { CommunityPage } from "@/pages/CommunityPage";
+import Community from "@/pages/Community";
 
 export const privateRoutes: { path: string; element: ReactElement }[] = [
   {
@@ -17,7 +18,7 @@ export const privateRoutes: { path: string; element: ReactElement }[] = [
   },
   {
     path: "/community/:name",
-    element: React.createElement(CommunityPage),
+    element: React.createElement(Community),
   },
   {
     path: "/submit",
