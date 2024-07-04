@@ -38,6 +38,7 @@ app.use("/api/comment", verifyJwt, commentRouter);
 
 app.use(handleErrors);
 
-app.listen(process.env.SERVER_PORT, () => {
-  console.log("Connected on port:", process.env.SERVER_PORT);
+const port = process.env.SERVER_PORT || 3456;
+app.listen(port, () => {
+  console.log("Connected on port:", port);
 });
