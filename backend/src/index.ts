@@ -23,7 +23,9 @@ const app = express();
 
 app.use(credentials);
 
-app.use(cors(corsOptions));
+app.use(
+  cors({ origin: ["https://circlesss.onrender.com"], credentials: true })
+);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
