@@ -4,7 +4,7 @@ import Home from "@/pages/Home";
 import SignUp from "@/pages/SignUp";
 import Submit from "@/pages/Submit";
 import FindCommunities from "@/pages/FindCommunities";
-import communityPage from "@/pages/CommunityPage";
+import CommunityPage from "@/pages/CommunityPage";
 import PostDetail from "@/pages/PostDetail";
 import ProfilePosts from "@/pages/ProfilePosts";
 import ProfileComments from "@/pages/ProfileComments";
@@ -17,7 +17,7 @@ export const privateRoutes: { path: string; element: ReactElement }[] = [
   },
   {
     path: "/community/:name",
-    element: React.createElement(communityPage),
+    element: React.createElement(CommunityPage),
   },
   {
     path: "/submit",
