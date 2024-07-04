@@ -4,11 +4,11 @@ import Home from "@/pages/Home";
 import SignUp from "@/pages/SignUp";
 import Submit from "@/pages/Submit";
 import FindCommunities from "@/pages/FindCommunities";
-import CommunityPage from "@/pages/CommunityPage";
 import PostDetail from "@/pages/PostDetail";
 import ProfilePosts from "@/pages/ProfilePosts";
 import ProfileComments from "@/pages/ProfileComments";
 import ProfileSaved from "@/pages/ProfileSaved";
+import CommunityPage from "@/pages/CommunityPage";
 
 export const privateRoutes: { path: string; element: ReactElement }[] = [
   {
