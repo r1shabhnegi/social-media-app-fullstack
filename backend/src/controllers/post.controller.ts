@@ -1,8 +1,8 @@
 import { Response, Request } from 'express';
-import { tryCatch } from '../utility/tryCatch';
+// import { tryCatch } from '../utility/tryCatch';
 import { Post } from '../models/post.model';
 import { uploadOnCloudinary } from '../utility/cloudinary';
-import { ApiError } from '../utility/apiError';
+// import { ApiError } from '../utility/apiError';
 import { Community } from '../models/community.model';
 import {
   POST_COMMUNITY_NOT_EXIST,
@@ -13,30 +13,37 @@ import User from '../models/user.model';
 import mongoose from 'mongoose';
 import { Comment } from '../models/comment.model';
 
-const getNumberOfPosts = tryCatch(async (req: Request, res: Response) => {
+const getNumberOfPosts =
+//  tryCatch(
+  async (req: Request, res: Response) => {
   const numberOfPosts = await Post.countDocuments();
   res.status(200).send(numberOfPosts.toString());
-});
+}
+// );
 
-const createPost = tryCatch(async (req: Request, res: Response) => {
+const createPost =
+//  tryCatch(
+  async (req: Request, res: Response) => {
   const { title, content, communityName } = req.body;
   const image = req.files;
 
   const foundCommunity = await Community.findOne({ name: communityName });
 
   if (!foundCommunity)
-    throw new ApiError(
-      'community does not exist',
-      POST_COMMUNITY_NOT_EXIST,
-      401
-    );
+    throw new Error('community does not exist')
+  // ApiError(
+  //     'community does not exist',
+  //     POST_COMMUNITY_NOT_EXIST,
+  //     401
+  //   );
 
   const author = await User.findById(req.userId);
 
   // console.log(author?.avatar);
 
   if (!author)
-    throw new ApiError('user does not exist', POST_COMMUNITY_NOT_EXIST, 401);
+    throw new Error('user does not exist')
+  // ApiError('user does not exist', POST_COMMUNITY_NOT_EXIST, 401);
 
   const newPost = new Post({
     title,
@@ -55,19 +62,24 @@ const createPost = tryCatch(async (req: Request, res: Response) => {
   const imagePath = imageFile.image[0].path;
   if (imagePath) {
     const url = await uploadOnCloudinary(imagePath);
-    if (!url) throw new ApiError('Error Uploading Image', 908, 403);
+    if (!url) throw new Error('Error Uploading Image') 
+    //  ApiError('Error Uploading Image', 908, 403);
     newPost.image = url;
   }
 
   await newPost.save();
 
   if (!newPost)
-    throw new ApiError('Error Uploading Image', POST_NOT_CREATED, 401);
+    throw new Error('Error Uploading Image')
+  // ApiError('Error Uploading Image', POST_NOT_CREATED, 401);
 
   res.status(200).json({ message: 'Post Created Successfully' });
-});
+}
+// );
 
-const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
+const getAllCommunityPosts =
+//  tryCatch(
+  async (req: Request, res: Response) => {
   const { page, communityId } = req.params;
   const skipPosts = +page * 5;
   const pageItems = 5;
@@ -78,12 +90,16 @@ const getAllCommunityPosts = tryCatch(async (req: Request, res: Response) => {
     .limit(pageItems)
     .sort({ createdAt: -1 });
 
-  if (!foundPosts) throw new ApiError('Posts Not Found', POST_NOT_FOUND, 404);
+  if (!foundPosts) throw new Error('Posts Not Found') 
+  // ApiError('Posts Not Found', POST_NOT_FOUND, 404);
 
   res.status(200).json(foundPosts);
-});
+}
+// );
 
-const getAllPosts = tryCatch(async (req: Request, res: Response) => {
+const getAllPosts = 
+// tryCatch(
+  async (req: Request, res: Response) => {
   const { page } = req.params;
   const skipPosts = +page * 5;
   const pageItems = 5;
@@ -94,18 +110,24 @@ const getAllPosts = tryCatch(async (req: Request, res: Response) => {
     .sort({ createdAt: -1 });
 
   res.status(200).send(foundPosts);
-});
+}
+// );
 
-const getDetailsPost = tryCatch(async (req: Request, res: Response) => {
+const getDetailsPost =
+//  tryCatch(
+  async (req: Request, res: Response) => {
   const { postId } = req.params;
 
   const foundPostDetail = await Post.findById(postId);
   // console.log(foundPostDetail);
 
   res.status(200).send(foundPostDetail);
-});
+}
+// );
 
-const getPostStats = tryCatch(async (req: Request, res: Response) => {
+const getPostStats =
+//  tryCatch(
+  async (req: Request, res: Response) => {
   const { postId } = req.params;
   const userId = req.userId;
   const foundVotes = await Post.findById(postId);
@@ -143,9 +165,12 @@ const getPostStats = tryCatch(async (req: Request, res: Response) => {
   res
     .status(200)
     .send({ totalScore, isUpvoted, isDownvoted, postSaved, totalComments });
-});
+}
+// );
 
-const handleUpVote = tryCatch(async (req: Request, res: Response) => {
+const handleUpVote = 
+// tryCatch(
+  async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
   const foundDownVote = await Post.findOne(
@@ -186,7 +211,8 @@ const handleUpVote = tryCatch(async (req: Request, res: Response) => {
         new: true,
       }
     );
-    if (!upVoted) return new ApiError('Error up-voting the post', 1000, 1000);
+    if (!upVoted) return new Error('Error up-voting the post') 
+    // ApiError('Error up-voting the post', 1000, 1000);
   } else {
     const removedUpVote = await Post.findByIdAndUpdate(
       postId,
@@ -194,12 +220,16 @@ const handleUpVote = tryCatch(async (req: Request, res: Response) => {
       { new: true }
     );
     if (!removedUpVote)
-      return new ApiError('Error up-voting the post', 1000, 1000);
+      return new Error('Error up-voting the post')
+    // ApiError('Error up-voting the post', 1000, 1000);
   }
   res.status(200).json({ message: 'upVoted' });
-});
+}
+// );
 
-const handleDownVote = tryCatch(async (req: Request, res: Response) => {
+const handleDownVote = 
+// tryCatch(
+  async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
   const foundUpVote = await Post.findOne(
@@ -240,7 +270,8 @@ const handleDownVote = tryCatch(async (req: Request, res: Response) => {
         new: true,
       }
     );
-    if (!downVoted) return new ApiError('Error up-voting the post', 1000, 1000);
+    if (!downVoted) return new Error('Error up-voting the post') 
+    // ApiError('Error up-voting the post', 1000, 1000);
   } else {
     const removedDownVote = await Post.findByIdAndUpdate(
       postId,
@@ -248,13 +279,17 @@ const handleDownVote = tryCatch(async (req: Request, res: Response) => {
       { new: true }
     );
     if (!removedDownVote)
-      return new ApiError('Error up-voting the post', 1000, 1000);
+      return new Error('Error up-voting the post')
+    // ApiError('Error up-voting the post', 1000, 1000);
   }
   res.status(200).json({ message: 'downVoted' });
-});
+}
+// );
 // Save post
 
-const savePost = tryCatch(async (req: Request, res: Response) => {
+const savePost =
+//  tryCatch(
+  async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
 
   const savedPost = await User.findOne(
@@ -289,9 +324,12 @@ const savePost = tryCatch(async (req: Request, res: Response) => {
     res.status(200).send({ message: 'post bookmarked', code: '22' });
     return;
   }
-});
+}
+// );
 
-const deletePost = tryCatch(async (req: Request, res: Response) => {
+const deletePost = 
+// tryCatch(
+  async (req: Request, res: Response) => {
   const { postId, userId } = req.body;
   const deletedPost = await Post.findOneAndDelete({ _id: postId });
 
@@ -306,13 +344,16 @@ const deletePost = tryCatch(async (req: Request, res: Response) => {
   );
 
   if (!deletePost && !removerFromSaved) {
-    throw new ApiError('error deleting post', 1000, 1000);
+    throw new Error('error deleting post') 
+    // ApiError('error deleting post', 1000, 1000);
   }
 
   res.status(200).json({ message: 'Post Deleted Successfully!' });
-});
+}
+// );
 
-const postDetailsCommunityInfo = tryCatch(
+const postDetailsCommunityInfo =
+//  tryCatch(
   async (req: Request, res: Response) => {
     const { communityId } = req.params;
     // console.log(comId);
@@ -323,15 +364,16 @@ const postDetailsCommunityInfo = tryCatch(
     // console.log(communityInfo);
     res.status(200).send(communityInfo);
   }
-);
+// );
 
-const getCommunityNumberOfPosts = tryCatch(
+const getCommunityNumberOfPosts = 
+// tryCatch(
   async (req: Request, res: Response) => {
     const { communityId } = req.params;
     const numberOfPosts = await Post.countDocuments({ communityId });
     res.status(200).json(numberOfPosts);
   }
-);
+// );
 
 export {
   getNumberOfPosts,
