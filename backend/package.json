@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This is full stack clone of Reddit.",
   "main": "./src/index.ts",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "npm install && npx tsc",
