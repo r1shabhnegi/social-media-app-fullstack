@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 type UserTypes = {
   name: string;
   username: string;
@@ -10,6 +10,7 @@ type UserTypes = {
   followers: mongoose.Types.ObjectId[];
   savedPosts: mongoose.Types.ObjectId[];
   refreshToken: string[];
+  recentPosts: mongoose.Types.ObjectId[];
 };
 
 const userSchema = new mongoose.Schema<UserTypes>(
@@ -42,22 +43,23 @@ const userSchema = new mongoose.Schema<UserTypes>(
     following: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     savedPosts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Post',
+        ref: "Post",
       },
     ],
     refreshToken: [String],
+    recentPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
   },
   { timestamps: true }
 );
@@ -69,6 +71,6 @@ const userSchema = new mongoose.Schema<UserTypes>(
 //   next();
 // });
 
-const User = mongoose.model<UserTypes>('User', userSchema);
+const User = mongoose.model<UserTypes>("User", userSchema);
 
 export default User;

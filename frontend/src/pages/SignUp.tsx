@@ -1,12 +1,12 @@
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { showToast } from '@/global/toastSlice';
-import { AppDispatch } from '@/global/_store';
-import { useLoginMutation, useSignUpMutation } from '@/api/queries/authQuery';
-import { setCredentials } from '@/global/authSlice';
-import { SignupType } from '@rishabhnegi/circlesss-common';
-import { Input } from '@/components/ui/input';
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showToast } from "@/global/toastSlice";
+import { AppDispatch } from "@/global/_store";
+import { useLoginMutation, useSignUpMutation } from "@/api/queries/authQuery";
+import { setCredentials } from "@/global/authSlice";
+import { SignupType } from "@rishabhnegi/circlesss-common";
+import { Input } from "@/components/ui/input";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const SignUp = () => {
   const onSubmit = handleSubmit(async (formData) => {
     try {
       const createUser = await SignUp(formData).unwrap();
-      if (!createUser) throw new Error('Sign Up Failed!');
+      if (!createUser) throw new Error("Sign Up Failed!");
 
       const signInUser = await login({
         username: formData.username,
@@ -31,16 +31,16 @@ const SignUp = () => {
       }).unwrap();
 
       if (signInUser) {
-        navigate('/');
+        navigate("/");
         dispatch(setCredentials({ ...signInUser }));
         dispatch(
-          showToast({ message: 'Sign Up Successful!', type: 'SUCCESS' })
+          showToast({ message: "Sign Up Successful!", type: "SUCCESS" })
         );
       } else {
-        throw new Error('Something went wrong maybe try Sign In!');
+        throw new Error("Something went wrong maybe try Sign In!");
       }
     } catch (error) {
-      dispatch(showToast({ message: error as string, type: 'ERROR' }));
+      dispatch(showToast({ message: error as string, type: "ERROR" }));
     }
   });
 
@@ -59,15 +59,15 @@ const SignUp = () => {
             <Input
               type='text'
               className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none mb-1'
-              {...register('name', {
-                required: 'This field is required.',
+              {...register("name", {
+                required: "This field is required.",
                 minLength: {
                   value: 4,
-                  message: 'This field cannot have less than 4 characters.',
+                  message: "This field cannot have less than 4 characters.",
                 },
                 maxLength: {
                   value: 16,
-                  message: 'This field cannot have more than 16 characters.',
+                  message: "This field cannot have more than 16 characters.",
                 },
               })}
             />
@@ -83,15 +83,15 @@ const SignUp = () => {
             <Input
               type='text'
               className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none mb-1'
-              {...register('username', {
-                required: 'This field is required.',
+              {...register("username", {
+                required: "This field is required.",
                 minLength: {
                   value: 4,
-                  message: 'This field cannot have less than 4 characters.',
+                  message: "This field cannot have less than 4 characters.",
                 },
                 maxLength: {
                   value: 16,
-                  message: 'This field cannot have more than 16 characters.',
+                  message: "This field cannot have more than 16 characters.",
                 },
               })}
             />
@@ -108,8 +108,8 @@ const SignUp = () => {
           <Input
             type='email'
             className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none mb-1'
-            {...register('email', {
-              required: 'This field is required.',
+            {...register("email", {
+              required: "This field is required.",
             })}
           />
           {errors?.email && (
@@ -123,14 +123,14 @@ const SignUp = () => {
           <Input
             type='password'
             className='mt-1 text-[#f2f2f1]  bg-[#1a282d] w-full h-16 rounded-3xl p-4 outline-none mb-1'
-            {...register('password', {
-              required: 'This field is required.',
-              pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                message:
-                  'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&)',
-              },
+            {...register("password", {
+              required: "This field is required.",
+              // pattern: {
+              //   value:
+              //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+              //   message:
+              //     'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&)',
+              // },
             })}
           />
           {errors?.password && (

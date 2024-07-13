@@ -1,6 +1,7 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   createPost,
+  createRecentPost,
   deletePost,
   getAllCommunityPosts,
   getAllPosts,
@@ -8,40 +9,45 @@ import {
   getDetailsPost,
   getNumberOfPosts,
   getPostStats,
+  getRecentPost,
   handleDownVote,
   handleUpVote,
   postDetailsCommunityInfo,
   savePost,
-} from '../controllers/post.controller';
-import { upload } from '../middlewares/multer.middleware';
+} from "../controllers/post.controller";
+import { upload } from "../middlewares/multer.middleware";
 
 const router = Router();
 
-router.get('/getAllPosts/:page', getAllPosts);
+router.get("/getAllPosts/:page", getAllPosts);
 
-router.get('/numberOfPosts', getNumberOfPosts);
+router.get("/numberOfPosts", getNumberOfPosts);
 
-router.get('/postDetails/:postId', getDetailsPost);
+router.get("/postDetails/:postId", getDetailsPost);
 
-router.get('/postStats/:postId', getPostStats);
+router.get("/postStats/:postId", getPostStats);
 
-router.get('/postDetailsCommunityInfo/:communityId', postDetailsCommunityInfo);
+router.get("/postDetailsCommunityInfo/:communityId", postDetailsCommunityInfo);
 
-router.get('/numberOfPosts/:communityId', getCommunityNumberOfPosts);
+router.get("/numberOfPosts/:communityId", getCommunityNumberOfPosts);
 
-router.get('/communityPosts/:communityId/:page', getAllCommunityPosts);
+router.get("/communityPosts/:communityId/:page", getAllCommunityPosts);
 
-router.post('/upVote', handleUpVote);
+router.get("/recent-post", getRecentPost);
 
-router.post('/downVote', handleDownVote);
+router.post("/upVote", handleUpVote);
 
-router.post('/savePost', savePost);
+router.post("/downVote", handleDownVote);
 
-router.post('/deletePost', deletePost);
+router.post("/savePost", savePost);
+
+router.post("/deletePost", deletePost);
+
+router.post("/recent-post", createRecentPost);
 
 router.post(
-  '/createPost',
-  upload.fields([{ name: 'image', maxCount: 1 }]),
+  "/createPost",
+  upload.fields([{ name: "image", maxCount: 1 }]),
   createPost
 );
 

@@ -29,7 +29,7 @@ import { Button } from "./ui/button";
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn, username, userId } = useSelector(
+  const { isLoggedIn, username, userId, avatar } = useSelector(
     (state: RootState) => state.auth
   );
   const [logout] = useLogoutMutation();
@@ -107,8 +107,10 @@ const Header = () => {
                   variant='ghost'
                   className='border-0 hover:bg-transparent ring-0 focus:ring-0'>
                   <Avatar className='size-8 sm:size-9'>
-                    <AvatarImage src='https://github.com/r1shabhnegi.png' />
-                    <AvatarFallback>{"Rn"}</AvatarFallback>
+                    <AvatarImage src={avatar} />
+                    <AvatarFallback className='bg-gray-700'>
+                      {username.slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>

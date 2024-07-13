@@ -3,17 +3,17 @@ import {
   FetchArgs,
   createApi,
   fetchBaseQuery,
-} from '@reduxjs/toolkit/query/react';
-import { setCredentials, setLogout } from '../global/authSlice';
-import { RootState } from '@/global/_store';
+} from "@reduxjs/toolkit/query/react";
+import { setCredentials, setLogout } from "../global/authSlice";
+import { RootState } from "@/global/_store";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${import.meta.env.VITE_API_BASE_URL}`,
-  credentials: 'include',
+  credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).auth.accessToken;
     if (accessToken) {
-      headers.set('Authorization', `Bearer ${accessToken}`);
+      headers.set("Authorization", `Bearer ${accessToken}`);
     }
     return headers;
   },
@@ -28,7 +28,7 @@ const baseQueryAuthRF = async (
 
   if (result.error?.status === 403) {
     const refreshResult = await baseQuery(
-      '/api/auth/refresh',
+      "/api/auth/refresh",
       api,
       extraOptions
     );
@@ -46,15 +46,16 @@ export const apiClient = createApi({
   baseQuery: baseQueryAuthRF,
   endpoints: () => ({}),
   tagTypes: [
-    'getCommunity',
-    'communityPosts',
-    'getUserCommunities',
-    'getUserModCommunities',
-    'findBestCommunities',
-    'getHomePosts',
-    'postStats',
-    'postDetail',
-    'comments',
-    'userProfile',
+    "getCommunity",
+    "communityPosts",
+    "getUserCommunities",
+    "getUserModCommunities",
+    "findBestCommunities",
+    "getHomePosts",
+    "postStats",
+    "postDetail",
+    "comments",
+    "userProfile",
+    "recent-post",
   ],
 });

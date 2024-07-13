@@ -1,34 +1,35 @@
-import { multiFormatDateString } from '@/lib/checkDate';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/global/_store';
-import { BiDownvote, BiUpvote } from 'react-icons/bi';
-import {  FaRegCommentAlt } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
-import { BiSolidUpvote } from 'react-icons/bi';
-import { BiSolidDownvote } from 'react-icons/bi';
-import { MdBookmarkBorder, MdOutlineDeleteOutline } from 'react-icons/md';
-import { MdOutlineBookmark } from 'react-icons/md';
-import { BsThreeDots } from 'react-icons/bs';
+import { multiFormatDateString } from "@/lib/checkDate";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/global/_store";
+import { BiDownvote, BiUpvote } from "react-icons/bi";
+import { FaRegCommentAlt } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { BiSolidUpvote } from "react-icons/bi";
+import { BiSolidDownvote } from "react-icons/bi";
+import { MdBookmarkBorder, MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineBookmark } from "react-icons/md";
+import { BsThreeDots } from "react-icons/bs";
 
 import {
+  useCreateRecentPostsMutation,
   useDeletePostMutation,
   useDownVoteMutation,
   // useGetPostStatsQuery,
   useLazyGetPostStatsQuery,
   useSavePostMutation,
   useUpVoteMutation,
-} from '@/api/queries/postQuery';
-import { showToast } from '@/global/toastSlice';
-import { useEffect } from 'react';
+} from "@/api/queries/postQuery";
+import { showToast } from "@/global/toastSlice";
+import { useEffect } from "react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from './ui/button';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "./ui/button";
 
 type postDataType = {
   _id: string;
@@ -56,8 +57,7 @@ const PostCard = ({
   const navigate = useNavigate();
   const createAt = multiFormatDateString(postData?.createdAt);
   const { userId } = useSelector((state: RootState) => state.auth);
-  const [fetchPostStats, { data: postsStats}] =
-    useLazyGetPostStatsQuery();
+  const [fetchPostStats, { data: postsStats }] = useLazyGetPostStatsQuery();
 
   useEffect(() => {
     if (postData?._id) {
@@ -67,7 +67,7 @@ const PostCard = ({
             postId: postData?._id,
           }).unwrap();
 
-          if (!res) throw new Error('Error fetching post data');
+          if (!res) throw new Error("Error fetching post data");
         } catch (error) {
           console.log(error);
         }
@@ -79,6 +79,7 @@ const PostCard = ({
   const [upVote, { isLoading: loadingUpVote }] = useUpVoteMutation();
   const [downVote, { isLoading: loadingDownVote }] = useDownVoteMutation();
   const [savePost, { isLoading: loadingSavePost }] = useSavePostMutation();
+  const [createRecentPost] = useCreateRecentPostsMutation();
   const [deletePostQuery] = useDeletePostMutation();
 
   const handleUpVote = async () => {
@@ -98,11 +99,11 @@ const PostCard = ({
 
   const handleSavePosts = async () => {
     const res = await savePost({ postId: postData?._id, userId }).unwrap();
-    if (res.code == '11') {
-      dispatch(showToast({ message: res.message, type: 'SUCCESS' }));
+    if (res.code == "11") {
+      dispatch(showToast({ message: res.message, type: "SUCCESS" }));
     }
-    if (res.code == '22') {
-      dispatch(showToast({ message: res.message, type: 'SUCCESS' }));
+    if (res.code == "22") {
+      dispatch(showToast({ message: res.message, type: "SUCCESS" }));
     }
   };
 
@@ -111,23 +112,27 @@ const PostCard = ({
     if (res) {
       navigate(0);
       dispatch(
-        showToast({ message: 'Post deleted successfully!', type: 'SUCCESS' })
+        showToast({ message: "Post deleted successfully!", type: "SUCCESS" })
       );
     } else {
-      dispatch(showToast({ message: 'Failed Deleting Post!', type: 'ERROR' }));
+      dispatch(showToast({ message: "Failed Deleting Post!", type: "ERROR" }));
     }
   };
 
+  const handleClickDetailPost = async () => {
+    await createRecentPost({ postId: postData?._id });
+    !fromPostDetail && navigate(`/post/${postData?._id}`);
+  };
+
   const isMod = postData?.authorId === userId;
-  console.log(postsStats?.isUpvoted);
   return (
     <div
       className={`overflow-auto  ${
-        !fromPostDetail ? 'border-t-2 border-gray-700' : ''
+        !fromPostDetail ? "border-t-2 border-gray-700" : ""
       } bg-re-400 w-full max-w-[40rem]`}>
       <div
         className={`${
-          !fromPostDetail ? 'hover:bg-[#131d20] my-4' : ''
+          !fromPostDetail ? "hover:bg-[#131d20] my-4" : ""
         } p-4 rounded-md flex flex-col gap-4`}>
         <div className='flex items-center justify-between'>
           <div className='flex gap-2'>
@@ -165,7 +170,7 @@ const PostCard = ({
                   <Button
                     variant='ghost'
                     className={`${
-                      !isMod && 'hidden'
+                      !isMod && "hidden"
                     } flex items-center hover:bg-transparent ring-0 focus:ring-0 rounded-full hover:text-gray-500`}>
                     <BsThreeDots className='size-6' />
                   </Button>
@@ -186,8 +191,8 @@ const PostCard = ({
         </div>
 
         <div
-          onClick={() => !fromPostDetail && navigate(`/post/${postData?._id}`)}
-          className={`${!fromPostDetail && 'cursor-pointer'}`}>
+          onClick={handleClickDetailPost}
+          className={`${!fromPostDetail && "cursor-pointer"}`}>
           <div className='mb-2'>
             <h1 className='mb-3 text-lg font-semibold'>{postData?.title}</h1>
             <p className='text-sm text-gray-300'>{postData?.content}</p>

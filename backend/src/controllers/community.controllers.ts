@@ -1,21 +1,21 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 // import { validationResult } from 'express-validator';
-import { Community, CommunityTypes } from '../models/community.model';
-// import { uploadSingleImage } from '../config/cloudinary';
-import jwt from 'jsonwebtoken';
-// import { ApiError } from '../utility/apiError';
-import { v2 as cloudinary } from 'cloudinary';
+import { Community, CommunityTypes } from "../models/community.model";
+import { uploadSingleImage } from "../config/cloudinary";
+import jwt from "jsonwebtoken";
+import { ApiError } from "../utility/apiError";
+import { v2 as cloudinary } from "cloudinary";
 import {
   COM_COOKIE_MISSING,
   COM_ALREADY_EXISTS,
   COM_INVALID_RF_TOKEN,
   COM_NOT_FOUND,
   COM_AUTHOR_NOT_FOUND,
-} from '../utility/errorConstants';
-// import { tryCatch } from '../utility/tryCatch';
-import { uploadOnCloudinary } from '../utility/cloudinary';
-import User from '../models/user.model';
-import { Post } from '../models/post.model';
+} from "../utility/errorConstants";
+import { tryCatch } from "../utility/tryCatch";
+import { uploadOnCloudinary } from "../utility/cloudinary";
+import User from "../models/user.model";
+import { Post } from "../models/post.model";
 
 interface decodedTypes {
   userId?: string;
@@ -23,14 +23,12 @@ interface decodedTypes {
 
 // CREATE_COMMUNITY
 
-const createCommunity = 
-// tryCatch(
-  async (req: Request, res: Response) => {
+const createCommunity = tryCatch(async (req: Request, res: Response) => {
   const { name: communityName, description } = req.body;
   const cookies = req.cookies;
   if (!cookies?.jwt)
-    throw new Error('cookie missing')
-  // ApiError('cookie missing', COM_COOKIE_MISSING, 403);
+    throw new ApiError("cookie missing", COM_COOKIE_MISSING, 403);
+  // throw new Error('cookie missing')
 
   const refreshToken = cookies?.jwt;
 
@@ -40,20 +38,20 @@ const createCommunity =
   ) as decodedTypes;
 
   if (!decodedToken) {
-    throw new Error('Refresh Token Invalid') 
-    // ApiError('Refresh Token Invalid', COM_INVALID_RF_TOKEN, 401);
+    // throw new Error('Refresh Token Invalid')
+    throw new ApiError("Refresh Token Invalid", COM_INVALID_RF_TOKEN, 401);
   }
 
   let foundCommunity = await Community.findOne({ communityName });
   let foundAuthor = await User.findById(decodedToken.userId);
 
   if (foundCommunity) {
-    throw new  Error('Community Already Exists')
-    // ApiError('Community Already Exists', COM_ALREADY_EXISTS, 403);
+    // throw new  Error('Community Already Exists')
+    throw new ApiError("Community Already Exists", COM_ALREADY_EXISTS, 403);
   }
   if (!foundAuthor) {
-    throw new Error('Author not found') 
-    // ApiError('Author not found', COM_AUTHOR_NOT_FOUND, 403);
+    // throw new Error('Author not found')
+    throw new ApiError("Author not found", COM_AUTHOR_NOT_FOUND, 403);
   }
 
   const newCommunity = new Community({
@@ -68,15 +66,12 @@ const createCommunity =
   });
   await newCommunity.save();
 
-  res.status(200).json({ message: 'success' });
-}
-// );
+  res.status(200).json({ message: "success" });
+});
 
 // FIND_COMMUNITIES
 
-const findCommunities =
-//  tryCatch(
-  async (req: Request, res: Response) => {
+const findCommunities = tryCatch(async (req: Request, res: Response) => {
   const { page } = req.params;
   const pageSize = 9;
   const skipItems = +page * 9;
@@ -121,27 +116,21 @@ const findCommunities =
   // ]);
 
   res.status(200).send(foundCommunities);
-}
-// );
+});
 
-const getCommunity =
-//  tryCatch(
-  async (req: Request, res: Response) => {
+const getCommunity = tryCatch(async (req: Request, res: Response) => {
   const { comId } = req.params;
 
   const foundCommunity = await Community.findOne({ name: comId });
 
   if (!foundCommunity)
-    throw new Error('Community not found!')
-  // ApiError('Community not found!', COM_NOT_FOUND, 404);
+    // throw new Error("Community not found!");
+    throw new ApiError("Community not found!", COM_NOT_FOUND, 404);
 
   res.status(200).send(foundCommunity);
-}
-// );
+});
 
-const joinCommunity = 
-// tryCatch(
-  async (req: Request, res: Response) => {
+const joinCommunity = tryCatch(async (req: Request, res: Response) => {
   const { communityName, userId } = req.body;
 
   const community = await Community.findOneAndUpdate(
@@ -158,16 +147,14 @@ const joinCommunity =
     }
   );
 
-  if (!community) throw new Error('Not Joined')
-  //  ApiError('Not Joined', 907, 403);
+  if (!community)
+    // throw new Error("Not Joined");
+    throw new ApiError("Not Joined", 907, 403);
 
-  res.status(200).json({ message: 'done' });
-}
-// );
+  res.status(200).json({ message: "done" });
+});
 
-const leaveCommunity = 
-// tryCatch(
-  async (req: Request, res: Response) => {
+const leaveCommunity = tryCatch(async (req: Request, res: Response) => {
   const { communityName, userId } = req.body;
 
   const community = await Community.findOneAndUpdate(
@@ -184,16 +171,14 @@ const leaveCommunity =
     }
   );
 
-  if (!community) throw new Error('haven"t left')
-  //  ApiError('haven"t left', 907, 403);
+  if (!community)
+    // throw new Error('haven"t left');
+    throw new ApiError('haven"t left', 907, 403);
 
-  res.status(200).json({ message: 'done' });
-}
-// );
+  res.status(200).json({ message: "done" });
+});
 
-const getCommunities = 
-// tryCatch(
-  async (req: Request, res: Response) => {
+const getCommunities = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
 
   const foundCommunities = await Community.find(
@@ -217,12 +202,9 @@ const getCommunities =
   // if(!foundCommunities)
 
   res.status(200).send(foundCommunities);
-}
-// );
+});
 
-const getModCommunities = 
-// tryCatch(
-  async (req: Request, res: Response) => {
+const getModCommunities = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
 
   const foundModCommunities = await Community.find(
@@ -239,8 +221,7 @@ const getModCommunities =
   );
 
   res.status(200).send(foundModCommunities);
-}
-// );
+});
 
 // type coverImgType =
 interface uploadFile {
@@ -251,40 +232,43 @@ interface uploadFile {
   // add other properties as needed
 }
 
-const editCommunity = 
-// tryCatch(
-  async (req: Request, res: Response) => {
+const editCommunity = tryCatch(async (req: Request, res: Response) => {
   const { name: newName, description, rules, communityName } = req.body;
 
   const foundCommunity = await Community.findOne({ name: communityName });
 
-  if (!foundCommunity) return new Error('Community Not Found')
-  // ApiError('Community Not Found', 901, 404);
+  if (!foundCommunity)
+    //  return new Error("Community Not Found");
+    throw new ApiError("Community Not Found", 901, 404);
 
   if (req.userId !== foundCommunity.authorId.toString()) {
-    throw new Error('User not allowed to edit community') 
-    // ApiError('User not allowed to edit community', 909, 403);
+    // throw new Error("User not allowed to edit community");
+    throw new ApiError("User not allowed to edit community", 909, 403);
   }
 
-  const imgFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
+  const imgFiles = req.files as {
+    [fieldname: string]: Express.Multer.File[];
+  };
   const avatarImgPath = imgFiles.avatarImg[0].path;
   const coverImgPath = imgFiles.coverImg[0].path;
 
   if (avatarImgPath) {
     const url = await uploadOnCloudinary(avatarImgPath);
-    if (!url) throw new Error('Error Uploading Image') 
-    // ApiError('Error Uploading Image', 908, 403);
+    if (!url)
+      // throw new Error("Error Uploading Image");
+      throw new ApiError("Error Uploading Image", 908, 403);
     foundCommunity.avatarImg = url;
   }
 
   if (coverImgPath) {
     const url = await uploadOnCloudinary(coverImgPath);
-    if (!url) throw new Error('Error Uploading Image')
-    // ApiError('Error Uploading Image', 908, 403);
+    if (!url)
+      // throw new Error("Error Uploading Image");
+      throw new ApiError("Error Uploading Image", 908, 403);
     foundCommunity.coverImg = url;
   }
 
-  const splittedRulesArr = rules.split(',');
+  const splittedRulesArr = rules.split(",");
 
   foundCommunity.name = newName;
   foundCommunity.rules = splittedRulesArr;
@@ -292,21 +276,19 @@ const editCommunity =
 
   await foundCommunity.save();
 
-  res.status(200).json({ message: 'Edit successful' });
-}
-// );
+  res.status(200).json({ message: "Edit successful" });
+});
 
-const deleteCommunity = 
-// tryCatch(
-  async (req: Request, res: Response) => {
+const deleteCommunity = tryCatch(async (req: Request, res: Response) => {
   const userId = req.userId;
   const { communityName } = req.body;
 
   const foundCommunity = await Community.findOne({ name: communityName });
 
   if (foundCommunity?.authorId.toString() !== userId)
-    return new Error('Invalid AC Token')
-  //  ApiError('Invalid AC Token', 906, 403);
+    throw new ApiError("Invalid AC Token", 906, 403);
+  // return
+  //  throw new  Error("Invalid AC Token");
 
   await Post.deleteMany({ communityId: foundCommunity._id });
 
@@ -318,9 +300,8 @@ const deleteCommunity =
   // if (!deletedCommunity)
   //   return new ApiError('Error Deleting Community', 911, 401);
 
-  res.status(200).json({ message: 'Community Deleted!' });
-}
-// );
+  res.status(200).json({ message: "Community Deleted!" });
+});
 
 export {
   createCommunity,

@@ -1,75 +1,75 @@
-import { apiClient } from '../apiClient';
+import { apiClient } from "../apiClient";
 
 const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    numberOfPosts: builder.query({ query: () => '/api/post/numberOfPosts' }),
+    numberOfPosts: builder.query({ query: () => "/api/post/numberOfPosts" }),
 
     createPost: builder.mutation({
       query: (data) => ({
-        url: '/api/post/createPost',
-        method: 'POST',
+        url: "/api/post/createPost",
+        method: "POST",
         body: data,
       }),
-      invalidatesTags: ['getCommunity', 'communityPosts', 'getHomePosts'],
+      invalidatesTags: ["getCommunity", "communityPosts", "getHomePosts"],
     }),
 
     getAllCommunityPosts: builder.query({
       query: ({ communityId, page }) =>
         `/api/post/communityPosts/${communityId}/${page}`,
-      providesTags: ['communityPosts'],
+      providesTags: ["communityPosts"],
     }),
 
     getAllPosts: builder.query({
       query: (page) => `/api/post/getAllPosts/${page}`,
-      providesTags: ['getHomePosts'],
+      providesTags: ["getHomePosts"],
     }),
 
     getPostDetails: builder.query({ query: (id) => `/api/post/detail/${id}` }),
 
     getPostStats: builder.query({
       query: ({ postId }) => `/api/post/postStats/${postId}`,
-      providesTags: ['postStats'],
+      providesTags: ["postStats"],
     }),
 
     upVote: builder.mutation({
       query: (data) => ({
-        url: '/api/post/upVote',
-        method: 'POST',
+        url: "/api/post/upVote",
+        method: "POST",
         body: data,
       }),
-      invalidatesTags: ['postStats'],
+      invalidatesTags: ["postStats"],
     }),
 
     downVote: builder.mutation({
       query: (data) => ({
-        url: '/api/post/downVote',
-        method: 'POST',
+        url: "/api/post/downVote",
+        method: "POST",
         body: data,
       }),
-      invalidatesTags: ['postStats'],
+      invalidatesTags: ["postStats"],
     }),
 
     savePost: builder.mutation({
       query: (data) => ({
-        url: '/api/post/savePost',
-        method: 'POST',
+        url: "/api/post/savePost",
+        method: "POST",
         body: data,
       }),
-      invalidatesTags: ['postStats'],
+      invalidatesTags: ["postStats"],
     }),
 
     deletePost: builder.mutation({
       query: (postId) => ({
-        url: '/api/post/deletePost',
-        method: 'POST',
+        url: "/api/post/deletePost",
+        method: "POST",
         body: postId,
       }),
-      invalidatesTags: ['getHomePosts', 'communityPosts'],
+      invalidatesTags: ["getHomePosts", "communityPosts"],
     }),
 
     postDetails: builder.query({
       query: (postId) => `/api/post/postDetails/${postId}`,
-      providesTags: ['postDetail'],
+      providesTags: ["postDetail"],
     }),
 
     postDetailsCommunityInfo: builder.query({
@@ -79,12 +79,27 @@ const apiRequests = apiClient.injectEndpoints({
     communityNumberOfPosts: builder.query({
       query: (communityId) => `/api/post/numberOfPosts/${communityId}`,
     }),
+
+    getRecentPosts: builder.query({
+      query: () => "/api/post/recent-post",
+      providesTags: ["recent-post"],
+    }),
+    createRecentPosts: builder.mutation({
+      query: (postId) => ({
+        url: "/api/post/recent-post",
+        method: "POST",
+        body: postId,
+      }),
+      invalidatesTags: ["recent-post"],
+    }),
   }),
 });
 
 export const {
   useNumberOfPostsQuery,
   useCreatePostMutation,
+  useCreateRecentPostsMutation,
+  useGetRecentPostsQuery,
   // useGetAllCommunityPostsQuery,
   useGetAllPostsQuery,
   useLazyGetPostStatsQuery,

@@ -203,7 +203,8 @@ const ProfileLayout = () => {
                   className: `rounded-3xl flex mt-1 flex bg-[#1A282D] justify-center items-center size-32 ${
                     !avatar?.preview && "border"
                   }`,
-                })}>
+                })}
+                onClick={() => console.log("e")}>
                 <input {...getAvatarInputProps()} />
                 {isAvatarDragActive ? (
                   <p className='font-bold text-gray-700'>Drop</p>
