@@ -7,9 +7,12 @@ export const credentials = (
   next: NextFunction
 ) => {
   const origin = req.headers.origin;
-  console.log(req.url);
+  // console.log(req.url);
   // console.log(origin);
-  if (origin === "https://circlesss.onrender.com") {
+  if (
+    origin === "https://circlesss.onrender.com" ||
+    origin === "circlesss.onrender.com"
+  ) {
     res.header("Access-Control-Allow-Credentials", "true");
   }
   next();
