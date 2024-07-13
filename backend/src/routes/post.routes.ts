@@ -5,6 +5,7 @@ import {
   deletePost,
   getAllCommunityPosts,
   getAllPosts,
+  getCommunitiesFeedPosts,
   getCommunityNumberOfPosts,
   getDetailsPost,
   getNumberOfPosts,
@@ -32,6 +33,8 @@ router.get("/postDetailsCommunityInfo/:communityId", postDetailsCommunityInfo);
 router.get("/numberOfPosts/:communityId", getCommunityNumberOfPosts);
 
 router.get("/communityPosts/:communityId/:page", getAllCommunityPosts);
+
+router.get("/communities-feed-posts/:page", getCommunitiesFeedPosts);
 
 router.get("/recent-post", getRecentPost);
 

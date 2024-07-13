@@ -92,6 +92,11 @@ const apiRequests = apiClient.injectEndpoints({
       }),
       invalidatesTags: ["recent-post"],
     }),
+
+    communitiesFeedPosts: builder.query({
+      query: (page) => `/api/post/communities-feed-posts/${page}`,
+      providesTags: ["communities-feed-posts"],
+    }),
   }),
 });
 
@@ -101,6 +106,7 @@ export const {
   useCreateRecentPostsMutation,
   useGetRecentPostsQuery,
   // useGetAllCommunityPostsQuery,
+  useCommunitiesFeedPostsQuery,
   useGetAllPostsQuery,
   useLazyGetPostStatsQuery,
   useUpVoteMutation,

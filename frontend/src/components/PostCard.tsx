@@ -132,7 +132,7 @@ const PostCard = ({
       } bg-re-400 w-full max-w-[40rem]`}>
       <div
         className={`${
-          !fromPostDetail ? "hover:bg-[#131d20] my-4" : ""
+          !fromPostDetail ? "hover:bg-[#131d20] my-8" : ""
         } p-4 rounded-md flex flex-col gap-4`}>
         <div className='flex items-center justify-between'>
           <div className='flex gap-2'>

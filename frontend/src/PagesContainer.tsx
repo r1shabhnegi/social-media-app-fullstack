@@ -1,12 +1,14 @@
-import { Route, Routes } from 'react-router-dom';
-import { Layout } from './Layout';
+import { Route, Routes } from "react-router-dom";
+import { Layout } from "./Layout";
 import {
   privateRoutes,
   independentPageRoutes,
   profileRoutes,
-} from './lib/routes';
-import ProtectedRoutes from './ProtectedRoutes';
-import ProfileLayout from './Layout/ProfileLayout';
+  homeRoutes,
+} from "./lib/routes";
+import ProtectedRoutes from "./ProtectedRoutes";
+import ProfileLayout from "./Layout/ProfileLayout";
+import HomeLayout from "./Layout/HomeLayout";
 
 const PagesContainer = () => {
   return (
@@ -20,6 +22,16 @@ const PagesContainer = () => {
               element={element}
             />
           ))}
+
+          <Route element={<HomeLayout />}>
+            {homeRoutes.map(({ path, element }) => (
+              <Route
+                key={path}
+                path={path}
+                element={element}
+              />
+            ))}
+          </Route>
 
           <Route element={<ProfileLayout />}>
             {profileRoutes?.map(({ path, element }) => (

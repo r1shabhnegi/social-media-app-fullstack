@@ -9,12 +9,9 @@ import ProfilePosts from "@/pages/ProfilePosts";
 import ProfileComments from "@/pages/ProfileComments";
 import ProfileSaved from "@/pages/ProfileSaved";
 import Community from "@/pages/Community";
+import CommunitiesFeed from "@/pages/CommunitiesFeed";
 
 export const privateRoutes: { path: string; element: ReactElement }[] = [
-  {
-    path: "/",
-    element: React.createElement(Home),
-  },
   {
     path: "/community/:name",
     element: React.createElement(Community),
@@ -61,5 +58,16 @@ export const profileRoutes: { path: string; element: ReactElement }[] = [
   {
     path: "/profile/:username/saved",
     element: React.createElement(ProfileSaved),
+  },
+];
+
+export const homeRoutes: { path: string; element: ReactElement }[] = [
+  {
+    path: "/",
+    element: React.createElement(Home),
+  },
+  {
+    path: "/following-feed",
+    element: React.createElement(CommunitiesFeed),
   },
 ];

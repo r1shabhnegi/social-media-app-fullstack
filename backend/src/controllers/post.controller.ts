@@ -396,9 +396,38 @@ const getRecentPost = tryCatch(async (req: Request, res: Response) => {
       throw new Error("error getting recent post");
     }
   }
-  console.log(postsArr);
   res.status(200).send(postsArr);
 });
+
+const getCommunitiesFeedPosts = tryCatch(
+  async (req: Request, res: Response) => {
+    const userId = req.userId;
+    const { page } = req.params;
+    console.log("userId", userId);
+    console.log("page", page);
+    const pageSize = 5;
+
+    const allCommunities = await Community.find({
+      members: userId,
+    }).select("_id");
+
+    console.log("allCommunities", allCommunities);
+
+    const posts = await Post.find({
+      communityId: { $in: allCommunities.map((c) => c._id) },
+    })
+      .sort({ createdAt: -1 })
+      .skip((+page - 1) * pageSize)
+      .limit(pageSize);
+    console.log("postscFeed", posts);
+    const numberOfPosts = await Post.countDocuments({
+      communityId: { $in: allCommunities.map((c) => c._id) },
+    });
+    console.log("numberOfPosts", numberOfPosts);
+
+    res.status(200).send({ posts, numberOfPosts });
+  }
+);
 
 export {
   getNumberOfPosts,
@@ -415,4 +444,5 @@ export {
   getCommunityNumberOfPosts,
   createRecentPost,
   getRecentPost,
+  getCommunitiesFeedPosts,
 };

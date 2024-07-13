@@ -57,5 +57,6 @@ export const apiClient = createApi({
     "comments",
     "userProfile",
     "recent-post",
+    "communities-feed-posts",
   ],
 });

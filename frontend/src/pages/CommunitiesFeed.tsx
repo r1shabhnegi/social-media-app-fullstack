@@ -1,28 +1,28 @@
-import { useGetAllPostsQuery } from "@/api/queries/postQuery";
+import { useCommunitiesFeedPostsQuery } from "@/api/queries/postQuery";
 import CommonLoader from "@/components/CommonLoader";
 import PageLoader from "@/components/PageLoader";
 import PostCard from "@/components/PostCard";
-import { RootState } from "@/global/_store";
 import { postDataType } from "@/lib/types";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useSelector } from "react-redux";
 
-const Home = () => {
-  const { numberOfPosts } = useSelector((state: RootState) => state.posts);
+const CommunitiesFeed = () => {
+  // const { numberOfPosts } = useSelector((state: RootState) => state.posts);
+  const [numberOfPosts, setNumberOfPosts] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [postsData, setPostsData] = useState<postDataType[]>([]);
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
 
   const {
     data: postsFetchedData,
     refetch: fetchPostsData,
     isLoading,
-  } = useGetAllPostsQuery(page);
+  } = useCommunitiesFeedPostsQuery(page);
 
   useEffect(() => {
     if (postsFetchedData) {
-      setPostsData((prev) => [...prev, ...postsFetchedData]);
+      setNumberOfPosts(postsFetchedData.numberOfPosts);
+      setPostsData((prev) => [...prev, ...postsFetchedData.posts]);
     }
   }, [postsFetchedData]);
 
@@ -35,6 +35,7 @@ const Home = () => {
     }
   };
   isLoading && <PageLoader isLoading={isLoading} />;
+
   return (
     <InfiniteScroll
       className='flex flex-col items-center justify-center'
@@ -51,4 +52,4 @@ const Home = () => {
     </InfiniteScroll>
   );
 };
-export default Home;
+export default CommunitiesFeed;
