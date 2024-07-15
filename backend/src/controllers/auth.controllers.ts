@@ -59,6 +59,7 @@ const signIn = async (req: Request, res: Response) => {
       }
       res.clearCookie("jwt", {
         httpOnly: true,
+        sameSite: "none",
         secure: true,
       });
     }
@@ -91,6 +92,7 @@ const signIn = async (req: Request, res: Response) => {
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -178,6 +180,7 @@ const refreshToken = async (req: Request, res: Response) => {
     res.cookie("jwt", newRefreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -206,6 +209,7 @@ const signOut = async (req: Request, res: Response) => {
     if (!foundUser) {
       res.clearCookie("jwt", {
         httpOnly: true,
+        sameSite: "none",
         secure: true,
       });
 
@@ -217,7 +221,7 @@ const signOut = async (req: Request, res: Response) => {
     );
     await foundUser.save();
 
-    res.clearCookie("jwt", { httpOnly: true, secure: true });
+    res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
 
     return res.status(200).json({ message: "success!" });
   } catch (error) {
