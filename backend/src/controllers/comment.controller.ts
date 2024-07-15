@@ -18,13 +18,13 @@ const create = async (req: Request, res: Response) => {
       postId: postId,
     });
     if (!newComment)
-      return res.send(500).json({ error: "error creating comment" });
+      return res.status(500).json({ error: "error creating comment" });
 
     await newComment.save();
     // throw new ApiError("error creating comment", 2000, 2000);
     // throw new Error("Error creating comment");
 
-    res.status(200).json({ message: "comment created comment" });
+    return res.status(200).json({ message: "comment created comment" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -43,7 +43,7 @@ const getComments = async (req: Request, res: Response) => {
       .sort({ createdAt: -1 });
 
     //   console.log(comments);
-    res.status(200).send(comments);
+    return res.status(200).send(comments);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }

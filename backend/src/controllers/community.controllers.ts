@@ -27,7 +27,7 @@ const createCommunity = async (req: Request, res: Response) => {
   try {
     const { name: communityName, description } = req.body;
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.send(403).json({ error: "cookie missing" });
+    if (!cookies?.jwt) return res.status(403).json({ error: "cookie missing" });
 
     // throw new ApiError("cookie missing", COM_COOKIE_MISSING, 403);
     // throw new Error('cookie missing')
@@ -40,7 +40,7 @@ const createCommunity = async (req: Request, res: Response) => {
     ) as decodedTypes;
 
     if (!decodedToken) {
-      return res.send(401).json({ error: "Refresh Token Invalid" });
+      return res.status(401).json({ error: "Refresh Token Invalid" });
       // throw new ApiError("Refresh Token Invalid", COM_INVALID_RF_TOKEN, 401);
     }
 
@@ -49,12 +49,12 @@ const createCommunity = async (req: Request, res: Response) => {
 
     if (foundCommunity) {
       // throw new  Error('Community Already Exists')
-      return res.send(403).json({ error: "Community Already Exists" });
+      return res.status(403).json({ error: "Community Already Exists" });
       // throw new ApiError("Community Already Exists", COM_ALREADY_EXISTS, 403);
     }
     if (!foundAuthor) {
       // throw new Error('Author not found')
-      return res.send(403).json({ error: "Author not found" });
+      return res.status(403).json({ error: "Author not found" });
       // throw new ApiError("Author not found", COM_AUTHOR_NOT_FOUND, 403);
     }
 
@@ -70,7 +70,7 @@ const createCommunity = async (req: Request, res: Response) => {
     });
     await newCommunity.save();
 
-    res.status(200).json({ message: "success" });
+    return res.status(200).json({ message: "success" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -88,7 +88,7 @@ const findCommunities = async (req: Request, res: Response) => {
       .limit(pageSize)
       .sort();
 
-    res.status(200).send(foundCommunities);
+    return res.status(200).send(foundCommunities);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -104,7 +104,7 @@ const getCommunity = async (req: Request, res: Response) => {
       return res.status(500).json({ error: "Community not found!" });
     // throw new ApiError("Community not found!", COM_NOT_FOUND, 404);
 
-    res.status(200).send(foundCommunity);
+    return res.status(200).send(foundCommunity);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -131,7 +131,7 @@ const joinCommunity = async (req: Request, res: Response) => {
     if (!community) return res.status(500).json({ error: "Not Joined" });
     // throw new ApiError("Not Joined", 907, 403);
 
-    res.status(200).json({ message: "done" });
+    return res.status(200).json({ message: "done" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -158,7 +158,7 @@ const leaveCommunity = async (req: Request, res: Response) => {
     if (!community) return res.status(500).json({ error: "haven't left" });
     // throw new ApiError('haven"t left', 907, 403);
 
-    res.status(200).json({ message: "done" });
+    return res.status(200).json({ message: "done" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -188,7 +188,7 @@ const getCommunities = async (req: Request, res: Response) => {
 
     // if(!foundCommunities)
 
-    res.status(200).send(foundCommunities);
+    return res.status(200).send(foundCommunities);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -211,7 +211,7 @@ const getModCommunities = async (req: Request, res: Response) => {
       }
     );
 
-    res.status(200).send(foundModCommunities);
+    return res.status(200).send(foundModCommunities);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -273,7 +273,7 @@ const editCommunity = async (req: Request, res: Response) => {
 
     await foundCommunity.save();
 
-    res.status(200).json({ message: "Edit successful" });
+    return res.status(200).json({ message: "Edit successful" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -302,7 +302,7 @@ const deleteCommunity = async (req: Request, res: Response) => {
     // if (!deletedCommunity)
     //   return new ApiError('Error Deleting Community', 911, 401);
 
-    res.status(200).json({ message: "Community Deleted!" });
+    return res.status(200).json({ message: "Community Deleted!" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }

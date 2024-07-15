@@ -25,14 +25,14 @@ const signIn = async (req: Request, res: Response) => {
     const password = parsedInput.data?.password;
 
     if (parsedInput.error) {
-      return res.send(401).json({ error: "Invalid Credentials" });
+      return res.status(401).json({ error: "Invalid Credentials" });
       // throw new ApiError("Invalid Credentials", AUTH_INVALID_CREDENTIALS, 401);
     }
 
     let foundUser = await User.findOne({ username });
 
     if (!foundUser) {
-      return res.send(404).json({ error: "User Not Found" });
+      return res.status(404).json({ error: "User Not Found" });
       // throw new ApiError("User Not Found", AUTH_USER_NOT_FOUND, 404);
     }
 
@@ -41,7 +41,7 @@ const signIn = async (req: Request, res: Response) => {
     if (!isMatch) {
       // throw new Error("PW");
       // throw new ApiError("pw", AUTH_INVALID_PW, 401);
-      return res.send(401).json({ error: "pw" });
+      return res.status(401).json({ error: "pw" });
     }
 
     const cookies = req.cookies;
@@ -96,7 +96,7 @@ const signIn = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       accessToken,
       username: foundUser.username,
       userId: foundUser._id,
@@ -116,7 +116,7 @@ const refreshToken = async (req: Request, res: Response) => {
     if (!cookie?.jwt) {
       // throw new Error("Cookie Missing");
       // throw new ApiError("Cookie Missing", RF_COOKIE_MISSING, 403);
-      return res.send(403).json({ error: "Cookie Missing" });
+      return res.status(403).json({ error: "Cookie Missing" });
     }
 
     res.clearCookie("jwt", { httpOnly: true, secure: true });
@@ -141,7 +141,7 @@ const refreshToken = async (req: Request, res: Response) => {
       }
       // throw new Error("Bad user request");
       // throw new ApiError("Bad user request", RF_INVALID_USER, 401);
-      return res.send(401).json({ error: "Bad user request" });
+      return res.status(401).json({ error: "Bad user request" });
     }
 
     const newRefreshTokenArray = foundUser.refreshToken.filter(
@@ -156,7 +156,7 @@ const refreshToken = async (req: Request, res: Response) => {
     if (!decodedToken || foundUser._id.toString() !== decodedToken.userId) {
       // throw new Error("Invalid Refresh Token");
       // throw new ApiError("Invalid Refresh Token", RF_INVALID_RF_TOKEN, 401);
-      return res.send(401).json({ error: "Invalid Refresh Token" });
+      return res.status(401).json({ error: "Invalid Refresh Token" });
     }
 
     const newRefreshToken = jwt.sign(
@@ -198,7 +198,7 @@ const refreshToken = async (req: Request, res: Response) => {
 const signOut = async (req: Request, res: Response) => {
   try {
     const cookie = req.cookies;
-    if (!cookie?.jwt) return res.send(403).json({ error: "cookie missing" });
+    if (!cookie?.jwt) return res.status(403).json({ error: "cookie missing" });
 
     // throw new ApiError("cookie missing", AUTH_COOKIE_MISSING, 403);
 
@@ -222,7 +222,7 @@ const signOut = async (req: Request, res: Response) => {
 
     res.clearCookie("jwt", { httpOnly: true, sameSite: "lax", secure: true });
 
-    res.status(200).json({ message: "success!" });
+    return res.status(200).json({ message: "success!" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }

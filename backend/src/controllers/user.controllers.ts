@@ -63,7 +63,7 @@ export const signUp = async (req: Request, res: Response) => {
       // );
     }
 
-    res.status(200).send({ message: "User Sign Up Successful!" });
+    return res.status(200).send({ message: "User Sign Up Successful!" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -76,8 +76,7 @@ export const getUserData = async (req: Request, res: Response) => {
     const cachedUser = await redis.get(`user:${username}`);
 
     if (cachedUser) {
-      res.status(200).send(JSON.parse(cachedUser));
-      return;
+      return res.status(200).send(JSON.parse(cachedUser));
     }
 
     const userData = await User.findOne({ username }).select(
@@ -89,7 +88,7 @@ export const getUserData = async (req: Request, res: Response) => {
 
     await redis.set(`user:${username}`, JSON.stringify(userData), "EX", 1800);
 
-    res.status(200).send(userData);
+    return res.status(200).send(userData);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -102,7 +101,7 @@ export const getUserProfilePosts = async (req: Request, res: Response) => {
     const cachedPosts = await redis.get(`profilePosts:${username}`);
 
     if (cachedPosts) {
-      res.status(200).send(JSON.parse(cachedPosts));
+      return res.status(200).send(JSON.parse(cachedPosts));
     }
 
     const userPosts = await Post.find({ authorName: username }).sort({
@@ -119,7 +118,7 @@ export const getUserProfilePosts = async (req: Request, res: Response) => {
       1800
     );
 
-    res.status(200).send(userPosts);
+    return res.status(200).send(userPosts);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -141,7 +140,7 @@ export const getUserProfileSaved = async (req: Request, res: Response) => {
     );
     const reversePosts = posts.reverse();
 
-    res.status(200).send(posts);
+    return res.status(200).send(posts);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -154,7 +153,7 @@ export const getUserProfileComments = async (req: Request, res: Response) => {
       createdAt: -1,
     });
 
-    res.status(200).send(userComments);
+    return res.status(200).send(userComments);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -188,7 +187,7 @@ export const editUser = async (req: Request, res: Response) => {
     foundUser.bio = description;
 
     await foundUser.save();
-    res.status(200).json({ message: "Edit successful!" });
+    return res.status(200).json({ message: "Edit successful!" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }

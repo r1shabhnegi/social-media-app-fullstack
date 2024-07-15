@@ -25,7 +25,7 @@ app.use(credentials);
 
 app.use(
   cors({
-    origin: "https://circlesss.onrender.com",
+    origin: ["https://circlesss.onrender.com", "http://localhost:5173"],
     credentials: true,
   })
 );

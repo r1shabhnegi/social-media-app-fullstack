@@ -15,7 +15,7 @@ import { redis } from "../utility/redis";
 const getNumberOfPosts = async (req: Request, res: Response) => {
   try {
     const numberOfPosts = await Post.countDocuments();
-    res.status(200).send(numberOfPosts.toString());
+    return res.status(200).send(numberOfPosts.toString());
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -79,7 +79,7 @@ const createPost = async (req: Request, res: Response) => {
       return res.status(500).json({ error: "Error Uploading Image" });
     // throw new ApiError("Error Uploading Image", POST_NOT_CREATED, 401);
 
-    res.status(200).json({ message: "Post Created Successfully" });
+    return res.status(200).json({ message: "Post Created Successfully" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -102,7 +102,7 @@ const getAllCommunityPosts = async (req: Request, res: Response) => {
       return res.status(500).json({ error: "Posts Not Found" });
     // throw new ApiError("Posts Not Found", POST_NOT_FOUND, 404);
 
-    res.status(200).json(foundPosts);
+    return res.status(200).json(foundPosts);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -119,7 +119,7 @@ const getAllPosts = async (req: Request, res: Response) => {
       .limit(pageItems)
       .sort({ createdAt: -1 });
     console.log(foundPosts);
-    res.status(200).send(foundPosts);
+    return res.status(200).send(foundPosts);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -132,7 +132,7 @@ const getDetailsPost = async (req: Request, res: Response) => {
     const foundPostDetail = await Post.findById(postId);
     // console.log(foundPostDetail);
 
-    res.status(200).send(foundPostDetail);
+    return res.status(200).send(foundPostDetail);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -237,7 +237,7 @@ const handleUpVote = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Error up-voting the post" });
       // throw new ApiError("Error up-voting the post", 1000, 1000);
     }
-    res.status(200).json({ message: "upVoted" });
+    return res.status(200).json({ message: "upVoted" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -299,7 +299,7 @@ const handleDownVote = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Error up-voting the post" });
       // throw new ApiError("Error up-voting the post", 1000, 1000);
     }
-    res.status(200).json({ message: "downVoted" });
+    return res.status(200).json({ message: "downVoted" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -339,7 +339,7 @@ const savePost = async (req: Request, res: Response) => {
           new: true,
         }
       );
-      res.status(200).send({ message: "post bookmarked", code: "22" });
+      return res.status(200).send({ message: "post bookmarked", code: "22" });
       return;
     }
   } catch (error) {
@@ -368,7 +368,7 @@ const deletePost = async (req: Request, res: Response) => {
       // throw new ApiError("error deleting post", 1000, 1000);
     }
 
-    res.status(200).json({ message: "Post Deleted Successfully!" });
+    return res.status(200).json({ message: "Post Deleted Successfully!" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -383,7 +383,7 @@ const postDetailsCommunityInfo = async (req: Request, res: Response) => {
     );
 
     // console.log(communityInfo);
-    res.status(200).send(communityInfo);
+    return res.status(200).send(communityInfo);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -392,7 +392,7 @@ const getCommunityNumberOfPosts = async (req: Request, res: Response) => {
   try {
     const { communityId } = req.params;
     const numberOfPosts = await Post.countDocuments({ communityId });
-    res.status(200).json(numberOfPosts);
+    return res.status(200).json(numberOfPosts);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -422,7 +422,7 @@ const createRecentPost = async (req: Request, res: Response) => {
     foundUser.recentPosts = recentPostsArr;
     await foundUser.save();
 
-    res.status(200).send({ message: "done" });
+    return res.status(200).send({ message: "done" });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -448,7 +448,7 @@ const getRecentPost = async (req: Request, res: Response) => {
         throw new Error("error getting recent post");
       }
     }
-    res.status(200).send(postsArr);
+    return res.status(200).send(postsArr);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
@@ -480,7 +480,7 @@ const getCommunitiesFeedPosts = async (req: Request, res: Response) => {
     });
     console.log("numberOfPosts", numberOfPosts);
 
-    res.status(200).send({ posts, numberOfPosts });
+    return res.status(200).send({ posts, numberOfPosts });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
   }
