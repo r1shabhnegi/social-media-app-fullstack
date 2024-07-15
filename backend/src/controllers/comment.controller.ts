@@ -8,9 +8,7 @@ import { Comment } from "../models/comment.model";
 const create = async (req: Request, res: Response) => {
   try {
     const { userId, postId, content, username } = req.body;
-    //   console.log(userId, postId, content);
-    const rr = content;
-    console.log(rr);
+
     const newComment = new Comment({
       content: content,
       authorId: userId,
@@ -33,7 +31,6 @@ const create = async (req: Request, res: Response) => {
 const getComments = async (req: Request, res: Response) => {
   try {
     const { postId, commentPage } = req.params;
-    //   console.log(postId);
 
     const skipComment = +commentPage * 10;
     const limit = 10;
@@ -42,7 +39,6 @@ const getComments = async (req: Request, res: Response) => {
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    //   console.log(comments);
     return res.status(200).send(comments);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);

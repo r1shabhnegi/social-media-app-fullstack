@@ -26,8 +26,6 @@ const Submit = () => {
     (state: RootState) => state.community
   );
 
-  console.log(selectOption);
-
   useEffect(() => {
     if (state) {
       setSelectOption(state.communityName);
@@ -164,7 +162,8 @@ const Submit = () => {
                   className: `rounded-3xl flex mt-1 flex bg-[#1A1A1B] justify-center items-center size-32 ${
                     !image?.preview && "border border-gray-700"
                   }`,
-                })}>
+                })}
+                onClick={() => console.log("c")}>
                 <input {...getInputProps()} />
                 {isDragActive ? (
                   <p className='font-bold text-gray-700'>Drop</p>

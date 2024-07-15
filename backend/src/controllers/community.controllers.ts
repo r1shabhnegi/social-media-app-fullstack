@@ -297,7 +297,6 @@ const deleteCommunity = async (req: Request, res: Response) => {
     await Community.findOneAndDelete({
       name: communityName,
     });
-    // console.log(await deleteCommunity);
 
     // if (!deletedCommunity)
     //   return new ApiError('Error Deleting Community', 911, 401);

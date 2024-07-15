@@ -6,7 +6,6 @@ export const credentials = (
   next: NextFunction
 ) => {
   res.header("Access-Control-Allow-Origin", "https://circlesss.onrender.com");
-  // res.header("Access-Control-Allow-Origin");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Methods",

@@ -24,12 +24,11 @@ const getNumberOfPosts = async (req: Request, res: Response) => {
 const createPost = async (req: Request, res: Response) => {
   try {
     const { title, content, communityName } = req.body;
-    const image = req.files;
     const foundCommunity = await Community.findOne({ name: communityName });
 
     if (!foundCommunity)
-      // throw new Error("community does not exist");
-      return res.status(500).json({ error: "haven't left" });
+      return res.status(500).json({ error: "community not found" });
+    // throw new Error("community does not exist");
     // throw new ApiError(
     //   "community does not exist",
     //   POST_COMMUNITY_NOT_EXIST,
@@ -39,11 +38,9 @@ const createPost = async (req: Request, res: Response) => {
     const author = await User.findById(req.userId);
 
     await redis.del(`profilePosts:${author?.username}`);
-    // console.log(author?.avatar);
 
-    if (!author)
-      // throw new Error("user does not exist");
-      return res.status(500).json({ error: "user does not exist" });
+    if (!author) return res.status(500).json({ error: "user does not exist" });
+    // throw new Error("user does not exist");
     // throw new ApiError("user does not exist", POST_COMMUNITY_NOT_EXIST, 401);
 
     const newPost = new Post({
@@ -63,21 +60,14 @@ const createPost = async (req: Request, res: Response) => {
     };
 
     const imagePath = imageFile.image[0].path;
+
     if (imagePath) {
       const url = await uploadOnCloudinary(imagePath);
-      if (!url)
-        // throw new Error("Error Uploading Image");
-        return res.status(500).json({ error: "Error Uploading Image" });
-      //   throw new ApiError("Error Uploading Image", 908, 403);
-      // newPost.image = url;
+      if (!url) return res.status(500).json({ error: "Error Uploading Image" });
+      newPost.image = url;
     }
 
     await newPost.save();
-
-    if (!newPost)
-      // throw new Error("Error Uploading Image");
-      return res.status(500).json({ error: "Error Uploading Image" });
-    // throw new ApiError("Error Uploading Image", POST_NOT_CREATED, 401);
 
     return res.status(200).json({ message: "Post Created Successfully" });
   } catch (error) {
@@ -118,7 +108,6 @@ const getAllPosts = async (req: Request, res: Response) => {
       .skip(skipPosts)
       .limit(pageItems)
       .sort({ createdAt: -1 });
-    console.log(foundPosts);
     return res.status(200).send(foundPosts);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
@@ -130,7 +119,6 @@ const getDetailsPost = async (req: Request, res: Response) => {
     const { postId } = req.params;
 
     const foundPostDetail = await Post.findById(postId);
-    // console.log(foundPostDetail);
 
     return res.status(200).send(foundPostDetail);
   } catch (error) {
@@ -377,12 +365,10 @@ const deletePost = async (req: Request, res: Response) => {
 const postDetailsCommunityInfo = async (req: Request, res: Response) => {
   try {
     const { communityId } = req.params;
-    // console.log(comId);
     const communityInfo = await Community.findById(communityId).select(
       "authorName avatar description name rules"
     );
 
-    // console.log(communityInfo);
     return res.status(200).send(communityInfo);
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
@@ -402,8 +388,6 @@ const createRecentPost = async (req: Request, res: Response) => {
     const userId = req.userId;
 
     const { postId } = req.body;
-    console.log("userId=", userId);
-    console.log("postId=", postId);
 
     const foundUser = await User.findById(userId).select("recentPosts");
 
@@ -418,7 +402,6 @@ const createRecentPost = async (req: Request, res: Response) => {
 
     const recentPostsArr = [new ObjectId(`${postId}`), ...newArr].slice(0, 5);
 
-    console.log(recentPostsArr);
     foundUser.recentPosts = recentPostsArr;
     await foundUser.save();
 
@@ -458,15 +441,12 @@ const getCommunitiesFeedPosts = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
     const { page } = req.params;
-    console.log("userId", userId);
-    console.log("page", page);
+
     const pageSize = 5;
 
     const allCommunities = await Community.find({
       members: userId,
     }).select("_id");
-
-    console.log("allCommunities", allCommunities);
 
     const posts = await Post.find({
       communityId: { $in: allCommunities.map((c) => c._id) },
@@ -474,11 +454,9 @@ const getCommunitiesFeedPosts = async (req: Request, res: Response) => {
       .sort({ createdAt: -1 })
       .skip((+page - 1) * pageSize)
       .limit(pageSize);
-    console.log("postscFeed", posts);
     const numberOfPosts = await Post.countDocuments({
       communityId: { $in: allCommunities.map((c) => c._id) },
     });
-    console.log("numberOfPosts", numberOfPosts);
 
     return res.status(200).send({ posts, numberOfPosts });
   } catch (error) {
