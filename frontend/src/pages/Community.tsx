@@ -196,26 +196,12 @@ const Community = () => {
         </div>
       </div>
       {editModal && (
-        <div className='fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-[#0f1a1c] mx-10 p-6 rounded-3xl max-w-[60rem] w-full'>
-            <div className='flex justify-between'>
-              <h1 className='px-1 mb-8 text-xl font-semibold text-center md:text-3xl '>
-                Edit Community
-              </h1>
-              <span
-                className='cursor-pointer top-10 right-10'
-                onClick={() => setEditModal(!editModal)}>
-                <MdOutlineCancel size={25} />
-              </span>
-            </div>
-            <EditCommunityForm
-              cancel={() => setEditModal(!editModal)}
-              name={communityData?.name}
-              description={communityData?.description}
-              rules={communityData?.rules}
-            />
-          </div>
-        </div>
+        <EditCommunityForm
+          cancel={() => setEditModal(!editModal)}
+          name={communityData?.name}
+          description={communityData?.description}
+          rules={communityData?.rules}
+        />
       )}
       {detailModal && (
         <div className='fixed top-0 left-0 flex items-center justify-center w-full h-screen bg-black bg-opacity-50'>
