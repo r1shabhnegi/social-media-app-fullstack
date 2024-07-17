@@ -2,10 +2,11 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import LeftSideBar from "@/components/LeftSideBar";
 import { useNumberOfPostsQuery } from "@/api/queries/postQuery";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/global/_store";
 import { setNumberOfPosts } from "@/global/postsSlice";
+import PageLoader from "@/components/PageLoader";
 
 const Layout = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,7 +25,9 @@ const Layout = () => {
         <LeftSideBar />
       </div>
       <div className='lg:ml-[17rem]'>
-        <Outlet />
+        <Suspense fallback={<PageLoader />}>
+          <Outlet />
+        </Suspense>
       </div>
     </main>
   );

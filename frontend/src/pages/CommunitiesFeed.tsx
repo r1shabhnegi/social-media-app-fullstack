@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const CommunitiesFeed = () => {
-  // const { numberOfPosts } = useSelector((state: RootState) => state.posts);
   const [numberOfPosts, setNumberOfPosts] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [postsData, setPostsData] = useState<postDataType[]>([]);

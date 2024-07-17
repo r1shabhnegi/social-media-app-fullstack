@@ -48,8 +48,6 @@ const HomeLayout = () => {
           </div>
         </div>
         <Outlet />
-
-        {/* <CommonLoader isLoading={postsLoading} /> */}
       </div>
       {/* <div className=''> */}
       <div className=' sticky hidden lg:flex gap-4 flex-col mr-3 p-4 bg-[#162226] rounded-lg md:block top-20 h-min max-h-[40rem] lg:w-80 md:w-72 xl:w-80'>

@@ -1,15 +1,17 @@
-import React, { ReactElement } from "react";
-import SignIn from "@/pages/SignIn";
+import React, { ReactElement, lazy } from "react";
+
 import Home from "@/pages/Home";
+import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
-import Submit from "@/pages/Submit";
-import FindCommunities from "@/pages/FindCommunities";
-import PostDetail from "@/pages/PostDetail";
-import ProfilePosts from "@/pages/ProfilePosts";
-import ProfileComments from "@/pages/ProfileComments";
-import ProfileSaved from "@/pages/ProfileSaved";
-import Community from "@/pages/Community";
-import CommunitiesFeed from "@/pages/CommunitiesFeed";
+
+const Submit = lazy(() => import("@/pages/Submit"));
+const FindCommunities = lazy(() => import("@/pages/FindCommunities"));
+const PostDetail = lazy(() => import("@/pages/PostDetail"));
+const ProfilePosts = lazy(() => import("@/pages/ProfilePosts"));
+const ProfileComments = lazy(() => import("@/pages/ProfileComments"));
+const ProfileSaved = lazy(() => import("@/pages/ProfileSaved"));
+const Community = lazy(() => import("@/pages/Community"));
+const CommunitiesFeed = lazy(() => import("@/pages/CommunitiesFeed"));
 
 export const privateRoutes: { path: string; element: ReactElement }[] = [
   {
