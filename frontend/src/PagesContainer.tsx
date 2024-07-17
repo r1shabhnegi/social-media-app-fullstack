@@ -6,7 +6,7 @@ import {
   homeRoutes,
 } from "./lib/routes";
 import ProtectedRoutes from "./ProtectedRoutes";
-import Layout from "./layout/MainLayout";
+import Layout from "./layouts/MainLayout";
 import HomeLayout from "./layouts/HomeLayout";
 import ProfileLayout from "./layouts/ProfileLayout";
 
