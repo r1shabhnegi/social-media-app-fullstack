@@ -34,7 +34,7 @@ const Home = () => {
       setHasMore(false);
     }
   };
-  isLoading && <PageLoader isLoading={isLoading} />;
+  isLoading && <PageLoader />;
   return (
     <InfiniteScroll
       className='flex flex-col items-center justify-center'

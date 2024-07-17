@@ -9,11 +9,7 @@ const App = () => {
   const { isError, isLoading } = useServerStatusQuery({});
 
   if (isLoading || isError) {
-    isLoading ? (
-      <PageLoader isLoading={isLoading} />
-    ) : (
-      <Error error={"Server Is Down"} />
-    );
+    isLoading ? <PageLoader /> : <Error error={"Server Is Down"} />;
   }
 
   return (
