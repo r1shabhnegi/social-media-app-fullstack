@@ -6,8 +6,9 @@ import {
   homeRoutes,
 } from "./lib/routes";
 import ProtectedRoutes from "./ProtectedRoutes";
-import { HomeLayout, Layout, ProfileLayout } from "./layout";
-// import { Layout, ProfileLayout, HomeLayout } from "./layout";
+import Layout from "./layout/MainLayout";
+import HomeLayout from "./layout/HomeLayout";
+import ProfileLayout from "./layout/ProfileLayout";
 
 const PagesContainer = () => {
   return (
