@@ -1,5 +1,5 @@
-import { useFindCommunitiesQuery } from '@/api/queries/communityQuery';
-import { useState } from 'react';
+import { useFindCommunitiesQuery } from "@/api/queries/communityQuery";
+import { useState } from "react";
 
 import {
   Pagination,
@@ -9,12 +9,12 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/global/_store';
-import { Link } from 'react-router-dom';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import PageLoader from '@/components/PageLoader';
+} from "@/components/ui/pagination";
+import { useSelector } from "react-redux";
+import { RootState } from "@/global/_store";
+import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import PageLoader from "@/components/PageLoader";
 
 const FindCommunities = () => {
   const [page, setPage] = useState(0);
@@ -22,7 +22,7 @@ const FindCommunities = () => {
   const { userId } = useSelector((state: RootState) => state.auth);
 
   if (isLoading) {
-    return <PageLoader isLoading={isLoading} />;
+    return <PageLoader />;
   }
 
   return (
@@ -73,7 +73,7 @@ const FindCommunities = () => {
                             <h2 className='mr-1'>{name}</h2>
                             <p
                               className={`${
-                                !isMod && 'hidden'
+                                !isMod && "hidden"
                               } px-[.2rem] text-xs bg-orange-700 `}>
                               MOD
                             </p>

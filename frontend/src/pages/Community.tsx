@@ -89,7 +89,7 @@ const Community = () => {
     }
   };
 
-  if (communityLoading) return <PageLoader isLoading={communityLoading} />;
+  if (communityLoading) return <PageLoader />;
 
   return (
     <div className='flex max-w-[65rem] mx-auto flex-col'>

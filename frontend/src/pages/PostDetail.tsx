@@ -1,20 +1,20 @@
 import {
   useCreateCommentMutation,
   useGetCommentsQuery,
-} from '@/api/queries/commentQuery';
+} from "@/api/queries/commentQuery";
 import {
   useLazyPostDetailsCommunityInfoQuery,
   usePostDetailsQuery,
-} from '@/api/queries/postQuery';
-import CommunityRightSideBar from '@/components/CommunityRightSideBar';
-import PageLoader from '@/components/PageLoader';
-import PostCard from '@/components/PostCard';
-import { RootState } from '@/global/_store';
-import { showToast } from '@/global/toastSlice';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+} from "@/api/queries/postQuery";
+import CommunityRightSideBar from "@/components/CommunityRightSideBar";
+import PageLoader from "@/components/PageLoader";
+import PostCard from "@/components/PostCard";
+import { RootState } from "@/global/_store";
+import { showToast } from "@/global/toastSlice";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 type commentT = {
   content: string;
@@ -51,7 +51,7 @@ const PostDetail = () => {
   useEffect(() => {
     if (postData && isSuccess) {
       const fetch = async () => {
-         await CommunityInfoFetch(postData?.communityId).unwrap();
+        await CommunityInfoFetch(postData?.communityId).unwrap();
       };
       fetch();
     }
@@ -76,16 +76,14 @@ const PostDetail = () => {
     }
   };
   useEffect(() => {
-    window.addEventListener('scroll', handleCommentPagination);
+    window.addEventListener("scroll", handleCommentPagination);
 
-    return () => window.removeEventListener('scroll', handleCommentPagination);
+    return () => window.removeEventListener("scroll", handleCommentPagination);
   });
 
-  const [createComment] =
-    useCreateCommentMutation();
+  const [createComment] = useCreateCommentMutation();
 
   const submitComment = handleSubmit(async (data) => {
-
     const res = await createComment({
       userId,
       username,
@@ -95,11 +93,11 @@ const PostDetail = () => {
     if (res) {
       reset();
       // navigate(0);
-      dispatch(showToast({ message: 'Comment created', type: 'SUCCESS' }));
+      dispatch(showToast({ message: "Comment created", type: "SUCCESS" }));
     }
   });
 
-  if (postDataLoading) <PageLoader isLoading={postDataLoading} />;
+  if (postDataLoading) <PageLoader />;
 
   return (
     <div className='max-w-[65rem] flex justify-center mx-auto pb-10'>
@@ -115,7 +113,7 @@ const PostDetail = () => {
               className='flex gap-2'>
               <input
                 {...register(
-                  'content'
+                  "content"
                   // min:{value:10,}
                 )}
                 className='flex-1 border-gray-500 bg-[#0B1416] border-b-2 focus:outline-0 focus:border-gray-400'

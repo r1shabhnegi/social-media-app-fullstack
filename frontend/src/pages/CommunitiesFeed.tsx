@@ -33,7 +33,7 @@ const CommunitiesFeed = () => {
       setHasMore(false);
     }
   };
-  isLoading && <PageLoader isLoading={isLoading} />;
+  isLoading && <PageLoader />;
 
   return (
     <InfiniteScroll
