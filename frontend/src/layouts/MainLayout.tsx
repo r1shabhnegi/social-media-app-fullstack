@@ -6,7 +6,7 @@ import { useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/global/_store";
 import { setNumberOfPosts } from "@/global/postsSlice";
-import PageLoader from "@/components/PageLoader";
+// import PageLoader from "@/components/PageLoader";
 
 const Layout = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,9 +25,7 @@ const Layout = () => {
         <LeftSideBar />
       </div>
       <div className='lg:ml-[17rem]'>
-        <Suspense fallback={<PageLoader />}>
-          <Outlet />
-        </Suspense>
+        <Outlet />
       </div>
     </main>
   );
