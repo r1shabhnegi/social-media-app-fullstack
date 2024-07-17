@@ -57,8 +57,6 @@ const EditCommunityForm = ({
     });
   }, []);
 
-  // console.log(file);
-
   const {
     getRootProps: getCoverRootProps,
     isDragActive: isCoverDragActive,

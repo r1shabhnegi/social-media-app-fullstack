@@ -17,7 +17,7 @@ const HomeLayout = () => {
   }, []);
 
   return (
-    <div className='flex max-w-[65rem] mx-auto w-full justify-center min-h-screen md:gap-6 lg:gap-4  xl:gap-16 py-5'>
+    <div className='flex max-w-[65rem] mx-auto w-full justify-center min-h-screen md:gap-6 lg:gap-4 xl:gap-16 py-5'>
       <div className='flex flex-col flex-1'>
         <Link
           to='/submit'
@@ -70,9 +70,8 @@ const HomeLayout = () => {
           {recentPosts?.map((post: postDataType) => (
             <div
               key={post._id}
-              // onClick={}
+              onClick={() => navigate(`/post/${post._id}`)}
               className='flex hover:bg-[#1a282d] px-1.5 py-2 rounded-md cursor-pointer items-center justify-start w-full gap-5'>
-              {/* <span> */}
               <Avatar className='size-8 sm:size-9'>
                 <AvatarImage src={post.authorAvatar} />
                 <AvatarFallback className='bg-gray-700'>
@@ -80,7 +79,6 @@ const HomeLayout = () => {
                 </AvatarFallback>
               </Avatar>
               <p className='font-semibold line-clamp-2'>{post.title}</p>
-              {/* </span> */}
             </div>
           ))}
         </div>

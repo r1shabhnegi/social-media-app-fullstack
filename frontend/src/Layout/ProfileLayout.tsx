@@ -64,16 +64,13 @@ const ProfileLayout = () => {
         avatar?.File instanceof File &&
         (await imageCompression(avatar?.File, options));
 
-      console.log(avatarImg);
 
       const formData = new FormData();
       formData.append("name", data?.name);
       formData.append("description", data?.description);
       avatarImg && formData.append("avatar", avatarImg);
 
-      for (const [key, value] of formData) {
-        console.log(key, value);
-      }
+ 
 
       const res = await submitEditUser(formData).unwrap();
 

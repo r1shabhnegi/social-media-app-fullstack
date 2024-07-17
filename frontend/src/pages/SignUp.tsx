@@ -7,6 +7,7 @@ import { useLoginMutation, useSignUpMutation } from "@/api/queries/authQuery";
 import { setCredentials } from "@/global/authSlice";
 import { SignupType } from "@rishabhnegi/circlesss-common";
 import { Input } from "@/components/ui/input";
+import CommonLoader from "@/components/CommonLoader";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -145,7 +146,7 @@ const SignUp = () => {
             type='submit'
             className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-16 rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '
             disabled={signInLoading || signUpLoading}>
-            Submit
+            {signInLoading || signUpLoading ? <CommonLoader /> : "Submit"}
           </button>
           <p className='mt-1 ml-2 text-sm text-[#a0b6bd]'>
             Already have account?

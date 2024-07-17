@@ -85,7 +85,6 @@ const PostDetail = () => {
     useCreateCommentMutation();
 
   const submitComment = handleSubmit(async (data) => {
-    console.log(data.content);
 
     const res = await createComment({
       userId,
@@ -93,7 +92,6 @@ const PostDetail = () => {
       postId,
       content: data.content,
     }).unwrap();
-    console.log(res);
     if (res) {
       reset();
       // navigate(0);

@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import { Layout } from "./Layout";
 import {
   privateRoutes,
   independentPageRoutes,
@@ -7,8 +6,8 @@ import {
   homeRoutes,
 } from "./lib/routes";
 import ProtectedRoutes from "./ProtectedRoutes";
-import ProfileLayout from "./Layout/ProfileLayout";
-import HomeLayout from "./Layout/HomeLayout";
+import { Layout, ProfileLayout } from "./layout";
+import HomeLayout from "./layout/HomeLayout";
 
 const PagesContainer = () => {
   return (

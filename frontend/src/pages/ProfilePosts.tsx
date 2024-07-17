@@ -21,7 +21,6 @@ type postDataType = {
 
 const ProfilePosts = () => {
   const { username } = useParams();
-  console.log(username);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
