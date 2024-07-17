@@ -16,11 +16,7 @@ const ProtectedRoutes = () => {
   return isLoading ? null : isLoggedIn ? (
     <Outlet />
   ) : (
-    <Navigate
-      to='/sign-in'
-      // state={{ from: location }}
-      // replace
-    />
+    <Navigate to='/sign-in' />
   );
 };
 export default ProtectedRoutes;
