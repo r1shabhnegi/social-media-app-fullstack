@@ -5,7 +5,7 @@ export const credentials = (
   res: Response,
   next: NextFunction
 ) => {
-  res.header("Access-Control-Allow-Origin", "https://circlesss.onrender.com");
+  res.header("Access-Control-Allow-Origin", "https://circlesss.vercel.app");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Methods",
