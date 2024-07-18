@@ -144,7 +144,7 @@ const SignUp = () => {
         <div>
           <button
             type='submit'
-            className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-16 rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '
+            className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-auto rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '
             disabled={signInLoading || signUpLoading}>
             {signInLoading || signUpLoading ? <CommonLoader /> : "Submit"}
           </button>
