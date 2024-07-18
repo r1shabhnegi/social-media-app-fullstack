@@ -20,36 +20,39 @@ import { upload } from "../middlewares/multer.middleware";
 
 const router = Router();
 
-router.get("/getAllPosts/:page", getAllPosts);
+router.get("/get-all-posts/:page", getAllPosts);
 
-router.get("/numberOfPosts", getNumberOfPosts);
+router.get("/number-of-posts", getNumberOfPosts);
 
-router.get("/postDetails/:postId", getDetailsPost);
+router.get("/post-details/:postId", getDetailsPost);
 
-router.get("/postStats/:postId", getPostStats);
+router.get("/post-stats/:postId", getPostStats);
 
-router.get("/postDetailsCommunityInfo/:communityId", postDetailsCommunityInfo);
+router.get(
+  "/post-details-community-info/:communityId",
+  postDetailsCommunityInfo
+);
 
-router.get("/numberOfPosts/:communityId", getCommunityNumberOfPosts);
+router.get("/number-of-posts/:communityId", getCommunityNumberOfPosts);
 
-router.get("/communityPosts/:communityId/:page", getAllCommunityPosts);
+router.get("/community-posts/:communityId/:page", getAllCommunityPosts);
 
 router.get("/communities-feed-posts/:page", getCommunitiesFeedPosts);
 
 router.get("/recent-post", getRecentPost);
 
-router.post("/upVote", handleUpVote);
+router.post("/up-vote", handleUpVote);
 
-router.post("/downVote", handleDownVote);
+router.post("/down-vote", handleDownVote);
 
-router.post("/savePost", savePost);
+router.post("/save-post", savePost);
 
-router.post("/deletePost", deletePost);
+router.post("/delete-post", deletePost);
 
 router.post("/recent-post", createRecentPost);
 
 router.post(
-  "/createPost",
+  "/create-post",
   upload.fields([{ name: "image", maxCount: 1 }]),
   createPost
 );

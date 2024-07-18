@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { upload } from '../middlewares/multer.middleware';
+import { Router } from "express";
+import { upload } from "../middlewares/multer.middleware";
 
 import {
   getCommunity,
@@ -11,32 +11,33 @@ import {
   editCommunity,
   getModCommunities,
   deleteCommunity,
-} from '../controllers/community.controllers';
+} from "../controllers/community.controllers";
 
 const router = Router();
 
-router.get('/findCommunities/:page', findCommunities);
+router.get("/find-communities/:page", findCommunities);
 
-router.get('/getCommunity/:comId', getCommunity);
+router.get("/get-community/:comId", getCommunity);
 
-router.get('/getUserCommunitiesList', getCommunities);
+router.get("/get-user-communities-list", getCommunities);
 
-router.get('/getUserModCommunities', getModCommunities);
+router.get("/get-user-mod-communities", getModCommunities);
 
-router.post('/create', createCommunity);
-
-router.post('/joinCommunity', joinCommunity);
-
-router.post('/leaveCommunity', leaveCommunity);
-
-router.post('/deleteCommunity', deleteCommunity);
-
-router.patch(
-  '/editCommunity',
-  upload.fields([
-    { name: 'avatarImg', maxCount: 1 },
-    { name: 'coverImg', maxCount: 1 },
-  ]),
+router.post(
+  "/create/edit-community",
+  // upload.fields([
+  //   { name: "avatarImg", maxCount: 1 },
+  //   { name: "coverImg", maxCount: 1 },
+  // ]),
   editCommunity
 );
+
+router.post("/create", createCommunity);
+
+router.post("/join-community", joinCommunity);
+
+router.post("/leave-community", leaveCommunity);
+
+router.post("/delete-community", deleteCommunity);
+
 export default router;

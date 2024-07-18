@@ -11,7 +11,6 @@ import serverStatusRouter from "./routes/serverStatus.routes";
 import postRouter from "./routes/post.routes";
 import commentRouter from "./routes/comment.routes";
 
-import { corsOptions } from "./config/corsOption";
 import { credentials } from "./middlewares/credentials.middleware";
 import { connectDb } from "./config/db";
 import { verifyJwt } from "./middlewares/auth.middleware";
@@ -42,7 +41,7 @@ app.use("/api/comment", verifyJwt, commentRouter);
 
 app.use(handleErrors);
 
-const port = process.env.SERVER_PORT || 3456;
+const port = process.env.PORT || 3456;
 app.listen(port, () => {
   console.log("Connected on port:", port);
 });

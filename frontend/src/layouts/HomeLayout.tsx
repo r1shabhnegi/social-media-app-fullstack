@@ -65,23 +65,26 @@ const HomeLayout = () => {
           <IoAdd className='size-6' />
           <p>Create a Post</p>
         </div>
-        <div className='overflow-y-auto bg-[#131A1D] flex-col flex rounded-lg  py-1.5 gap-6 text-sm px-3 '>
-          <h2 className='font-semibold'>Recent Posts</h2>
-          {recentPosts?.map((post: postDataType) => (
-            <div
-              key={post._id}
-              onClick={() => navigate(`/post/${post._id}`)}
-              className='flex hover:bg-[#1a282d] px-1.5 py-2 rounded-md cursor-pointer items-center justify-start w-full gap-5'>
-              <Avatar className='size-8 sm:size-9'>
-                <AvatarImage src={post.authorAvatar} />
-                <AvatarFallback className='bg-gray-700'>
-                  {post.authorName.slice(0, 2)}
-                </AvatarFallback>
-              </Avatar>
-              <p className='font-semibold line-clamp-2'>{post.title}</p>
-            </div>
-          ))}
-        </div>
+        {recentPosts && recentPosts.length > 0 ? (
+          <div className='overflow-y-auto bg-[#131A1D] flex-col flex rounded-lg  py-1.5 gap-6 text-sm px-3 '>
+            <h2 className='font-semibold'>Recent Posts</h2>
+
+            {recentPosts?.map((post: postDataType) => (
+              <div
+                key={post._id}
+                onClick={() => navigate(`/post/${post._id}`)}
+                className='flex hover:bg-[#1a282d] px-1.5 py-2 rounded-md cursor-pointer items-center justify-start w-full gap-5'>
+                <Avatar className='size-8 sm:size-9'>
+                  <AvatarImage src={post.authorAvatar} />
+                  <AvatarFallback className='bg-gray-700'>
+                    {post.authorName.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+                <p className='font-semibold line-clamp-2'>{post.title}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
       {/* </div> */}
       {openCreateCom && (

@@ -6,7 +6,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     createPost: builder.mutation({
       query: (data) => ({
-        url: "/api/post/createPost",
+        url: "/api/post/create-post",
         method: "POST",
         body: data,
       }),
@@ -15,25 +15,25 @@ const apiRequests = apiClient.injectEndpoints({
 
     getAllCommunityPosts: builder.query({
       query: ({ communityId, page }) =>
-        `/api/post/communityPosts/${communityId}/${page}`,
+        `/api/post/community-posts/${communityId}/${page}`,
       providesTags: ["communityPosts"],
     }),
 
     getAllPosts: builder.query({
-      query: (page) => `/api/post/getAllPosts/${page}`,
+      query: (page) => `/api/post/get-all-posts/${page}`,
       providesTags: ["getHomePosts"],
     }),
 
     getPostDetails: builder.query({ query: (id) => `/api/post/detail/${id}` }),
 
     getPostStats: builder.query({
-      query: ({ postId }) => `/api/post/postStats/${postId}`,
+      query: ({ postId }) => `/api/post/post-stats/${postId}`,
       providesTags: ["postStats"],
     }),
 
     upVote: builder.mutation({
       query: (data) => ({
-        url: "/api/post/upVote",
+        url: "/api/post/up-vote",
         method: "POST",
         body: data,
       }),
@@ -42,7 +42,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     downVote: builder.mutation({
       query: (data) => ({
-        url: "/api/post/downVote",
+        url: "/api/post/down-vote",
         method: "POST",
         body: data,
       }),
@@ -51,7 +51,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     savePost: builder.mutation({
       query: (data) => ({
-        url: "/api/post/savePost",
+        url: "/api/post/save-post",
         method: "POST",
         body: data,
       }),
@@ -60,7 +60,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     deletePost: builder.mutation({
       query: (postId) => ({
-        url: "/api/post/deletePost",
+        url: "/api/post/delete-post",
         method: "POST",
         body: postId,
       }),
@@ -68,16 +68,16 @@ const apiRequests = apiClient.injectEndpoints({
     }),
 
     postDetails: builder.query({
-      query: (postId) => `/api/post/postDetails/${postId}`,
+      query: (postId) => `/api/post/post-details/${postId}`,
       providesTags: ["postDetail"],
     }),
 
     postDetailsCommunityInfo: builder.query({
-      query: (id) => `/api/post/postDetailsCommunityInfo/${id}`,
+      query: (id) => `/api/post/post-details-community-info/${id}`,
     }),
 
     communityNumberOfPosts: builder.query({
-      query: (communityId) => `/api/post/numberOfPosts/${communityId}`,
+      query: (communityId) => `/api/post/number-of-posts/${communityId}`,
     }),
 
     getRecentPosts: builder.query({

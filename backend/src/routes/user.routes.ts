@@ -7,7 +7,6 @@ import {
   getUserProfileSaved,
   signUp,
 } from "../controllers/user.controllers";
-import { body, check } from "express-validator";
 import { verifyJwt } from "../middlewares/auth.middleware";
 import { upload } from "../middlewares/multer.middleware";
 
@@ -22,7 +21,7 @@ router.get("/comments/:username", verifyJwt, getUserProfileComments);
 
 router.post("/sign-up", signUp);
 
-router.patch(
+router.post(
   "/editUser",
   verifyJwt,
   upload.fields([{ name: "avatar", maxCount: 1 }]),

@@ -1,10 +1,10 @@
-import { apiClient } from '../apiClient';
+import { apiClient } from "../apiClient";
 
 const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
     getUserData: builder.query({
       query: (username) => `/api/user/get/${username}`,
-      providesTags: ['userProfile'],
+      providesTags: ["userProfile"],
     }),
 
     getUserPosts: builder.query({
@@ -21,11 +21,11 @@ const apiRequests = apiClient.injectEndpoints({
 
     editUser: builder.mutation({
       query: (data) => ({
-        url: '/api/user/editUser',
-        method: 'PATCH',
+        url: "/api/user/editUser",
+        method: "POST",
         body: data,
       }),
-      invalidatesTags: ['userProfile'],
+      invalidatesTags: ["userProfile"],
     }),
   }),
 });

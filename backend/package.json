@@ -2,11 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "This is full stack clone of Reddit.",
-  "main": "./src/index.ts",
+  "main": "./src/app.ts",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon src/app.ts",
     "build": "npm install && npx tsc",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/app.js"
   },
   "author": "Rishabh Negi",
   "license": "ISC",

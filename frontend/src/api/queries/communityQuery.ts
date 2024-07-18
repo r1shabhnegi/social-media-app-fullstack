@@ -1,4 +1,4 @@
-import { apiClient } from '../apiClient';
+import { apiClient } from "../apiClient";
 
 const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,18 +16,18 @@ const apiRequests = apiClient.injectEndpoints({
     }),
 
     findCommunities: builder.query({
-      query: (pageCount) => `/api/community/findCommunities/${pageCount}`,
+      query: (pageCount) => `/api/community/find-communities/${pageCount}`,
       providesTags: ["findBestCommunities"],
     }),
 
     getCommunity: builder.query({
-      query: (name) => `/api/community/getCommunity/${name}`,
+      query: (name) => `/api/community/get-community/${name}`,
       providesTags: ["getCommunity"],
     }),
 
     joinCommunity: builder.mutation({
       query: (data) => ({
-        url: "/api/community/joinCommunity",
+        url: "/api/community/join-community",
         method: "POST",
         body: data,
       }),
@@ -40,7 +40,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     leaveCommunity: builder.mutation({
       query: (data) => ({
-        url: "/api/community/leaveCommunity",
+        url: "/api/community/leave-community",
         method: "POST",
         body: data,
       }),
@@ -48,18 +48,18 @@ const apiRequests = apiClient.injectEndpoints({
     }),
 
     getUserCommunities: builder.query({
-      query: () => "/api/community/getUserCommunitiesList",
+      query: () => "/api/community/get-user-communities-list",
       providesTags: ["getUserCommunities"],
     }),
 
     getUserModCommunities: builder.query({
-      query: () => "/api/community/getUserModCommunities",
+      query: () => "/api/community/get-user-mod-communities",
       providesTags: ["getUserModCommunities"],
     }),
     editCommunity: builder.mutation({
       query: (data) => ({
-        url: "/api/community/editCommunity",
-        method: "PATCH",
+        url: "/api/community/create/edit-community",
+        method: "POST",
         body: data,
       }),
       invalidatesTags: [
@@ -71,7 +71,7 @@ const apiRequests = apiClient.injectEndpoints({
 
     deleteCommunity: builder.mutation({
       query: (data) => ({
-        url: "/api/community/deleteCommunity",
+        url: "/api/community/delete-community",
         method: "POST",
         body: data,
       }),

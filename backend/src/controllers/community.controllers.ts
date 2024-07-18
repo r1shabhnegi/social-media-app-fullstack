@@ -230,11 +230,11 @@ const editCommunity = async (req: Request, res: Response) => {
   try {
     const { name: newName, description, rules, communityName } = req.body;
 
+    console.log(newName, description, rules, communityName);
     const foundCommunity = await Community.findOne({ name: communityName });
 
     if (!foundCommunity)
       return res.status(500).json({ error: "Community Not Found" });
-    //  return new Error("Community Not Found");
 
     if (req.userId !== foundCommunity.authorId.toString()) {
       // throw new Error("User not allowed to edit community");
