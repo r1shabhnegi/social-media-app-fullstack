@@ -25,22 +25,13 @@ app.use(credentials);
 
 app.use(
   cors({
-    origin: ["https://circlesss.onrender.com", "http://localhost:5173"],
+    origin: ["https://circlesss.vercel.app", "http://localhost:5173"],
     credentials: true,
   })
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-
-// app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-
-// app.use(express.static(path.join(__dirname, "")));
-
-// For any other routes, serve the index.html
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../../frontend/dist", "index.html"));
-// });
 
 app.use("/server-status", serverStatusRouter);
 app.use("/api/auth", authRouter);
