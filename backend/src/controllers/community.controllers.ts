@@ -1,17 +1,9 @@
 import { Request, Response } from "express";
 // import { validationResult } from 'express-validator';
 import { Community, CommunityTypes } from "../models/community.model";
-import { uploadSingleImage } from "../config/cloudinary";
 import jwt from "jsonwebtoken";
 // import { ApiError } from "../utility/apiError";
-import { v2 as cloudinary } from "cloudinary";
-import {
-  COM_COOKIE_MISSING,
-  COM_ALREADY_EXISTS,
-  COM_INVALID_RF_TOKEN,
-  COM_NOT_FOUND,
-  COM_AUTHOR_NOT_FOUND,
-} from "../utility/errorConstants";
+
 // import { tryCatch } from "../utility/tryCatch";
 import { uploadOnCloudinary } from "../utility/cloudinary";
 import User from "../models/user.model";
@@ -229,43 +221,44 @@ interface uploadFile {
 const editCommunity = async (req: Request, res: Response) => {
   try {
     const { name: newName, description, rules, communityName } = req.body;
-
     console.log(newName, description, rules, communityName);
     const foundCommunity = await Community.findOne({ name: communityName });
 
-    if (!foundCommunity)
-      return res.status(500).json({ error: "Community Not Found" });
+    if (!foundCommunity) {
+      return res.status(404).json({ error: "Community Not Found" });
+    }
 
     if (req.userId !== foundCommunity.authorId.toString()) {
-      // throw new Error("User not allowed to edit community");
       return res
         .status(403)
         .json({ error: "User not allowed to edit community" });
-      // throw new ApiError("User not allowed to edit community", 909, 403);
     }
 
     const imgFiles = req.files as {
       [fieldname: string]: Express.Multer.File[];
     };
-    const avatarImgPath = imgFiles.avatarImg[0].path;
-    const coverImgPath = imgFiles.coverImg[0].path;
-
-    if (avatarImgPath) {
-      const url = await uploadOnCloudinary(avatarImgPath);
-      if (!url) return res.status(403).json({ error: "Community Not Found" });
-      // throw new Error("Error Uploading Image");
-      // throw new ApiError("Error Uploading Image", 908, 403);
+    // console.log(imgFiles);
+    if (imgFiles.avatarImg && imgFiles.avatarImg[0]) {
+      console.log("IMAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+      const url = await uploadOnCloudinary(imgFiles.avatarImg[0]);
+      if (!url) {
+        return res.status(500).json({ error: "Error Uploading Avatar Image" });
+      }
       foundCommunity.avatarImg = url;
     }
 
-    if (coverImgPath) {
-      const url = await uploadOnCloudinary(coverImgPath);
-      if (!url) return res.status(403).json({ error: "Community Not Found" });
-      // throw new ApiError("Error Uploading Image", 908, 403);
+    if (imgFiles.coverImg && imgFiles.coverImg[0]) {
+      console.log(
+        "IMAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE2222222222222222222222"
+      );
+      const url = await uploadOnCloudinary(imgFiles.coverImg[0]);
+      if (!url) {
+        return res.status(500).json({ error: "Error Uploading Cover Image" });
+      }
       foundCommunity.coverImg = url;
     }
 
-    const splittedRulesArr = rules.split(",");
+    const splittedRulesArr = rules.split(",").map((rule: any) => rule.trim());
 
     foundCommunity.name = newName;
     foundCommunity.rules = splittedRulesArr;
@@ -275,7 +268,8 @@ const editCommunity = async (req: Request, res: Response) => {
 
     return res.status(200).json({ message: "Edit successful" });
   } catch (error) {
-    return res.status(500).json(`${error || "Something went wrong"} `);
+    console.error(error);
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -288,9 +282,6 @@ const deleteCommunity = async (req: Request, res: Response) => {
 
     if (foundCommunity?.authorId.toString() !== userId)
       return res.status(403).json({ error: "Invalid AC Token" });
-    // throw new ApiError("Invalid AC Token", 906, 403);
-    // return
-    //  throw new  Error("Invalid AC Token");
 
     await Post.deleteMany({ communityId: foundCommunity._id });
 

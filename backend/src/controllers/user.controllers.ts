@@ -173,11 +173,10 @@ export const editUser = async (req: Request, res: Response) => {
     const avatarFile = req.files as {
       [fieldName: string]: Express.Multer.File[];
     };
+    // const avatarPath = avatarFile.avatar[0].path;
 
-    const avatarPath = avatarFile.avatar[0].path;
-
-    if (avatarPath) {
-      const url = await uploadOnCloudinary(avatarPath);
+    if (avatarFile) {
+      const url = await uploadOnCloudinary(avatarFile.avatar[0]);
 
       if (!url) throw new Error("Error uploading file");
       foundUser.avatar = url;

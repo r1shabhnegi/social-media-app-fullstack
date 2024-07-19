@@ -25,10 +25,10 @@ router.get("/get-user-mod-communities", getModCommunities);
 
 router.post(
   "/create/edit-community",
-  // upload.fields([
-  //   { name: "avatarImg", maxCount: 1 },
-  //   { name: "coverImg", maxCount: 1 },
-  // ]),
+  upload.fields([
+    { name: "avatarImg", maxCount: 1 },
+    { name: "coverImg", maxCount: 1 },
+  ]),
   editCommunity
 );
 

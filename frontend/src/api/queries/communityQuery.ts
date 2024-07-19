@@ -61,6 +61,7 @@ const apiRequests = apiClient.injectEndpoints({
         url: "/api/community/create/edit-community",
         method: "POST",
         body: data,
+        data: true,
       }),
       invalidatesTags: [
         "getCommunity",

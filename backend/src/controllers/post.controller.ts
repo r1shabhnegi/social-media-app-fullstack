@@ -59,10 +59,10 @@ const createPost = async (req: Request, res: Response) => {
       [fieldName: string]: Express.Multer.File[];
     };
 
-    const imagePath = imageFile.image[0].path;
+    // const imagePath = imageFile.image[0].path;
 
-    if (imagePath) {
-      const url = await uploadOnCloudinary(imagePath);
+    if (imageFile) {
+      const url = await uploadOnCloudinary(imageFile.image[0]);
       if (!url) return res.status(500).json({ error: "Error Uploading Image" });
       newPost.image = url;
     }

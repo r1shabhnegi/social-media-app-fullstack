@@ -93,6 +93,11 @@ const EditCommunityForm = ({
       formData.append("rules", data.rules);
       avatarImage && formData.append("avatarImg", avatarImage);
       coverImage && formData.append("coverImg", coverImage);
+
+      // for (const [key, value] of formData) {
+      //   console.log(key, value);
+      // }
+
       const res = await editCommunity(formData).unwrap();
 
       if (res) {

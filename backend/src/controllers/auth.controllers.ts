@@ -184,10 +184,11 @@ const refreshToken = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.json({
+    return res.status(200).json({
       accessToken,
       username: foundUser.username,
       userId: foundUser._id,
+      avatar: foundUser.avatar,
     });
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);

@@ -10,11 +10,12 @@ import { useForm } from "react-hook-form";
 import { MdAddPhotoAlternate, MdOutlineCancel } from "react-icons/md";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import imageCompression from "browser-image-compression";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@/global/toastSlice";
 import { FaRegEdit } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
 import CommonLoader from "@/components/CommonLoader";
+import { RootState } from "@/global/_store";
 
 type EditProfileTypes = {
   name: string;
@@ -31,7 +32,7 @@ const ProfileLayout = () => {
   const [submitEditUser, { isLoading: loadingEditUser }] =
     useEditUserMutation();
   const { register, handleSubmit, reset } = useForm<EditProfileTypes>();
-
+  const { avatar: userAvatar } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     reset({ name: userData?.name, description: userData?.bio });
   }, [reset, userData?.bio, userData?.name]);
@@ -81,6 +82,7 @@ const ProfileLayout = () => {
       dispatch(showToast({ message: "Edit Failed", type: "ERROR" }));
     }
   });
+  console.log(userAvatar);
   return (
     <div className='flex py-8 max-w-[65rem] mx-auto '>
       <div className='flex flex-col items-center flex-1 gap-8 w-full max-w-[40rem] mx-auto lg:ml-3 '>
@@ -89,7 +91,7 @@ const ProfileLayout = () => {
             <Avatar className='size-[3.5rem] sm:size-[4.5rem]'>
               <AvatarImage
                 className='object-cover'
-                src={userData?.avatar}
+                src={userAvatar}
               />
               <AvatarFallback className='bg-[#3D494E]'>
                 {userData?.name?.slice(0, 2)}
