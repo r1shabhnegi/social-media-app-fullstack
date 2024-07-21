@@ -45,11 +45,7 @@ const ProfileLayout = () => {
       preview: URL.createObjectURL(acceptedFiles[0]),
     });
   }, []);
-  const {
-    getRootProps: getAvatarRootProps,
-    isDragActive: isAvatarDragActive,
-    getInputProps: getAvatarInputProps,
-  } = useDropzone({
+  const { getRootProps, isDragActive, getInputProps } = useDropzone({
     onDrop: onDropAvatar,
     maxSize: 1024 * 4000,
   });
@@ -195,14 +191,14 @@ const ProfileLayout = () => {
             <label className='flex flex-col text-[#67787e] text-sm'>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avatar Image
               <div
-                {...getAvatarRootProps({
+                {...getRootProps({
                   className: `rounded-3xl flex mt-1 flex bg-[#1A282D] justify-center items-center size-32 ${
                     !avatar?.preview && "border"
                   }`,
                 })}
-                onClick={() => console.log("e")}>
-                <input {...getAvatarInputProps()} />
-                {isAvatarDragActive ? (
+                onClick={() => console.log("a")}>
+                <input {...getInputProps()} />
+                {isDragActive ? (
                   <p className='font-bold text-gray-700'>Drop</p>
                 ) : (
                   <div className='flex items-center justify-center'>
