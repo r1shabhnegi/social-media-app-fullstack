@@ -82,7 +82,6 @@ const ProfileLayout = () => {
       dispatch(showToast({ message: "Edit Failed", type: "ERROR" }));
     }
   });
-  console.log(userDatapo);
   return (
     <div className='flex py-8 max-w-[65rem] mx-auto '>
       <div className='flex flex-col items-center flex-1 gap-8 w-full max-w-[40rem] mx-auto lg:ml-3 '>
