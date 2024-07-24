@@ -155,7 +155,7 @@ export const getUserProfileComments = async (req: Request, res: Response) => {
 
     return res.status(200).send(userComments);
   } catch (error) {
-    return res.status(500).json(`${error || "Something went wrong"} `);
+    return res.status(500).json(`${error || "Something went wrong"}`);
   }
 };
 
@@ -169,7 +169,6 @@ export const editUser = async (req: Request, res: Response) => {
     if (!foundUser) {
       throw new Error("User not found");
     }
-
     const avatarFile = req.files as {
       [fieldName: string]: Express.Multer.File[];
     };

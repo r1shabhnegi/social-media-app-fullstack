@@ -66,6 +66,10 @@ const ProfileLayout = () => {
       formData.append("description", data?.description);
       avatarImg && formData.append("avatar", avatarImg);
 
+      for (const [key, value] of formData) {
+        console.log(key, value);
+      }
+
       const res = await submitEditUser(formData).unwrap();
 
       if (res) {
@@ -78,7 +82,7 @@ const ProfileLayout = () => {
       dispatch(showToast({ message: "Edit Failed", type: "ERROR" }));
     }
   });
-  console.log(userAvatar);
+  console.log(userDatapo);
   return (
     <div className='flex py-8 max-w-[65rem] mx-auto '>
       <div className='flex flex-col items-center flex-1 gap-8 w-full max-w-[40rem] mx-auto lg:ml-3 '>
