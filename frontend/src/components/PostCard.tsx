@@ -195,7 +195,10 @@ const PostCard = ({
           className={`${!fromPostDetail && "cursor-pointer"}`}>
           <div className='mb-2'>
             <h1 className='mb-3 text-lg font-semibold'>{postData?.title}</h1>
-            <p className='text-sm text-gray-300 line-clamp-4'>
+            <p
+              className={`text-sm text-gray-300 ${
+                fromPostDetail ? "" : "line-clamp-4"
+              }`}>
               {postData?.content}
             </p>
           </div>

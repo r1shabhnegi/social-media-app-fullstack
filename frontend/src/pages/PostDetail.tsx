@@ -97,7 +97,7 @@ const PostDetail = () => {
     }
   });
 
-  if (postDataLoading) <PageLoader />;
+  if (postDataLoading) return <PageLoader />;
 
   return (
     <div className='max-w-[65rem] flex justify-center mx-auto pb-10'>

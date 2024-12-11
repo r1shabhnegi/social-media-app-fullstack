@@ -12,7 +12,6 @@ import { Post } from "../models/post.model";
 import { Comment } from "../models/comment.model";
 import { signupInput } from "@rishabhnegi/circlesss-common";
 import { uploadOnCloudinary } from "../utility/cloudinary";
-import { redis } from "../utility/redis";
 
 export const signUp = async (req: Request, res: Response) => {
   try {
@@ -73,20 +72,12 @@ export const getUserData = async (req: Request, res: Response) => {
   try {
     const { username } = req.params;
 
-    const cachedUser = await redis.get(`user:${username}`);
-
-    if (cachedUser) {
-      return res.status(200).send(JSON.parse(cachedUser));
-    }
-
     const userData = await User.findOne({ username }).select(
       "_id createdAt bio email name username avatar"
     );
 
     if (!userData) return res.status(500).json({ error: "Err" });
     //  throw new ApiError("Error", 3000, 3000);
-
-    await redis.set(`user:${username}`, JSON.stringify(userData), "EX", 1800);
 
     return res.status(200).send(userData);
   } catch (error) {
@@ -98,25 +89,12 @@ export const getUserProfilePosts = async (req: Request, res: Response) => {
   try {
     const { username } = req.params;
 
-    const cachedPosts = await redis.get(`profilePosts:${username}`);
-
-    if (cachedPosts) {
-      return res.status(200).send(JSON.parse(cachedPosts));
-    }
-
     const userPosts = await Post.find({ authorName: username }).sort({
       createdAt: -1,
     });
     if (!userPosts) {
       throw new Error("user posts not found");
     }
-
-    await redis.set(
-      `profilePosts:${username}`,
-      JSON.stringify(userPosts),
-      "EX",
-      1800
-    );
 
     return res.status(200).send(userPosts);
   } catch (error) {

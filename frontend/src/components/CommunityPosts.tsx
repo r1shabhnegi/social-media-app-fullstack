@@ -1,12 +1,12 @@
 import {
   useCommunityNumberOfPostsQuery,
   useGetAllCommunityPostsQuery,
-} from '@/api/queries/postQuery';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import PostCard from './PostCard';
-import { useEffect, useState } from 'react';
-import CommonLoader from './CommonLoader';
-import { useLocation } from 'react-router-dom';
+} from "@/api/queries/postQuery";
+import InfiniteScroll from "react-infinite-scroll-component";
+import PostCard from "./PostCard";
+import { useEffect, useState } from "react";
+import CommonLoader from "./CommonLoader";
+import { useLocation } from "react-router-dom";
 
 type postDataType = {
   _id: string;
@@ -45,7 +45,7 @@ const CommunityPosts = ({
   }, [pathname, communityId]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const CommunityPosts = ({
       }
     };
     fetch();
-  }, [fetchNumberOfPosts, communityId]);
+  }, [communityId]);
 
   const { data: postsFetchedData, refetch: fetchPostsData } =
     useGetAllCommunityPostsQuery({

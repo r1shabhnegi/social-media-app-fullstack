@@ -10,11 +10,11 @@ import {
 } from "../utility/errorConstants";
 import User from "../models/user.model";
 import { Comment } from "../models/comment.model";
-import { redis } from "../utility/redis";
 
 const getNumberOfPosts = async (req: Request, res: Response) => {
   try {
     const numberOfPosts = await Post.countDocuments();
+
     return res.status(200).send(numberOfPosts.toString());
   } catch (error) {
     return res.status(500).json(`${error || "Something went wrong"} `);
@@ -36,8 +36,6 @@ const createPost = async (req: Request, res: Response) => {
     // );
 
     const author = await User.findById(req.userId);
-
-    await redis.del(`profilePosts:${author?.username}`);
 
     if (!author) return res.status(500).json({ error: "user does not exist" });
     // throw new Error("user does not exist");
@@ -174,6 +172,7 @@ const handleUpVote = async (req: Request, res: Response) => {
   try {
     const { postId, userId } = req.body;
 
+    // Check if user has downvoted this post before
     const foundDownVote = await Post.findOne(
       {
         _id: postId,
@@ -192,6 +191,7 @@ const handleUpVote = async (req: Request, res: Response) => {
       );
     }
 
+    // Check if user has already upvoted this post
     const foundUpvoteInPost = await Post.findOne(
       {
         _id: postId,
@@ -203,45 +203,47 @@ const handleUpVote = async (req: Request, res: Response) => {
     );
 
     if (!foundUpvoteInPost) {
+      // User hasn't upvoted, add upvote
       const upVoted = await Post.findByIdAndUpdate(
         postId,
         {
-          $addToSet: { upVotes: userId },
+          upVotes: [userId], // This overwrites all upvotes with just userId, which is probably not intended
+          // $addToSet: { upVotes: userId }, // Better to use this if you want to add to an array without duplicates
         },
         {
           new: true,
         }
       );
-      if (!upVoted) return new Error("Error up-voting the post");
-      // ApiError('Error up-voting the post', 1000, 1000);
-    } else {
-      const removedUpVote = await Post.findByIdAndUpdate(
-        postId,
-        { $pull: { upVotes: userId } },
-        { new: true }
-      );
-      if (!removedUpVote)
-        // throw new Error("Error up-voting the post");
-        return res.status(500).json({ error: "Error up-voting the post" });
-      // throw new ApiError("Error up-voting the post", 1000, 1000);
+
+      if (!upVoted) return new Error("Error up-voting the post"); // This won't send a response, it just creates an error object
+      return res.status(200).json({ message: "upVoted" });
     }
+
+    // User has upvoted, so remove the upvote
+    const removedUpVote = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { upVotes: userId } },
+      { new: true }
+    );
+
+    if (!removedUpVote) {
+      return res.status(500).json({ error: "Error up-voting the post" });
+    }
+
     return res.status(200).json({ message: "upVoted" });
-  } catch (error) {
-    return res.status(500).json(`${error || "Something went wrong"} `);
+  } catch (error: any) {
+    return res.status(500).json(`${error.message || "Something went wrong"} `);
   }
 };
+
 const handleDownVote = async (req: Request, res: Response) => {
   try {
     const { postId, userId } = req.body;
 
+    // Check if user has upvoted this post before
     const foundUpVote = await Post.findOne(
-      {
-        _id: postId,
-        upVotes: [userId],
-      },
-      {
-        projection: { _id: 1 },
-      }
+      { _id: postId, upVotes: userId },
+      { projection: { _id: 1 } }
     );
 
     if (foundUpVote) {
@@ -252,44 +254,42 @@ const handleDownVote = async (req: Request, res: Response) => {
       );
     }
 
+    // Check if user has downvoted this post before
     const foundDownvoteInPost = await Post.findOne(
-      {
-        _id: postId,
-        downVotes: [userId],
-      },
-      {
-        projection: { _id: 1 },
-      }
+      { _id: postId, downVotes: userId },
+      { projection: { _id: 1 } }
     );
 
     if (!foundDownvoteInPost) {
+      // Add downvote if not present
       const downVoted = await Post.findByIdAndUpdate(
         postId,
-        {
-          $addToSet: { downVotes: userId },
-        },
-        {
-          new: true,
-        }
-      );
-      if (!downVoted)
-        // throw new Error("Error up-voting the post");
-        return res.status(500).json({ error: "Error up-voting the post" });
-      // throw new ApiError("Error up-voting the post", 1000, 1000);
-    } else {
-      const removedDownVote = await Post.findByIdAndUpdate(
-        postId,
-        { $pull: { downVotes: userId } },
+        { $addToSet: { downVotes: userId } },
         { new: true }
       );
-      if (!removedDownVote)
-        // throw new Error("Error up-voting the post");
-        return res.status(500).json({ error: "Error up-voting the post" });
-      // throw new ApiError("Error up-voting the post", 1000, 1000);
+      if (!downVoted) {
+        return res.status(500).json({ error: "Error down-voting the post" });
+      }
+      return res.status(200).json({ message: "Downvote processed" });
     }
-    return res.status(200).json({ message: "downVoted" });
-  } catch (error) {
-    return res.status(500).json(`${error || "Something went wrong"} `);
+
+    // If downvote exists, remove it
+    const removedDownVote = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { downVotes: userId } },
+      { new: true }
+    );
+
+    if (!removedDownVote) {
+      return res.status(500).json({ error: "Error down-voting the post" });
+    }
+
+    return res.status(200).json({ message: "Downvote processed" });
+  } catch (error: any) {
+    console.error("Downvote error:", error);
+    return res
+      .status(500)
+      .json({ error: error.message || "Something went wrong" });
   }
 };
 // Save post

@@ -2,7 +2,7 @@ import { apiClient } from "../apiClient";
 
 const apiRequests = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    numberOfPosts: builder.query({ query: () => "/api/post/numberOfPosts" }),
+    numberOfPosts: builder.query({ query: () => "/api/post/number-of-posts" }),
 
     createPost: builder.mutation({
       query: (data) => ({
