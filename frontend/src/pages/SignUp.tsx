@@ -7,7 +7,6 @@ import { useLoginMutation, useSignUpMutation } from "@/api/queries/authQuery";
 import { setCredentials } from "@/global/authSlice";
 import { SignupType } from "@rishabhnegi/circlesss-common";
 import { Input } from "@/components/ui/input";
-import CommonLoader from "@/components/CommonLoader";
 import MoonLoader from "react-spinners/MoonLoader";
 
 const SignUp = () => {

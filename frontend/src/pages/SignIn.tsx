@@ -7,7 +7,6 @@ import { AppDispatch } from "@/global/_store";
 import { setCredentials } from "@/global/authSlice";
 import { signinType } from "@rishabhnegi/circlesss-common";
 import { Input } from "@/components/ui/input";
-import CommonLoader from "@/components/CommonLoader";
 import MoonLoader from "react-spinners/MoonLoader";
 
 const SignIn = () => {
