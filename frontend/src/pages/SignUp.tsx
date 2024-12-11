@@ -8,6 +8,7 @@ import { setCredentials } from "@/global/authSlice";
 import { SignupType } from "@rishabhnegi/circlesss-common";
 import { Input } from "@/components/ui/input";
 import CommonLoader from "@/components/CommonLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -141,22 +142,32 @@ const SignUp = () => {
           )}
         </label>
 
-        <div>
-          <button
-            type='submit'
-            className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-auto rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '
-            disabled={signInLoading || signUpLoading}>
-            {signInLoading || signUpLoading ? <CommonLoader /> : "Submit"}
-          </button>
-          <p className='mt-1 ml-2 text-sm text-[#a0b6bd]'>
-            Already have account?
-            <Link
-              to='/sign-in'
-              className='ml-2 font-semibold text-green-400 underline hover:text-green-600'>
-              Sign In
-            </Link>
-          </p>
-        </div>
+        <button
+          type='submit'
+          disabled={signInLoading || signUpLoading}
+          className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-16 rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '>
+          {signInLoading || signUpLoading ? (
+            <div className='flex items-center justify-center'>
+              <MoonLoader
+                color='#f2f2f1'
+                loading={true}
+                size={30}
+                aria-label='Loading Spinner'
+                data-testid='loader'
+              />
+            </div>
+          ) : (
+            "Submit"
+          )}
+        </button>
+        <p className='mt-1 ml-2 text-sm text-[#a0b6bd]'>
+          Already have account?
+          <Link
+            to='/sign-in'
+            className='ml-2 font-semibold text-green-400 underline hover:text-green-600'>
+            Sign In
+          </Link>
+        </p>
       </form>
     </div>
   );

@@ -8,6 +8,7 @@ import { setCredentials } from "@/global/authSlice";
 import { signinType } from "@rishabhnegi/circlesss-common";
 import { Input } from "@/components/ui/input";
 import CommonLoader from "@/components/CommonLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -82,22 +83,34 @@ const SignIn = () => {
           )}
         </label>
 
-        <div>
-          <button
-            type='submit'
-            disabled={isLoading}
-            className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-auto rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '>
-            {isLoading ? <CommonLoader /> : "Submit"}
-          </button>
-          <p className='mt-1 ml-2 text-sm text-[#a0b6bd]'>
-            Create an Account
-            <Link
-              to='/sign-up'
-              className='ml-2 font-semibold text-green-400 underline hover:text-green-600'>
-              Sign Up
-            </Link>
-          </p>
-        </div>
+        <button
+          type='submit'
+          disabled={isLoading}
+          className=' text-[#f2f2f1]  bg-[#0045ac] w-full h-16 rounded-3xl p-4 outline-none mb-1 font-semibold text-xl mt-5 hover:bg-[#0045acc9] '>
+          {isLoading ? (
+            <div className='flex items-center justify-center'>
+              <MoonLoader
+                color='#f2f2f1'
+                loading={true}
+                size={30}
+                aria-label='Loading Spinner'
+                data-testid='loader'
+              />
+            </div>
+          ) : (
+            "Submit"
+          )}
+        </button>
+        {/* <div> */}
+        <p className='mt-1 ml-2 text-sm text-[#a0b6bd]'>
+          Create an Account
+          <Link
+            to='/sign-up'
+            className='ml-2 font-semibold text-green-400 underline hover:text-green-600'>
+            Sign Up
+          </Link>
+        </p>
+        {/* </div> */}
       </form>
     </div>
   );
